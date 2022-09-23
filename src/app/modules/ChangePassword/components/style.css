@@ -1,0 +1,103 @@
+*{
+      margin: 0px;
+      padding: 0px;
+      box-sizing: border-box;
+  }
+  
+  
+  .head-1 {
+      margin-top: 1.5rem;
+  }
+  .alert {
+      background-color: #F1F3F9;
+  }
+  .alert.alert-1 {
+      margin-top: 20px;
+  }
+  .col-6.button-1 {
+      text-align: right;
+  }
+  .col-6.copy-button {
+      text-align: right;
+  }
+  span.appID {
+      font-weight: bold;
+      margin-left: 10px;
+  }
+  span.text-1
+  {
+      margin-left: 10px;
+  }
+  
+  a.check-1
+  {
+      text-decoration: none;
+      font-weight: bold;
+      margin-top: 10px;
+  }
+  p.link-1 {
+      margin-top: 20px;
+  }
+  i.bi.bi-file-earmark-text
+  {
+      margin-right: 10px;
+      font-weight: bold;
+  }
+  .card{
+      margin-top: 10px;
+      box-shadow: 0 0px 10px rgb(0 0 0 / 0.2);
+     
+      
+  }
+  
+  .head-3 {
+      margin-top: 35px;
+  }
+  p.para-3 {
+      margin-top: 20px;
+  }
+  
+  p.card-text {
+      margin-top: 20px;
+  }
+  .row.card-row {
+      --bs-gutter-x: 0px;
+  }
+  .head-4 {
+      margin-top: 35px;
+  }
+  .row.row-services {
+      padding: 0px 6rem;
+      margin-top: 20px;
+  }
+  .figure-caption
+  {
+      font-size: 20px;
+      color: black;
+  }
+  .figure{
+      width: 60px;
+  }
+  .p-3
+  {
+      background-color: #f6f6f6;
+  }
+  span.copyright
+  {
+      color: #6A6F75;
+  }
+  ul,li {
+      display: inline;
+      
+    }
+    li{
+      text-decoration: none;
+    }
+    a.links {
+      text-decoration: none;
+      padding: 20px;
+      color: #6A6F75;
+  }
+  footer.text-lg-start{
+      margin-top: 20px;
+  }
