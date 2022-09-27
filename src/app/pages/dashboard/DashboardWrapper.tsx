@@ -4,17 +4,23 @@ import { useIntl } from 'react-intl'
 import axios from 'axios'
 import moment from 'moment'
 import DataTable, { createTheme } from 'react-data-table-component';
-import { PageTitle } from '../../../_metronic/layout/core'
-import './tabs.css'
-import {ShowDataTable} from './ShowDataTable'
+import { PageTitle } from '../../../_metronic/layout/core';
+import {ChecksComponent} from './Checks'
+import './dashboard-page.css'
+import {ShowDataTable} from './ShowDataTable';
+import {ReportTable} from './Table'
 const DashboardPage: FC = () => {
- 
+ const [checks,setChecks]=useState([]);
+ const [thData,setThData]=useState([]);
+ const [tBodyData,setBodyData]=useState([]);
   const logged_user_detail: any = localStorage.getItem('logged_user_detail');
   const loggedInUserDetails = JSON.parse(logged_user_detail);
 
   const baseUrl = process.env.REACT_APP_API_URL;
   const getLoggedInUserEndPoint = `${baseUrl}/api/Common/GetLoggedInUser`;
   const getMyTrainsForInspectionEndPoint = `${baseUrl}/api/Common/GetTrainsForInspection`;
+  const getMyTrainsDailyReportEndPoint = `${baseUrl}/api/Common/GetTrainsDailyReport`;
+  const getMyTrainsDailyCleaningReportEndPoint = `${baseUrl}/api/Common/GetTrainsDailyCleaningReport`;
   const headerJson = {
     headers: {
       Authorization: `bearer ${loggedInUserDetails.access_token}`
@@ -23,8 +29,9 @@ const DashboardPage: FC = () => {
 
   useEffect(() => {
     getLoggedInUserdata();
-    getMyTrainsForInspection();
-    
+    getMyTrainsDailyReport();
+    // getMyTrainsForInspection();
+    GetTrainsDailyCleaningReport();
   }, []);
  
   const getLoggedInUserdata = async () => {
@@ -37,6 +44,86 @@ const DashboardPage: FC = () => {
     }
   }
 
+  const getMyTrainsDailyReport = async () => {
+    const response = await axios.post(getMyTrainsDailyReportEndPoint,{},headerJson);
+    
+    if (response && response.data) {
+      const { data } = response;
+      console.log({data});
+      let thData:any=[];
+      thData.push('Header');
+      let tBodyData:any=[];
+      data.trains.forEach((item:any)=>{
+        thData.push(item.trainName);
+      })
+      for(let i=0;i<data.checks.length;i++) {
+        let check=data.checks[i];
+        let trData=[];
+        console.log({check})
+        trData.push({
+          carId:check.id,
+          carName:check.name,
+          checkId:check.id,
+          checkValue:null,
+        });
+        for(let j=0;j<data.trains.length;j++) {
+          let trainCheck=data.trains[j].Checks[i];
+          // console.log({trainCheck})
+          trData.push(trainCheck);
+        }
+        tBodyData.push(trData); 
+      }
+
+      // data.checks.forEach((item:any)=>{
+
+      // })
+      console.log({thData,tBodyData});
+      setThData(thData);
+      setBodyData(tBodyData);
+      setChecks(data.checks);
+
+    }
+  }
+  const GetTrainsDailyCleaningReport =async () =>{
+    const response = await axios.post(getMyTrainsDailyCleaningReportEndPoint,{},headerJson);
+    
+    if (response && response.data) {
+      const { data } = response;
+      console.log({data111:data});
+      // let thData:any=[];
+      // thData.push('Header');
+      // let tBodyData:any=[];
+      // data.trains.forEach((item:any)=>{
+      //   thData.push(item.trainName);
+      // })
+      // for(let i=0;i<data.checks.length;i++) {
+      //   let check=data.checks[i];
+      //   let trData=[];
+      //   console.log({check})
+      //   trData.push({
+      //     carId:check.id,
+      //     carName:check.name,
+      //     checkId:check.id,
+      //     checkValue:null,
+      //   });
+      //   for(let j=0;j<data.trains.length;j++) {
+      //     let trainCheck=data.trains[j].Checks[i];
+      //     // console.log({trainCheck})
+      //     trData.push(trainCheck);
+      //   }
+      //   tBodyData.push(trData); 
+      // }
+
+      // // data.checks.forEach((item:any)=>{
+
+      // // })
+      // console.log({thData,tBodyData});
+      // setThData(thData);
+      // setBodyData(tBodyData);
+      // setChecks(data.checks);
+
+    }
+  }
   const getMyTrainsForInspection = async () => {
     console.log({headerJson})
     const response = await axios.post(getMyTrainsForInspectionEndPoint,{},headerJson);
@@ -61,6 +148,37 @@ const DashboardPage: FC = () => {
                 <button type="button" className="btn btn-danger mx-3">Clear</button>
             </div>
           </div>
+          {/* <table className="table table-bordered">
+              <thead>
+                <tr>
+                {
+                  thData.map((item:any,index)=>{
+                    return (
+                      <th key={index}>{item}</th>
+                    )
+                  })
+                }
+</tr>
+              </thead>
+              <tbody>
+                {
+                  tBodyData.map((item:any)=>{
+                    return (
+                      <tr>
+                        {item.map((_item:any,index:any)=>{
+                          return(
+                            <td key={index}>{_item}</td>
+                          )
+                        })}
+                      </tr>
+                    )
+                  })
+
+                }
+
+              </tbody>
+          </table> */}
+          <ReportTable className='mb-5 mb-xl-8' trData={tBodyData} thData={thData} />
 
         </div>
       </div>
