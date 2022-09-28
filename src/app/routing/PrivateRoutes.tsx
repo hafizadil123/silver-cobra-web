@@ -3,6 +3,8 @@ import { Route, Routes, Navigate } from 'react-router-dom'
 import { MasterLayout } from '../../_metronic/layout/MasterLayout'
 import TopBarProgress from 'react-topbar-progress-indicator'
 import { DashboardWrapper } from '../pages/dashboard/DashboardWrapper'
+import { TrainsDailyReportWrapper } from '../pages/TrainsDailyReport/TrainsDailyReportWrapper';
+import { CleaningReportWrapper } from '../pages/CleaningReport/CleaningReportWrapper';
 import { MenuTestPage } from '../pages/MenuTestPage'
 import { getCSSVariableValue } from "../../_metronic/assets/ts/_utils";
 import { ChangePassword1 } from '../modules/ChangePassword'
@@ -32,6 +34,9 @@ const PrivateRoutes = () => {
         <Route path='menu-test' element={<MenuTestPage />} />
         <Route path='profile/*' element={<ChangePassword1 />} />
         <Route path='/user-details' element={<UserDetailsPage />} />
+        <Route  path='/trains-daily-report/*' element={<TrainsDailyReportWrapper />} />
+        <Route  path='/trains-cleaning-report/*' element={<CleaningReportWrapper />} />
+        
         <Route path='/main-attendance' element={<DailyAttendancePage />} />
         <Route path='/documents' element={<DocumentsPage />} />
         <Route path='/upload-document' element={<UploadDocumentSection />} />

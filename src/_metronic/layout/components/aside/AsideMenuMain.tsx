@@ -6,14 +6,16 @@ import {useSelector} from 'react-redux'
 import {UserModel} from '../../../../app/modules/auth/models/UserModel'
 import {RootState} from '../../../../setup'
 import {AsideMenuItemWithSub} from './AsideMenuItemWithSub'
-import {AsideMenuItem} from './AsideMenuItem'
+import {AsideMenuItem} from './AsideMenuItem';
+import{Routes} from './data';
 
 export interface objectV {
   access_token?: string
 }
 export function AsideMenuMain() {
   const intl = useIntl()
-
+  const userRole=localStorage.getItem('userType');
+  const myRoutes=Routes(userRole);
   return (
     <>
      
@@ -25,11 +27,23 @@ export function AsideMenuMain() {
 
       {/* <AsideMenuItem to={`/builder`} title='בּוֹנֶה' hasBullet={true}></AsideMenuItem> */}
       {/* <AsideMenuItem to={`/menu-test`} title='תַפרִיט' hasBullet={true}></AsideMenuItem> */}
-      <AsideMenuItem
-        to={`/`}
-        title="Dashboard"
-        hasBullet={true}
-      ></AsideMenuItem>
+      {/* {
+        userRole === 'OccUser' ?
+
+      } */}
+      {
+        myRoutes.map((item:any)=>{
+          return (
+
+            <AsideMenuItem
+            to={item.route}
+            title={item.title}
+            hasBullet={true}
+          ></AsideMenuItem>
+          )
+        })
+      }
+    
     
     </>
   )

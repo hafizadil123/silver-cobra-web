@@ -52,7 +52,7 @@ export function Login(props: any) {
         console.log({err})
         setLoading(false)
         setSubmitting(false)
-        setStatus('תעודת זהות וסיסמא אינם תקינים, יש לנסות שנית או לפנות למוקד.')
+        setStatus('שם משתמש וסיסמא אינם תקינים, יש לנסות שנית או לפנות למוקד.')
       }
     }
   })
@@ -67,7 +67,7 @@ export function Login(props: any) {
       {/* begin::Heading */}
 
       <div className='text-center mb-10'>
-        <h1 className='text-dark mb-3'>{<FormattedMessage id="AUTH.GENERAL.ACCOUNT_DETAILS" />}</h1>
+        <h1 className='text-dark mb-3'>{<FormattedMessage id="AUTH.GENERAL.ACCOUNT_DETAILS" />}1111</h1>
       </div>
       {/* begin::Heading */}
 
@@ -84,7 +84,7 @@ export function Login(props: any) {
         <label className='form-label fs-6 fw-bolder text-dark'>{<FormattedMessage id="AUTH.INPUT.USERNAME" />}</label>
 
         <input
-          placeholder='תעודת זהות'
+          placeholder='שם משתמש'
           {...formik.getFieldProps('username')}
           className={clsx(
             'form-control form-control-lg form-control-solid',

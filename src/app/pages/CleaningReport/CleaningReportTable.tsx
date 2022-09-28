@@ -9,7 +9,7 @@ type Props = {
   drivers:any[],
 }
 
-const ReportTable: React.FC<Props> = ({className,trData,thData,drivers}) => {
+const CleaningReportTable: React.FC<Props> = ({className,trData,thData,drivers}) => {
   return (
     <div className={`card ${className}`}>
 
@@ -75,7 +75,7 @@ const ReportTable: React.FC<Props> = ({className,trData,thData,drivers}) => {
   )
 }
 
-export {ReportTable}
+export {CleaningReportTable}
 const TableDataView = (props: any) => {
     const { flexValue, text, type, className,index } = props;
 

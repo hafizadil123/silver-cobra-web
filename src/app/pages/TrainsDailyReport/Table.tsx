@@ -2,12 +2,14 @@
 import React ,{useState,useEffect} from 'react';
 import {KTSVG} from '../../../_metronic/helpers';
 import moment from 'moment';
+import axios from 'axios';
 type Props = {
   className: string,
   trData:any[],
   thData:any[],
   drivers:any[],
 }
+const baseUrl = process.env.REACT_APP_API_URL;
 
 const ReportTable: React.FC<Props> = ({className,trData,thData,drivers}) => {
   return (
@@ -42,11 +44,11 @@ const ReportTable: React.FC<Props> = ({className,trData,thData,drivers}) => {
                                     <tr >
                                         {
                                             item.map((_item:any,index:any)=>{
-                                                const {carId,carName,checkId,checkValue}=_item;
+                                                const {carId,carName,checkId,checkValue,trainId}=_item;
                                                 return (
 
                                                    
-                                                    <TableDataView index={index}  flexValue={1} text={carName}  />
+                                                    <TableDataView index={index} carId={carId} carName={carName} checkId={checkId} trainId={trainId} checkValue={checkValue}  flexValue={1} text={carName}  />
                                                 )
                                             })
                                         }
@@ -77,8 +79,30 @@ const ReportTable: React.FC<Props> = ({className,trData,thData,drivers}) => {
 
 export {ReportTable}
 const TableDataView = (props: any) => {
-    const { flexValue, text, type, className,index } = props;
+    const { flexValue, text, type, className,index ,carId,checkId,checkValue,trainId} = props;
+    const SaveTrainDailyCheckValue = `${baseUrl}/api/Common/SaveTrainDailyCheckValue`;
+    const logged_user_detail: any = localStorage.getItem('logged_user_detail');
+    const loggedInUserDetails = JSON.parse(logged_user_detail);
+    const headerJson = {
+      headers: {
+        Authorization: `bearer ${loggedInUserDetails.access_token}`
+      }
+    }
 
+    const handleUpdateCheckValue =async (statusToChange:boolean)=>{
+      let date=new Date();
+      let dateFormatted=moment(date).format('DD-MM-yyyy');
+      const dataToSend ={
+        trainId,
+        checkValue:statusToChange,
+        checkid:checkId,
+        carid:carId,
+        date:dateFormatted
+      };
+      console.log({dataToSend})
+      const response = await axios.post(SaveTrainDailyCheckValue,dataToSend,headerJson);
+      console.log({response})
+    }
     const renderFields = () => {
         return (
               <td className={`${className} `} style={{minWidth:'530px'}}>
@@ -88,8 +112,8 @@ const TableDataView = (props: any) => {
                 <>
                 <span  style={{float:'right'}}> {text}</span>
                 <span style={{float:'left'}}>  
-                <button onClick={()=>{console.log('clicked')}} className='btn btn-secondary btn-sm'><i  className="fa fa-times" style={{color:"#c18080",fontWeight:"bold",cursor:'pointer'}}></i></button>
-                <button onClick={()=>{console.log('clicked')}} className='btn btn-secondary btn-sm'><i onClick={()=>{console.log('clicked')}} className="fa fa-check" style={{color:"#1dd61d",fontWeight:"bold",cursor:'pointer'}} aria-hidden="true"></i></button> 
+                <button onClick={()=>{handleUpdateCheckValue(false)}} className='btn btn-secondary btn-sm'><i  className="fa fa-times" style={{color:"#c18080",fontWeight:"bold",cursor:'pointer'}}></i></button>
+                <button onClick={()=>{handleUpdateCheckValue(true)}} className='btn btn-secondary btn-sm'><i onClick={()=>{console.log('clicked')}} className="fa fa-check" style={{color:"#1dd61d",fontWeight:"bold",cursor:'pointer'}} aria-hidden="true"></i></button> 
                 </span> 
                 </>
               }
@@ -113,8 +137,17 @@ const TableDataView = (props: any) => {
 
 
 const TableFootView = (props: any) => {
+  const logged_user_detail: any = localStorage.getItem('logged_user_detail');
+  const loggedInUserDetails = JSON.parse(logged_user_detail);
+  const headerJson = {
+    headers: {
+      Authorization: `bearer ${loggedInUserDetails.access_token}`
+    }
+  }
+
+  const SaveTrainDailyNotes = `${baseUrl}/api/Common/SaveTrainDailyNotes`;
   const { flexValue, text, index,trainId } = props;
-  const handleUpdateNote =(value:any)=>{
+  const handleUpdateNote = async (value:any)=>{
     setNotes(value);
     let date=new Date();
     let dateFormatted=moment(date).format('DD-MM-yyyy');
@@ -124,6 +157,8 @@ const TableFootView = (props: any) => {
       date:dateFormatted
     };
     console.log({dataToSend})
+    const response = await axios.post(SaveTrainDailyNotes,dataToSend,headerJson);
+    console.log({response})
   }
   const [notes,setNotes]=useState("")
   useEffect (()=>{
@@ -158,6 +193,17 @@ const TableFootView = (props: any) => {
 
 
 const TableHeadView = (props: any) => {
+  const logged_user_detail: any = localStorage.getItem('logged_user_detail');
+  const loggedInUserDetails = JSON.parse(logged_user_detail);
+  const headerJson = {
+    headers: {
+      Authorization: `bearer ${loggedInUserDetails.access_token}`
+    }
+  }
+
+  const SaveTrainDailyStatus = `${baseUrl}/api/Common/SaveTrainDailyStatus`;
+  const SaveTrainDailyDriverEndPoint = `${baseUrl}/api/Common/SaveTrainDailyDriver`;
+  
   const {  text,className,index,drivers,driverName,driverId,status,trainId } = props;
   const [selectedDriver,setSelectedDriver]=useState(drivers[0].id)
   useEffect(() => {
@@ -165,7 +211,7 @@ const TableHeadView = (props: any) => {
       setSelectedDriver(driverId)
     }
   },[])
-  const handleChangeTrainStatus =(statusToChange:number) =>{
+  const handleChangeTrainStatus =async (statusToChange:number) =>{
     let date=new Date();
     let dateFormatted=moment(date).format('DD-MM-yyyy');
     console.log({dateFormatted})
@@ -175,18 +221,21 @@ const TableHeadView = (props: any) => {
       date:dateFormatted
     };
     console.log({DataToSend})
+    const response = await axios.post(SaveTrainDailyStatus,DataToSend,headerJson);
 
+    console.log({response})
   }
-  const handleDriverChangeUpdate =(value:any) =>{
+  const handleDriverChangeUpdate =async (value:any) =>{
     setSelectedDriver(value);
     let date=new Date();
     let dateFormatted=moment(date).format('DD-MM-yyyy');
     const dataToSend ={
       trainId,
       date:dateFormatted,
-      driverid:Number(value)
+      driverId:Number(value)
     };
-    console.log({dataToSend})
+    const response = await axios.post(SaveTrainDailyDriverEndPoint,dataToSend,headerJson);
+    console.log({response})
   }
   return (
       <th style={{minWidth:'530px !important'}} className={`${className}`}>

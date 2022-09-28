@@ -2,14 +2,9 @@
 import React, { FC, useState, useEffect } from 'react'
 import { useIntl } from 'react-intl'
 import axios from 'axios'
-import moment from 'moment'
-import DataTable, { createTheme } from 'react-data-table-component';
 import { PageTitle } from '../../../_metronic/layout/core';
-import {ChecksComponent} from './Checks'
-import './dashboard-page.css'
-import {ShowDataTable} from './ShowDataTable';
-import {ReportTable} from './Table'
-const DashboardPage: FC = () => {
+import {CleaningReportTable} from './CleaningReportTable'
+const CleaningReportpage: FC = () => {
  const [checks,setChecks]=useState([]);
  const [thData,setThData]=useState([]);
  const [tBodyData,setBodyData]=useState([]);
@@ -19,9 +14,6 @@ const DashboardPage: FC = () => {
 
   const baseUrl = process.env.REACT_APP_API_URL;
   const getLoggedInUserEndPoint = `${baseUrl}/api/Common/GetLoggedInUser`;
-  const getDriversEndPoint = `${baseUrl}/api/Common/GetDrivers`;
-  const getMyTrainsForInspectionEndPoint = `${baseUrl}/api/Common/GetTrainsForInspection`;
-  const getMyTrainsDailyReportEndPoint = `${baseUrl}/api/Common/GetTrainsDailyReport`;
   const getMyTrainsDailyCleaningReportEndPoint = `${baseUrl}/api/Common/GetTrainsDailyCleaningReport`;
   const headerJson = {
     headers: {
@@ -30,7 +22,7 @@ const DashboardPage: FC = () => {
   }
 
   useEffect(() => {
-    getMyTrainsForInspection();
+    GetTrainsDailyCleaningReport();
     getLoggedInUserdata();
   }, []);
  
@@ -44,11 +36,43 @@ const DashboardPage: FC = () => {
     }
   }
 
-  const getMyTrainsForInspection = async () => {
-    const response = await axios.post(getMyTrainsForInspectionEndPoint,{},headerJson);
+  const GetTrainsDailyCleaningReport =async () =>{
+    const response = await axios.post(getMyTrainsDailyCleaningReportEndPoint,{},headerJson);
     
     if (response && response.data) {
       const { data } = response;
+      // let thData:any=[];
+      // thData.push('Header');
+      // let tBodyData:any=[];
+      // data.trains.forEach((item:any)=>{
+      //   thData.push(item.trainName);
+      // })
+      // for(let i=0;i<data.checks.length;i++) {
+      //   let check=data.checks[i];
+      //   let trData=[];
+      //   console.log({check})
+      //   trData.push({
+      //     carId:check.id,
+      //     carName:check.name,
+      //     checkId:check.id,
+      //     checkValue:null,
+      //   });
+      //   for(let j=0;j<data.trains.length;j++) {
+      //     let trainCheck=data.trains[j].Checks[i];
+      //     // console.log({trainCheck})
+      //     trData.push(trainCheck);
+      //   }
+      //   tBodyData.push(trData); 
+      // }
+
+      // // data.checks.forEach((item:any)=>{
+
+      // // })
+      // console.log({thData,tBodyData});
+      // setThData(thData);
+      // setBodyData(tBodyData);
+      // setChecks(data.checks);
+
     }
   }
  
@@ -67,7 +91,7 @@ const DashboardPage: FC = () => {
                 <button type="button" className="btn btn-danger mx-3">Clear</button>
             </div>
           </div>
-          {/* <ReportTable className='mb-5 mb-xl-8' drivers={drivers} trData={tBodyData} thData={thData} /> */}
+          <CleaningReportTable className='mb-5 mb-xl-8' drivers={drivers} trData={tBodyData} thData={thData} />
 
         </div>
       </div>
@@ -75,15 +99,15 @@ const DashboardPage: FC = () => {
   </>
 }
 
-const DashboardWrapper: FC = () => {
+const CleaningReportWrapper: FC = () => {
   const intl = useIntl()
   return (
     <>
       <PageTitle breadcrumbs={[]}>{intl.formatMessage({ id: 'MENU.DASHBOARD' })}</PageTitle>
-      <DashboardPage />
+      <CleaningReportpage />
     </>
   )
 }
 
-export { DashboardWrapper }
+export { CleaningReportWrapper }
  

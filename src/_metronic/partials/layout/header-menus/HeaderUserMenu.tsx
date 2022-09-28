@@ -20,7 +20,7 @@ const HeaderUserMenu: FC = () => {
   const [user, setUser] = useState<any>({});
   const API_URL = process.env.REACT_APP_API_URL;
 
-  const getUserDetailUrl = `${API_URL}/api/Inner/GetLoggedInUser`;
+  const getUserDetailUrl = `${API_URL}/api/Common/GetLoggedInUser`;
   const logged_user_detail: any = localStorage.getItem('logged_user_detail');
   const getUser = JSON.parse(logged_user_detail);
   useEffect(() => {
@@ -31,8 +31,8 @@ const HeaderUserMenu: FC = () => {
           Authorization: `bearer ${getUser.access_token}`
         }
       });
-      localStorage.setItem('userType', response.data.userType);
-      localStorage.setItem('logged_in_user_firstName',response?.data?.firstName);
+      localStorage.setItem('userType', response.data.userRole);
+      localStorage.setItem('logged_in_user_firstName',response?.data?.name);
       setUser(response.data)
     }
 
