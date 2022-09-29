@@ -5,6 +5,7 @@ import TopBarProgress from 'react-topbar-progress-indicator'
 import { DashboardWrapper } from '../pages/dashboard/DashboardWrapper'
 import { TrainsDailyReportWrapper } from '../pages/TrainsDailyReport/TrainsDailyReportWrapper';
 import { CleaningReportWrapper } from '../pages/CleaningReport/CleaningReportWrapper';
+import { DriverDashboardWrapper } from '../pages/DriverDashBoard/DriverDashboardWrapper';
 import { MenuTestPage } from '../pages/MenuTestPage'
 import { getCSSVariableValue } from "../../_metronic/assets/ts/_utils";
 import { ChangePassword1 } from '../modules/ChangePassword'
@@ -36,6 +37,7 @@ const PrivateRoutes = () => {
         <Route path='/user-details' element={<UserDetailsPage />} />
         <Route  path='/trains-daily-report/*' element={<TrainsDailyReportWrapper />} />
         <Route  path='/trains-cleaning-report/*' element={<CleaningReportWrapper />} />
+        <Route  path='/driver-dashboard/*' element={<DriverDashboardWrapper />} />
         
         <Route path='/main-attendance' element={<DailyAttendancePage />} />
         <Route path='/documents' element={<DocumentsPage />} />

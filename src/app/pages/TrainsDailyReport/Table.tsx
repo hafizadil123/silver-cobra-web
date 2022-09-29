@@ -256,7 +256,7 @@ const TableHeadView = (props: any) => {
              {/* Status */}
 
              <button onClick={()=>{
-              handleChangeTrainStatus(0);
+              handleChangeTrainStatus(2);
              }} style={{marginRight:'20px',background: status ===0 ? '#3F4254': '#E4E6EF'} } className='btn btn-secondary btn-sm'><i  className="fa fa-times" style={{color:"#c18080",fontWeight:"bold",cursor:'pointer'}}></i></button>
               <button onClick={()=>{handleChangeTrainStatus(1);}} style={{background: status ===1 ? '#3F4254': '#E4E6EF'}} className='btn btn-secondary btn-sm'><i onClick={()=>{console.log('clicked')}} className="fa fa-check" style={{color:"#1dd61d",fontWeight:"bold",cursor:'pointer'}} aria-hidden="true"></i></button> 
              {/* Status */}
