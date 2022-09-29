@@ -57,16 +57,21 @@ const DriverDashboardPage: FC = () => {
   return <>
     <div style={{height:'auto'}} className='main-container-dashboard'>
       <h1>My Trains</h1>
-      <div className="row">
+      <div className="container-fluid row">
         <div className="col-lg-12">
           <div className="row">
-            <div className="col-md-8 col-lg-8">
+            <div className="col-md-10 col-lg-10">
               <input type="text" value={search} onChange={e=>{handleSearch(e.target.value)}} className="form-control" placeholder="Search" />
             </div>
-            <div className="col-md-4 col-lg-4">
-                <button type="button" className="btn btn-danger mx-3" onClick={e=>handleSearch('')}>Clear</button>
+            <div className="col-md-2 col-lg-2">
+                <button type="button" className="btn btn-sm btn-danger btn-active-light-primary me-3" onClick={e=>handleSearch('')}>Clear</button>
             </div>
           </div>
+             {trains && trains.length === 0 && <div className='d-flex justify-content-center mb-5'>
+                <div className='spinner-border text-primary'>
+                  <span className='sr-only'>Please wait...</span>
+                </div>
+              </div>}
           <TrainsTable className='mb-5 mb-xl-8' trains={trains} />
         </div>
       </div>

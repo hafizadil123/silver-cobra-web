@@ -29,16 +29,16 @@ const PrivateRoutes = () => {
     <Routes>
       <Route element={<MasterLayout />}>
         {/* Redirect to Dashboard after success login/registartion */}
-        <Route path='auth/*' element={<Navigate to='/dashboard' />} />
+        <Route path='auth/*' element={<Navigate to='/driver-dashboard' />} />
         {/* Pages */}
-        <Route path='dashboard' element={<DashboardWrapper />} />
+        {/* <Route path='dashboard' element={<DashboardWrapper />} /> */}
         <Route path='builder' element={<BuilderPageWrapper />} />
         <Route path='menu-test' element={<MenuTestPage />} />
         <Route path='profile/*' element={<ChangePassword1 />} />
         <Route path='/user-details' element={<UserDetailsPage />} />
         <Route  path='/trains-daily-report/*' element={<TrainsDailyReportWrapper />} />
         <Route  path='/trains-cleaning-report/*' element={<CleaningReportWrapper />} />
-        <Route  path='/driver-dashboard/*' element={<DriverDashboardWrapper />} />
+        <Route  path='driver-dashboard/*' element={<DriverDashboardWrapper />} />
         <Route  path='/trains-inspection/*' element={<DriverSingleTrainInspectionWrapper />} />
         
         <Route path='/main-attendance' element={<DailyAttendancePage />} />

@@ -46,7 +46,7 @@ export function Login(props: any) {
           setLoading(false);
           const { data } = response;
           localStorage.setItem('logged_user_detail', JSON.stringify(data))
-          window.location.href = '/dashboard';
+          window.location.href = '/driver-dashboard';
         }
       } catch (err) {
         console.log({err})
