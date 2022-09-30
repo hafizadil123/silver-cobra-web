@@ -17,7 +17,7 @@ const routes:any =[
     {
         title:" דיווח ניקיון יומי",
         route:"/trains-cleaning-report",
-        role:['Cleaner','Admin']
+        role:['cleaningManager','Admin']
     }
 ]
 export const Routes =(role:any) =>{
