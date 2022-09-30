@@ -5,12 +5,11 @@ import {useIntl} from 'react-intl'
 import axios from 'axios'
 import {TrainAssemblyTable} from './TrainAssemby'
 import {PageTitle} from '../../../_metronic/layout/core'
-import { useToasts } from 'react-toast-notifications';
+import {useToasts} from 'react-toast-notifications'
 
 const SingleTrainInspectionDashboardPage: FC = () => {
   const location = useLocation()
-  const { addToast } = useToasts();
-  console.log('location', location)
+  const {addToast} = useToasts()
   const [trains, setTrains] = useState<any>([])
   const [notes, setNotes] = useState('')
   const [apiData, setApiData] = useState({})
@@ -19,6 +18,7 @@ const SingleTrainInspectionDashboardPage: FC = () => {
   const [message, setMessage] = useState('')
   const logged_user_detail: any = localStorage.getItem('logged_user_detail')
   const loggedInUserDetails = JSON.parse(logged_user_detail)
+  const userRole = localStorage.getItem('userType')
 
   const baseUrl = process.env.REACT_APP_API_URL
   const getLoggedInUserEndPoint = `${baseUrl}/api/Common/GetLoggedInUser`
@@ -99,14 +99,30 @@ const SingleTrainInspectionDashboardPage: FC = () => {
     const response = await axios.post(saveInspectionEndPoint, dataToSend, headerJson)
     console.log({response})
     setLoading(false)
-    addToast('Your Inspection Has Been Updated', { appearance: 'success' });
-   
+    addToast('Your Inspection Has Been Updated', {appearance: 'success'})
+  }
+  const handleMarkAllChecked = (value: any) => {
+    console.log({value})
+    let updatedTrains = trains.map((item: any) => {
+      let updatedItems = item.items.map((assembly: any) => {
+        return {
+          ...assembly,
+          value: value,
+        }
+      })
+
+      return {
+        ...item,
+        items: updatedItems,
+      }
+    })
+    setTrains(updatedTrains)
+    console.log({updatedTrains})
   }
 
   return (
     <>
       <div style={{height: 'auto'}} className='main-container-dashboard container-fluid'>
-        <h1>{`Train Title`}</h1>
         {message !== '' ? <span className='alert alert-primary'>{message}</span> : null}
         {loading ? (
           <div className='d-flex justify-content-center mb-5'>
@@ -116,6 +132,43 @@ const SingleTrainInspectionDashboardPage: FC = () => {
           </div>
         ) : (
           <>
+            <div className='row'>
+              <h1>
+                {`Train Title`}
+                {userRole === 'Cleaner' ? (
+                  <span style={{float: 'left', marginLeft: '50px'}}>
+                    <button
+                      onClick={() => {
+                        handleMarkAllChecked(false)
+                      }}
+                      style={{marginLeft: '20px'}}
+                      className='btn btn-danger btn-sm'
+                    >
+                      Mark All{' '}
+                      <i
+                        className='fa fa-times'
+                        style={{color: '#fff', fontWeight: 'bold', cursor: 'pointer'}}
+                        aria-hidden='true'
+                      ></i>
+                    </button>
+                    <button
+                      onClick={() => {
+                        handleMarkAllChecked(true)
+                      }}
+                      className='btn btn-success btn-sm'
+                    >
+                      Mark All{' '}
+                      <i
+                        className='fa fa-check'
+                        style={{color: '#fff', fontWeight: 'bold', cursor: 'pointer'}}
+                        aria-hidden='true'
+                      ></i>
+                    </button>
+                  </span>
+                ) : null}
+              </h1>
+            </div>
+
             <div className='row'>
               {trains &&
                 trains.map((item: any) => {
@@ -140,10 +193,13 @@ const SingleTrainInspectionDashboardPage: FC = () => {
                 ></textarea>
               </div>
               <div className='mt-5 text-center'>
-                {loading ?<button className='btn btn-primary mr-2'>Loading....</button>: <button type='button' onClick={handleSubmit} className='btn btn-primary'>
-                  Submit
-                </button>}
-                
+                {loading ? (
+                  <button className='btn btn-primary mr-2'>Loading....</button>
+                ) : (
+                  <button type='button' onClick={handleSubmit} className='btn btn-primary'>
+                    Submit
+                  </button>
+                )}
               </div>
             </div>
           </>

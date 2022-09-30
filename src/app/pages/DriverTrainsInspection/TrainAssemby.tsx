@@ -16,11 +16,17 @@ const TrainAssemblyTable: React.FC<Props> = ({
   assemblyId,
   handleStatusUpdate,
   assemblyName,
+  
 }) => {
+  
   return (
     <div className={`card ${className}`}>
-      <h3 style={{marginTop: '15px', paddingRight: '30px'}}>{assemblyName}</h3>
+      <h3 style={{marginTop: '15px', paddingRight: '30px'}}>{assemblyName}  
+      
+      
 
+      </h3>
+      {/* {HandleSelectAllButton()} */}
       <div className='card-body py-3'>
         {/* begin::Table container */}
         <div className='table-responsive'>
