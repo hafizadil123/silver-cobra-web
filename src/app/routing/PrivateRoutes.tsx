@@ -1,19 +1,19 @@
-import { lazy, FC, Suspense } from 'react'
-import { Route, Routes, Navigate } from 'react-router-dom'
-import { MasterLayout } from '../../_metronic/layout/MasterLayout'
+import {lazy, FC, Suspense} from 'react'
+import {Route, Routes, Navigate} from 'react-router-dom'
+import {MasterLayout} from '../../_metronic/layout/MasterLayout'
 import TopBarProgress from 'react-topbar-progress-indicator'
-import { DashboardWrapper } from '../pages/dashboard/DashboardWrapper'
-import { TrainsDailyReportWrapper } from '../pages/TrainsDailyReport/TrainsDailyReportWrapper';
-import { CleaningReportWrapper } from '../pages/CleaningReport/CleaningReportWrapper';
-import { DriverDashboardWrapper } from '../pages/DriverDashBoard/DriverDashboardWrapper';
-import { CleanerDashboardWrapper } from '../pages/CleanerDashBoard/CleanerDashboard';
-import { DriverSingleTrainInspectionWrapper } from '../pages/DriverTrainsInspection/TrainsInspection';
-import { MenuTestPage } from '../pages/MenuTestPage'
-import { getCSSVariableValue } from "../../_metronic/assets/ts/_utils";
-import { ChangePassword1 } from '../modules/ChangePassword'
-import { UserDetailsPage } from '../modules/user-details'
-import { AdminInterface } from '../modules/admin-interface'
-import { HebrewBirthDate } from '../modules/hebrew-birth-date'
+import {DashboardWrapper} from '../pages/dashboard/DashboardWrapper'
+import {TrainsDailyReportWrapper} from '../pages/TrainsDailyReport/TrainsDailyReportWrapper'
+import {CleaningReportWrapper} from '../pages/CleaningReport/CleaningReportWrapper'
+import {DriverDashboardWrapper} from '../pages/DriverDashBoard/DriverDashboardWrapper'
+import {ConductorDashboardWrapper} from '../pages/ConductorDashboard/ConductorDashboard'
+import {DriverSingleTrainInspectionWrapper} from '../pages/DriverTrainsInspection/TrainsInspection'
+import {MenuTestPage} from '../pages/MenuTestPage'
+import {getCSSVariableValue} from '../../_metronic/assets/ts/_utils'
+import {ChangePassword1} from '../modules/ChangePassword'
+import {UserDetailsPage} from '../modules/user-details'
+import {AdminInterface} from '../modules/admin-interface'
+import {HebrewBirthDate} from '../modules/hebrew-birth-date'
 
 const PrivateRoutes = () => {
   const BuilderPageWrapper = lazy(() => import('../pages/layout-builder/BuilderPageWrapper'))
@@ -37,13 +37,13 @@ const PrivateRoutes = () => {
         <Route path='menu-test' element={<MenuTestPage />} />
         <Route path='profile/*' element={<ChangePassword1 />} />
         <Route path='/user-details' element={<UserDetailsPage />} />
-        <Route  path='/trains-daily-report/*' element={<TrainsDailyReportWrapper />} />
-        <Route  path='/trains-cleaning-report/*' element={<CleaningReportWrapper />} />
-        <Route  path='driver-dashboard/*' element={<DriverDashboardWrapper />} />
+        <Route path='/trains-daily-report/*' element={<TrainsDailyReportWrapper />} />
+        <Route path='/trains-cleaning-report/*' element={<CleaningReportWrapper />} />
+        <Route path='driver-dashboard/*' element={<DriverDashboardWrapper />} />
+        <Route path='conductor-dashboard/*' element={<ConductorDashboardWrapper />} />
         {/* <Route  path='cleaner-dashboard/*' element={<CleanerDashboardWrapper />} /> */}
-        <Route  path='/trains-inspection/*' element={<DriverSingleTrainInspectionWrapper />} />
-        
-        
+        <Route path='/trains-inspection/*' element={<DriverSingleTrainInspectionWrapper />} />
+
         <Route path='/main-attendance' element={<DailyAttendancePage />} />
         <Route path='/documents' element={<DocumentsPage />} />
         <Route path='/upload-document' element={<UploadDocumentSection />} />
@@ -97,7 +97,7 @@ const PrivateRoutes = () => {
   )
 }
 
-const SuspensedView: FC = ({ children }) => {
+const SuspensedView: FC = ({children}) => {
   const baseColor = getCSSVariableValue('--bs-primary')
   TopBarProgress.config({
     barColors: {
@@ -105,8 +105,8 @@ const SuspensedView: FC = ({ children }) => {
     },
     barThickness: 1,
     shadowBlur: 5,
-  });
+  })
   return <Suspense fallback={<TopBarProgress />}>{children}</Suspense>
 }
 
-export { PrivateRoutes }
+export {PrivateRoutes}

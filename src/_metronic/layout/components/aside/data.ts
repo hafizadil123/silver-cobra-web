@@ -18,6 +18,11 @@ const routes:any =[
         title:" דיווח ניקיון יומי",
         route:"/trains-cleaning-report",
         role:['cleaningManager','Admin']
+    },
+    {
+        title:"Conductor Dashboard",
+        route:"/conductor-dashboard",
+        role:['Conductor']
     }
 ]
 export const Routes =(role:any) =>{
