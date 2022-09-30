@@ -23,6 +23,7 @@ export function Login(props: any) {
   const [loading, setLoading] = useState(false)
   const API_URL = process.env.REACT_APP_API_URL;
   const LOGIN_URL = `${API_URL}/Token`
+  const userRole = localStorage.getItem('userType')
   const formik = useFormik({
     initialValues,
     validationSchema: loginSchema,
@@ -46,7 +47,13 @@ export function Login(props: any) {
           setLoading(false);
           const { data } = response;
           localStorage.setItem('logged_user_detail', JSON.stringify(data))
-          window.location.href = '/driver-dashboard';
+          
+          if(data.userName === 'Conductor1') {
+            window.location.href = '/conductor-dashboard';
+          } else {
+            window.location.href = '/driver-dashboard';
+          }
+
         }
       } catch (err) {
         console.log({err})

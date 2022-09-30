@@ -68,7 +68,7 @@ const ConductorDashboard: FC = () => {
         ) : (
           <>
             <div className='row'>
-              <div className='col-md-6 col-lg-6'>
+              <div className='col-md-5 col-lg-5'>
                 <TrainActiviationTable
                   className='mb-5 mb-xl-8'
                   hasEdit={false}
@@ -76,7 +76,7 @@ const ConductorDashboard: FC = () => {
                 />
               </div>
 
-              <div className='col-md-6 col-lg-6'>
+              <div className='col-md-7 col-lg-7'>
                 <TrainActiviationTable className='mb-5 mb-xl-8' hasEdit={true} trains={todayList} />
               </div>
             </div>
