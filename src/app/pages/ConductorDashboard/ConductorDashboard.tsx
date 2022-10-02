@@ -6,6 +6,8 @@ import axios from 'axios'
 import {PageTitle} from '../../../_metronic/layout/core'
 import {useToasts} from 'react-toast-notifications'
 import {TrainActiviationTable} from './TrainActivationTable'
+import moment from 'moment'
+
 const ConductorDashboard: FC = () => {
   const location = useLocation()
   const {addToast} = useToasts()
@@ -13,13 +15,16 @@ const ConductorDashboard: FC = () => {
   const [todayList, setTodayList] = useState<any>([])
   const [loading, setLoading] = useState(true)
   const [message, setMessage] = useState('')
+  const [drivers, setDrivers] = useState([])
   const logged_user_detail: any = localStorage.getItem('logged_user_detail')
   const loggedInUserDetails = JSON.parse(logged_user_detail)
   const userRole = localStorage.getItem('userType')
 
   const baseUrl = process.env.REACT_APP_API_URL
   const getLoggedInUserEndPoint = `${baseUrl}/api/Common/GetLoggedInUser`
+  const getDriversEndPoint = `${baseUrl}/api/Common/GetDrivers`
   const getTrainActivationEndPoint = `${baseUrl}/api/Common/GetTrainsForActivation`
+  const saveTrainActivationEndPoint = `${baseUrl}/api/Common/SaveTrainsActivation`
 
   const headerJson = {
     headers: {
@@ -30,6 +35,7 @@ const ConductorDashboard: FC = () => {
   useEffect(() => {
     getLoggedInUserdata()
     getTrainsForActivation()
+    getDrivers()
   }, [])
 
   const getLoggedInUserdata = async () => {
@@ -54,7 +60,62 @@ const ConductorDashboard: FC = () => {
       setLoading(false)
     }
   }
+  const getDrivers = async () => {
+    console.log({headerJson})
+    const response = await axios.post(getDriversEndPoint, {}, headerJson)
 
+    if (response && response.data) {
+      const {data} = response
+      console.log({data})
+      setDrivers(data.Drivers)
+    }
+  }
+  const updateDriver = (data: any) => {
+    console.log({data1: data})
+    let updatedTodaList = todayList.map((item: any) => {
+      if (item.id == data.trainId) {
+        return {
+          ...item,
+          driver: data.name,
+          driverId: data.id,
+        }
+      } else {
+        return item
+      }
+    })
+    console.log({updatedTodaList})
+    setTodayList(updatedTodaList)
+  }
+  const updateStatus = (data: any) => {
+    console.log({statusData: data})
+    let updatedTodaList = todayList.map((item: any) => {
+      if (item.id == data.id) {
+        return {
+          ...item,
+          Status: data.status,
+        }
+      } else {
+        return item
+      }
+    })
+    console.log({updatedTodaList})
+    setTodayList(updatedTodaList)
+  }
+  const handleSubmitTrainActivation = async (e: any) => {
+    e.preventDefault()
+    let trains = todayList
+    let date = new Date()
+    let dateFormatted = moment(date).format('DD-MM-yyyy')
+    console.log({trains, dateFormatted})
+    let dataToSend = {
+      trains,
+      // date: dateFormatted,
+    }
+    // console.log({dataToSend})
+    const response = await axios.post(saveTrainActivationEndPoint, dataToSend, headerJson)
+    console.log({saveResponse: response})
+    addToast('Your Train Activation Has Been Updated', {appearance: 'success'})
+  }
   return (
     <>
       <div style={{height: 'auto'}} className='main-container-dashboard container-fluid'>
@@ -72,12 +133,35 @@ const ConductorDashboard: FC = () => {
                 <TrainActiviationTable
                   className='mb-5 mb-xl-8'
                   hasEdit={false}
+                  drivers={drivers}
+                  activeTab={'previous'}
+                  updateStatus={updateStatus}
+                  updateDriver={updateDriver}
                   trains={previousDayList}
                 />
               </div>
 
               <div className='col-md-7 col-lg-7'>
-                <TrainActiviationTable className='mb-5 mb-xl-8' hasEdit={true} trains={todayList} />
+                <TrainActiviationTable
+                  className='mb-5 mb-xl-8'
+                  drivers={drivers}
+                  hasEdit={true}
+                  activeTab={'today'}
+                  updateStatus={updateStatus}
+                  updateDriver={updateDriver}
+                  trains={todayList}
+                />
+              </div>
+            </div>
+            <div className='row'>
+              <div className='col-12 text-center mb-5'>
+                <button
+                  type='button'
+                  onClick={handleSubmitTrainActivation}
+                  className='btn btn-primary'
+                >
+                  Submit
+                </button>
               </div>
             </div>
           </>
