@@ -1,6 +1,8 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, {useState, useEffect} from 'react'
 import {KTSVG} from '../../../_metronic/helpers'
+import {useToasts} from 'react-toast-notifications'
+
 import moment from 'moment'
 import axios from 'axios'
 type Props = {
@@ -8,10 +10,15 @@ type Props = {
   trData: any[]
   thData: any[]
   drivers: any[]
+  reloadApi: () => any
 }
 const baseUrl = process.env.REACT_APP_API_URL
 
-const ReportTable: React.FC<Props> = ({className, trData, thData, drivers}) => {
+const ReportTable: React.FC<Props> = ({className, trData, thData, drivers, reloadApi}) => {
+  const {addToast} = useToasts()
+  const handleToastMessage = (message: any) => {
+    addToast(message, {appearance: 'success'})
+  }
   return (
     <div className={`card ${className}`}>
       <div className='card-body py-3'>
@@ -31,9 +38,11 @@ const ReportTable: React.FC<Props> = ({className, trData, thData, drivers}) => {
                       status={status}
                       trainId={trainId}
                       drivers={drivers}
+                      handleToastMessage={handleToastMessage}
                       index={index}
                       className='min-w-150px'
                       text={trainName}
+                      reloadApi={reloadApi}
                     />
                   )
                 })}
@@ -46,14 +55,17 @@ const ReportTable: React.FC<Props> = ({className, trData, thData, drivers}) => {
                 return (
                   <tr>
                     {item.map((_item: any, index: any) => {
-                      const {carId, carName, checkId, checkValue, trainId} = _item
+                      const {carId, carName, checkId, checkValue, trainId, status} = _item
                       return (
                         <TableDataView
                           index={index}
                           carId={carId}
+                          status={status}
                           carName={carName}
+                          handleToastMessage={handleToastMessage}
                           checkId={checkId}
                           trainId={trainId}
+                          reloadApi={reloadApi}
                           checkValue={checkValue}
                           flexValue={1}
                           text={carName}
@@ -67,7 +79,13 @@ const ReportTable: React.FC<Props> = ({className, trData, thData, drivers}) => {
                 {thData.map((item: any, index: any) => {
                   const {notes, trainId} = item
                   return (
-                    <TableFootView index={index} trainId={trainId} flexValue={1} text={notes} />
+                    <TableFootView
+                      index={index}
+                      handleToastMessage={handleToastMessage}
+                      trainId={trainId}
+                      flexValue={1}
+                      text={notes}
+                    />
                   )
                 })}
               </tr>
@@ -85,7 +103,19 @@ const ReportTable: React.FC<Props> = ({className, trData, thData, drivers}) => {
 
 export {ReportTable}
 const TableDataView = (props: any) => {
-  const {flexValue, text, type, className, index, carId, checkId, checkValue, trainId} = props
+  const {
+    flexValue,
+    text,
+    type,
+    className,
+    index,
+    carId,
+    checkId,
+    checkValue,
+    trainId,
+    reloadApi,
+    handleToastMessage,
+  } = props
   const SaveTrainDailyCheckValue = `${baseUrl}/api/Common/SaveTrainDailyCheckValue`
   const logged_user_detail: any = localStorage.getItem('logged_user_detail')
   const loggedInUserDetails = JSON.parse(logged_user_detail)
@@ -103,11 +133,14 @@ const TableDataView = (props: any) => {
       checkValue: statusToChange,
       checkid: checkId,
       carid: carId,
-      date: dateFormatted,
+      // date: dateFormatted,
     }
     console.log({dataToSend})
     const response = await axios.post(SaveTrainDailyCheckValue, dataToSend, headerJson)
-    console.log({response})
+    handleToastMessage(`Check Status Updated Successfully`)
+    // console.log({response})
+
+    reloadApi()
   }
   const renderFields = () => {
     return (
@@ -123,22 +156,22 @@ const TableDataView = (props: any) => {
                   handleUpdateCheckValue(false)
                 }}
                 className='btn btn-secondary btn-sm'
+                style={{background: checkValue == false ? '#3F4254' : '#E4E6EF'}}
               >
                 <i
                   className='fa fa-times'
                   style={{color: '#c18080', fontWeight: 'bold', cursor: 'pointer'}}
                 ></i>
+                {/* {'sssss' + checkValue} */}
               </button>
               <button
                 onClick={() => {
                   handleUpdateCheckValue(true)
                 }}
                 className='btn btn-secondary btn-sm'
+                style={{background: checkValue == true ? '#3F4254' : '#E4E6EF'}}
               >
                 <i
-                  onClick={() => {
-                    console.log('clicked')
-                  }}
                   className='fa fa-check'
                   style={{color: '#1dd61d', fontWeight: 'bold', cursor: 'pointer'}}
                   aria-hidden='true'
@@ -164,7 +197,7 @@ const TableFootView = (props: any) => {
   }
 
   const SaveTrainDailyNotes = `${baseUrl}/api/Common/SaveTrainDailyNotes`
-  const {flexValue, text, index, trainId} = props
+  const {flexValue, text, index, trainId, handleToastMessage} = props
   const handleUpdateNote = async (value: any) => {
     setNotes(value)
     let date = new Date()
@@ -172,11 +205,12 @@ const TableFootView = (props: any) => {
     const dataToSend = {
       trainId,
       notes: value,
-      date: dateFormatted,
+      // date: dateFormatted,
     }
     console.log({dataToSend})
     const response = await axios.post(SaveTrainDailyNotes, dataToSend, headerJson)
     console.log({response})
+    handleToastMessage(`Notes Updated Successfully`)
   }
   const [notes, setNotes] = useState('')
   useEffect(() => {
@@ -189,7 +223,8 @@ const TableFootView = (props: any) => {
         {index !== 0 ? (
           <input
             type='text'
-            onChange={(e) => {
+            onChange={(e) => setNotes(e.target.value)}
+            onBlur={(e) => {
               handleUpdateNote(e.target.value)
             }}
             value={notes}
@@ -215,7 +250,18 @@ const TableHeadView = (props: any) => {
   const SaveTrainDailyStatus = `${baseUrl}/api/Common/SaveTrainDailyStatus`
   const SaveTrainDailyDriverEndPoint = `${baseUrl}/api/Common/SaveTrainDailyDriver`
 
-  const {text, className, index, drivers, driverName, driverId, status, trainId} = props
+  const {
+    text,
+    className,
+    index,
+    drivers,
+    driverName,
+    driverId,
+    status,
+    trainId,
+    reloadApi,
+    handleToastMessage,
+  } = props
   const [selectedDriver, setSelectedDriver] = useState(drivers[0].id)
   useEffect(() => {
     if (driverId) {
@@ -229,11 +275,12 @@ const TableHeadView = (props: any) => {
     const DataToSend = {
       status: statusToChange,
       trainId,
-      date: dateFormatted,
+      // date: dateFormatted,
     }
     console.log({DataToSend})
     const response = await axios.post(SaveTrainDailyStatus, DataToSend, headerJson)
-
+    reloadApi()
+    handleToastMessage(`Train Status Updated Successfully`)
     console.log({response})
   }
   const handleDriverChangeUpdate = async (value: any) => {
@@ -242,11 +289,13 @@ const TableHeadView = (props: any) => {
     let dateFormatted = moment(date).format('DD-MM-yyyy')
     const dataToSend = {
       trainId,
-      date: dateFormatted,
+      // date: dateFormatted,
       driverId: Number(value),
     }
     const response = await axios.post(SaveTrainDailyDriverEndPoint, dataToSend, headerJson)
     console.log({response})
+    handleToastMessage(`Driver Updated Successfully`)
+    reloadApi()
   }
   return (
     <th style={{minWidth: '530px !important'}} className={`${className}`}>
@@ -263,7 +312,7 @@ const TableHeadView = (props: any) => {
             onClick={() => {
               handleChangeTrainStatus(2)
             }}
-            style={{marginRight: '20px', background: status === 0 ? '#3F4254' : '#E4E6EF'}}
+            style={{marginRight: '20px', background: status === 2 ? '#3F4254' : '#E4E6EF'}}
             className='btn btn-secondary btn-sm'
           >
             <i
@@ -279,9 +328,6 @@ const TableHeadView = (props: any) => {
             className='btn btn-secondary btn-sm'
           >
             <i
-              onClick={() => {
-                console.log('clicked')
-              }}
               className='fa fa-check'
               style={{color: '#1dd61d', fontWeight: 'bold', cursor: 'pointer'}}
               aria-hidden='true'
