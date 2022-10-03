@@ -140,8 +140,19 @@ const ConductorDashboard: FC = () => {
                   trains={previousDayList}
                 />
               </div>
+              <div className='col-md-1 col-lg-1'>
+                <button
+                  className='btn btn-primary'
+                  onClick={(e) => {
+                    e.preventDefault()
+                    setTodayList(previousDayList)
+                  }}
+                >
+                  Copy
+                </button>
+              </div>
 
-              <div className='col-md-7 col-lg-7'>
+              <div className='col-md-6 col-lg-6'>
                 <TrainActiviationTable
                   className='mb-5 mb-xl-8'
                   drivers={drivers}
