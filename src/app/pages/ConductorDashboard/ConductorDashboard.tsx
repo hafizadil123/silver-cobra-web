@@ -47,6 +47,15 @@ const ConductorDashboard: FC = () => {
       const {data} = response
     }
   }
+  const getPreviosDate = () => {
+    let date = new Date()
+    let yesterday = new Date(date.setDate(date.getDate() - 1))
+    return moment(yesterday).format('DD/MM/yyyy')
+  }
+  const getToday = () => {
+    let date = new Date()
+    return moment(date).format('DD/MM/yyyy')
+  }
 
   const getTrainsForActivation = async () => {
     console.log({headerJson})
@@ -128,8 +137,13 @@ const ConductorDashboard: FC = () => {
           </div>
         ) : (
           <>
+            <h3>Set Active Trains</h3>
             <div className='row'>
               <div className='col-md-5 col-lg-5'>
+                <p>
+                  {' '}
+                  <b>{getPreviosDate()} Trains For</b>
+                </p>
                 <TrainActiviationTable
                   className='mb-5 mb-xl-8'
                   hasEdit={false}
@@ -153,6 +167,10 @@ const ConductorDashboard: FC = () => {
               </div>
 
               <div className='col-md-6 col-lg-6'>
+                <p>
+                  <b>{getToday()} Trains For</b>
+                </p>
+
                 <TrainActiviationTable
                   className='mb-5 mb-xl-8'
                   drivers={drivers}
@@ -171,7 +189,7 @@ const ConductorDashboard: FC = () => {
                   onClick={handleSubmitTrainActivation}
                   className='btn btn-primary'
                 >
-                  Submit
+                  שמירה
                 </button>
               </div>
             </div>

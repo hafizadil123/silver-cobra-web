@@ -10,7 +10,7 @@ type Props = {
   trData: any[]
   thData: any[]
   drivers: any[]
-  reloadApi: () => any
+  reloadApi: (type: string, data: any) => any
 }
 const baseUrl = process.env.REACT_APP_API_URL
 
@@ -140,7 +140,7 @@ const TableDataView = (props: any) => {
     handleToastMessage(`Check Status Updated Successfully`)
     // console.log({response})
 
-    reloadApi()
+    // reloadApi()
   }
   const renderFields = () => {
     return (
@@ -279,7 +279,7 @@ const TableHeadView = (props: any) => {
     }
     console.log({DataToSend})
     const response = await axios.post(SaveTrainDailyStatus, DataToSend, headerJson)
-    reloadApi()
+    // reloadApi()
     handleToastMessage(`Train Status Updated Successfully`)
     console.log({response})
   }
@@ -295,7 +295,7 @@ const TableHeadView = (props: any) => {
     const response = await axios.post(SaveTrainDailyDriverEndPoint, dataToSend, headerJson)
     console.log({response})
     handleToastMessage(`Driver Updated Successfully`)
-    reloadApi()
+    reloadApi('driver', dataToSend)
   }
   return (
     <th style={{minWidth: '530px !important'}} className={`${className}`}>
