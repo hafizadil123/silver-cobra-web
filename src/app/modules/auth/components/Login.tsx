@@ -1,16 +1,14 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import { useState } from 'react'
-import { FormattedMessage } from 'react-intl';
-import axios from 'axios';
+import {useState} from 'react'
+import {FormattedMessage} from 'react-intl'
+import axios from 'axios'
 import * as Yup from 'yup'
 import clsx from 'clsx'
-import { Link } from 'react-router-dom'
-import { useFormik } from 'formik'
+import {Link} from 'react-router-dom'
+import {useFormik} from 'formik'
 const loginSchema = Yup.object().shape({
-  username: Yup.string()
-    .required( ` שדהשם משתמש הינו חובה`),
-  password: Yup.string()
-    .required( ` שדהסיסמה הינו חובה`),
+  username: Yup.string().required(` שדהשם משתמש הינו חובה`),
+  password: Yup.string().required(` שדהסיסמה הינו חובה`),
 })
 
 const initialValues = {
@@ -18,42 +16,67 @@ const initialValues = {
   password: '',
 }
 
-
 export function Login(props: any) {
   const [loading, setLoading] = useState(false)
-  const API_URL = process.env.REACT_APP_API_URL;
+  const API_URL = process.env.REACT_APP_API_URL
   const LOGIN_URL = `${API_URL}/Token`
   const userRole = localStorage.getItem('userType')
+  const getLoggedInUser = async () => {
+    const logged_user_detail: any = localStorage.getItem('logged_user_detail')
+    const getUser = JSON.parse(logged_user_detail)
+    const getUserDetailUrl = `${API_URL}/api/Common/GetLoggedInUser`
+    const response = await axios.post(
+      getUserDetailUrl,
+      {},
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `bearer ${getUser.access_token}`,
+        },
+      }
+    )
+    localStorage.setItem('userType', response.data.userRole)
+    localStorage.setItem('logged_in_user_firstName', response?.data?.name)
+  }
   const formik = useFormik({
     initialValues,
     validationSchema: loginSchema,
-    onSubmit: async (values, { setStatus, setSubmitting }) => {
+    onSubmit: async (values, {setStatus, setSubmitting}) => {
       try {
-        setLoading(true);
+        setLoading(true)
         setStatus('')
-        let username = values.username;
+        let username = values.username
         const params = new URLSearchParams()
         params.append('username', username)
         params.append('password', values.password)
         params.append('grant_type', 'password')
         const config = {
           headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-          }
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
         }
-        
-        const response = await axios.post(LOGIN_URL,params,config);
-        if (response) {
-          setLoading(false);
-          const { data } = response;
-          localStorage.setItem('logged_user_detail', JSON.stringify(data))
-          
-          if(data.userName === 'Conductor1') {
-            window.location.href = '/conductor-dashboard';
-          } else {
-            window.location.href = '/driver-dashboard';
-          }
 
+        const response = await axios.post(LOGIN_URL, params, config)
+        if (response) {
+          setLoading(false)
+          const {data} = response
+          console.log({data})
+          // return
+          localStorage.setItem('logged_user_detail', JSON.stringify(data))
+          getLoggedInUser()
+          let userRole = localStorage.getItem('userType')
+          console.log(localStorage.getItem('userType'))
+          if (userRole === 'Admin') {
+            window.location.href = '/conductor-dashboard'
+          } else if (userRole === 'Driver') {
+            window.location.href = '/driver-dashboard'
+          } else if (userRole === 'OccUser') {
+            window.location.href = '/trains-daily-report'
+          } else if (userRole === 'Conductor') {
+            window.location.href = '/conductor-dashboard'
+          } else {
+            window.location.href = '/trains-cleaning-report'
+          }
         }
       } catch (err) {
         console.log({err})
@@ -61,7 +84,7 @@ export function Login(props: any) {
         setSubmitting(false)
         setStatus('שם משתמש וסיסמא אינם תקינים, יש לנסות שנית או לפנות למוקד.')
       }
-    }
+    },
   })
 
   return (
@@ -74,7 +97,9 @@ export function Login(props: any) {
       {/* begin::Heading */}
 
       <div className='text-center mb-10'>
-        <h1 className='text-dark mb-3'>{<FormattedMessage id="AUTH.GENERAL.ACCOUNT_DETAILS" />}1111</h1>
+        <h1 className='text-dark mb-3'>
+          {<FormattedMessage id='AUTH.GENERAL.ACCOUNT_DETAILS' />}1111
+        </h1>
       </div>
       {/* begin::Heading */}
 
@@ -82,20 +107,20 @@ export function Login(props: any) {
         <div className='mb-lg-15 alert alert-danger'>
           <div className='alert-text font-weight-bold'>{formik.status}</div>
         </div>
-      ) : (
-        null
-      )}
+      ) : null}
 
       {/* begin::Form group */}
       <div className='fv-row mb-10'>
-        <label className='form-label fs-6 fw-bolder text-dark'>{<FormattedMessage id="AUTH.INPUT.USERNAME" />}</label>
+        <label className='form-label fs-6 fw-bolder text-dark'>
+          {<FormattedMessage id='AUTH.INPUT.USERNAME' />}
+        </label>
 
         <input
           placeholder='שם משתמש'
           {...formik.getFieldProps('username')}
           className={clsx(
             'form-control form-control-lg form-control-solid',
-            { 'is-invalid': formik.touched.username && formik.errors.username },
+            {'is-invalid': formik.touched.username && formik.errors.username},
             {
               'is-valid': formik.touched.username && !formik.errors.username,
             }
@@ -117,14 +142,16 @@ export function Login(props: any) {
         <div className='d-flex justify-content-between mt-n5'>
           <div className='d-flex flex-stack mb-2'>
             {/* begin::Label */}
-            <label className='form-label fw-bolder text-dark fs-6 mb-0'><FormattedMessage id="AUTH.INPUT.PASSWORD" /></label>
+            <label className='form-label fw-bolder text-dark fs-6 mb-0'>
+              <FormattedMessage id='AUTH.INPUT.PASSWORD' />
+            </label>
             {/* end::Label */}
             {/* begin::Link */}
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <Link
               to='/auth/forgot-password'
               className='link-primary fs-6 fw-bolder'
-              style={{ marginLeft: '5px' }}
+              style={{marginLeft: '5px'}}
             >
               שכחת סיסמא ?
             </Link>
@@ -163,16 +190,18 @@ export function Login(props: any) {
           className='btn btn-lg btn-primary w-100 mb-5'
           disabled={formik.isSubmitting || !formik.isValid}
         >
-          {!loading && <span className='indicator-label'>{<FormattedMessage id='AUTH.GENERAL.SUBMIT_BUTTON' />}</span>}
+          {!loading && (
+            <span className='indicator-label'>
+              {<FormattedMessage id='AUTH.GENERAL.SUBMIT_BUTTON' />}
+            </span>
+          )}
           {loading && (
-            <span className='indicator-progress' style={{ display: 'block' }}>
+            <span className='indicator-progress' style={{display: 'block'}}>
               Please wait...
               <span className='spinner-border spinner-border-sm align-middle ms-2'></span>
             </span>
           )}
         </button>
-
-
       </div>
       {/* end::Action */}
     </form>

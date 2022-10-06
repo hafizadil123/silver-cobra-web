@@ -10,8 +10,8 @@ import './dashboard-page.css'
 import {ShowDataTable} from './ShowDataTable'
 import {ReportTable} from './Table'
 const DashboardPage: FC = () => {
-  const [checks, setChecks] = useState([])
-  const [thData, setThData] = useState([])
+  const [checks, setChecks] = useState<any>([])
+  const [thData, setThData] = useState<any>([])
   const [tBodyData, setBodyData] = useState([])
   const [loading, setLoading] = useState(true)
   const [drivers, setDrivers] = useState<any>([])
@@ -48,6 +48,32 @@ const DashboardPage: FC = () => {
     }
   }
 
+  const handleDriverUpdate = (data: any) => {
+    let updatedThData = thData.map((item: any) => {
+      if (item.trainId == data.trainId) {
+        return {
+          ...item,
+          driverId: data.driverId,
+        }
+      } else {
+        return item
+      }
+    })
+    setThData(updatedThData)
+  }
+  const handleStatusUpdate = (data: any) => {
+    let updatedThData = thData.map((item: any) => {
+      if (item.trainId == data.trainId) {
+        return {
+          ...item,
+          status: data.status,
+        }
+      } else {
+        return item
+      }
+    })
+    setThData(updatedThData)
+  }
   const getMyTrainsDailyReport = async () => {
     const response = await axios.post(getMyTrainsDailyReportEndPoint, {}, headerJson)
 
@@ -121,10 +147,16 @@ const DashboardPage: FC = () => {
       // console.log({drivers:data})
     }
   }
-  const reloadApi = () => {
+  const reloadApi = (type: string, data: any) => {
+    if (type == 'driver') {
+      handleDriverUpdate(data)
+    } else if (type == 'trainStatus') {
+      console.log({type, data})
+      handleStatusUpdate(data)
+    }
     console.log('reloading api')
-    setLoading(true)
-    getMyTrainsDailyReport()
+    // setLoading(true)
+    // getMyTrainsDailyReport()
   }
 
   return (
