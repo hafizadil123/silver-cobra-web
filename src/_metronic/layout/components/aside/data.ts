@@ -12,7 +12,7 @@ const routes: any = [
   {
     title: 'Driver DashBoard',
     route: '/driver-dashboard',
-    role: ['Admin', 'Driver'],
+    role: ['Driver'],
   },
   {
     title: ' דיווח ניקיון יומי',
