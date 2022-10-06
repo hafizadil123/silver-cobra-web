@@ -280,6 +280,7 @@ const TableHeadView = (props: any) => {
     console.log({DataToSend})
     const response = await axios.post(SaveTrainDailyStatus, DataToSend, headerJson)
     // reloadApi()
+    reloadApi('trainStatus', DataToSend)
     handleToastMessage(`Train Status Updated Successfully`)
     console.log({response})
   }

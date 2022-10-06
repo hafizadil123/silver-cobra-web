@@ -21,6 +21,23 @@ export function Login(props: any) {
   const API_URL = process.env.REACT_APP_API_URL
   const LOGIN_URL = `${API_URL}/Token`
   const userRole = localStorage.getItem('userType')
+  const getLoggedInUser = async () => {
+    const logged_user_detail: any = localStorage.getItem('logged_user_detail')
+    const getUser = JSON.parse(logged_user_detail)
+    const getUserDetailUrl = `${API_URL}/api/Common/GetLoggedInUser`
+    const response = await axios.post(
+      getUserDetailUrl,
+      {},
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `bearer ${getUser.access_token}`,
+        },
+      }
+    )
+    localStorage.setItem('userType', response.data.userRole)
+    localStorage.setItem('logged_in_user_firstName', response?.data?.name)
+  }
   const formik = useFormik({
     initialValues,
     validationSchema: loginSchema,
@@ -46,15 +63,19 @@ export function Login(props: any) {
           console.log({data})
           // return
           localStorage.setItem('logged_user_detail', JSON.stringify(data))
-
-          if (data.userName === 'Conductor1') {
+          getLoggedInUser()
+          let userRole = localStorage.getItem('userType')
+          console.log(localStorage.getItem('userType'))
+          if (userRole === 'Admin') {
             window.location.href = '/conductor-dashboard'
-          } else if (data.userName === 'Driver1') {
+          } else if (userRole === 'Driver') {
             window.location.href = '/driver-dashboard'
-          } else if (data.userName === 'OccUser1') {
+          } else if (userRole === 'OccUser') {
             window.location.href = '/trains-daily-report'
-          } else {
+          } else if (userRole === 'Conductor') {
             window.location.href = '/conductor-dashboard'
+          } else {
+            window.location.href = '/trains-cleaning-report'
           }
         }
       } catch (err) {

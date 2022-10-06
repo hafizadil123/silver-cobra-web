@@ -61,6 +61,19 @@ const DashboardPage: FC = () => {
     })
     setThData(updatedThData)
   }
+  const handleStatusUpdate = (data: any) => {
+    let updatedThData = thData.map((item: any) => {
+      if (item.trainId == data.trainId) {
+        return {
+          ...item,
+          status: data.status,
+        }
+      } else {
+        return item
+      }
+    })
+    setThData(updatedThData)
+  }
   const getMyTrainsDailyReport = async () => {
     const response = await axios.post(getMyTrainsDailyReportEndPoint, {}, headerJson)
 
@@ -135,9 +148,11 @@ const DashboardPage: FC = () => {
     }
   }
   const reloadApi = (type: string, data: any) => {
-    console.log({type, data})
     if (type == 'driver') {
       handleDriverUpdate(data)
+    } else if (type == 'trainStatus') {
+      console.log({type, data})
+      handleStatusUpdate(data)
     }
     console.log('reloading api')
     // setLoading(true)
