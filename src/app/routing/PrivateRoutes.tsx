@@ -37,6 +37,7 @@ const PrivateRoutes = () => {
         <Route path='menu-test' element={<MenuTestPage />} />
         <Route path='profile/*' element={<ChangePassword1 />} />
         <Route path='/user-details' element={<UserDetailsPage />} />
+        <Route path='/user-management' element={<DashboardWrapper />} />
         <Route path='/trains-daily-report/*' element={<TrainsDailyReportWrapper />} />
         <Route path='/trains-cleaning-report/*' element={<CleaningReportWrapper />} />
         <Route path='driver-dashboard/*' element={<DriverDashboardWrapper />} />

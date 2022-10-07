@@ -37,6 +37,7 @@ export function Login(props: any) {
     )
     localStorage.setItem('userType', response.data.userRole)
     localStorage.setItem('logged_in_user_firstName', response?.data?.name)
+    return response.data.userRole
   }
   const formik = useFormik({
     initialValues,
@@ -63,7 +64,8 @@ export function Login(props: any) {
           console.log({data})
           // return
           localStorage.setItem('logged_user_detail', JSON.stringify(data))
-          getLoggedInUser()
+          let role = await getLoggedInUser()
+          console.log({role: role})
           let userRole = localStorage.getItem('userType')
           console.log(localStorage.getItem('userType'))
           if (userRole === 'Admin') {

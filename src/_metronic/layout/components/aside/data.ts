@@ -1,9 +1,9 @@
 const routes: any = [
-  // {
-  //     title:"Dashboard",
-  //     route:"/",
-  //     role:['OccUser','Admin','Cleaner']
-  // },
+  {
+    title: 'Dashboard',
+    route: '/user-management',
+    role: ['Admin'],
+  },
   {
     title: 'דיווח יומי',
     route: '/trains-daily-report',
