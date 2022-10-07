@@ -17,7 +17,7 @@ const routes: any = [
   {
     title: ' דיווח ניקיון יומי',
     route: '/trains-cleaning-report',
-    role: ['cleaningManager', 'Admin'],
+    role: ['CleaningManager', 'Admin'],
   },
   {
     title: 'Conductor Dashboard',
