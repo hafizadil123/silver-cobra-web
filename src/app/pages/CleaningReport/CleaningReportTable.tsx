@@ -1,15 +1,23 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, {useState, useEffect} from 'react'
 import {KTSVG} from '../../../_metronic/helpers'
+import {useToasts} from 'react-toast-notifications'
+
+import axios from 'axios'
 import moment from 'moment'
 type Props = {
   className: string
   trData: any[]
   thData: any[]
   drivers: any[]
+  updateData: (data: any, type: any) => any
 }
 
-const CleaningReportTable: React.FC<Props> = ({className, trData, thData, drivers}) => {
+const CleaningReportTable: React.FC<Props> = ({className, trData, thData, drivers, updateData}) => {
+  const {addToast} = useToasts()
+  const handleToastMessage = (message: any) => {
+    addToast(message, {appearance: 'success'})
+  }
   return (
     <div className={`card ${className}`}>
       <div className='card-body py-3'>
@@ -44,8 +52,21 @@ const CleaningReportTable: React.FC<Props> = ({className, trData, thData, driver
                 return (
                   <tr>
                     {item.map((_item: any, index: any) => {
-                      const {carId, carName, checkId, checkValue} = _item
-                      return <TableDataView index={index} flexValue={1} text={carName} />
+                      const {carId, carName, checkId, checkValue, trainId, status} = _item
+                      // const {carId, carName, checkId, checkValue} = _item
+                      return (
+                        <TableDataView
+                          handleToastMessage={handleToastMessage}
+                          index={index}
+                          flexValue={1}
+                          carId={carId}
+                          checkId={checkId}
+                          updateData={updateData}
+                          checkValue={checkValue}
+                          trainId={trainId}
+                          text={carName}
+                        />
+                      )
                     })}
                   </tr>
                 )
@@ -54,7 +75,13 @@ const CleaningReportTable: React.FC<Props> = ({className, trData, thData, driver
                 {thData.map((item: any, index: any) => {
                   const {notes, trainId} = item
                   return (
-                    <TableFootView index={index} trainId={trainId} flexValue={1} text={notes} />
+                    <TableFootView
+                      handleToastMessage={handleToastMessage}
+                      index={index}
+                      trainId={trainId}
+                      flexValue={1}
+                      text={notes}
+                    />
                   )
                 })}
               </tr>
@@ -72,8 +99,45 @@ const CleaningReportTable: React.FC<Props> = ({className, trData, thData, driver
 
 export {CleaningReportTable}
 const TableDataView = (props: any) => {
-  const {flexValue, text, type, className, index} = props
+  const {
+    text,
+    className,
+    index,
+    carId,
+    checkId,
+    trainId,
+    checkValue,
+    handleToastMessage,
+    updateData,
+  } = props
+  const baseUrl = process.env.REACT_APP_API_URL
+  const SaveTrainCleaningCheckValue = `${baseUrl}/api/Common/SaveTrainDailyCleaningCheckValue`
+  const logged_user_detail: any = localStorage.getItem('logged_user_detail')
+  const loggedInUserDetails = JSON.parse(logged_user_detail)
+  const headerJson = {
+    headers: {
+      Authorization: `bearer ${loggedInUserDetails.access_token}`,
+    },
+  }
+  const handleUpdateCheckValue = async (statusToChange: boolean) => {
+    let date = new Date()
+    let dateFormatted = moment(date).format('DD-MM-yyyy')
+    const dataToSend = {
+      trainId,
+      checkValue: statusToChange,
+      checkid: checkId,
+      carid: carId,
+      // date: dateFormatted,
+    }
+    console.log({dataToSend})
+    const response = await axios.post(SaveTrainCleaningCheckValue, dataToSend, headerJson)
+    console.log({response})
+    updateData(dataToSend, 'checkValue')
+    handleToastMessage(`Check Value Updated Successfully`)
+    // console.log({response})
 
+    // reloadApi()
+  }
   const renderFields = () => {
     return (
       <td className={`${className} `} style={{minWidth: '530px'}}>
@@ -85,25 +149,25 @@ const TableDataView = (props: any) => {
             <span style={{float: 'left'}}>
               <button
                 onClick={() => {
-                  console.log('clicked')
+                  handleUpdateCheckValue(false)
                 }}
                 className='btn btn-secondary btn-sm'
+                style={{background: checkValue == false ? '#3F4254' : '#E4E6EF'}}
               >
                 <i
                   className='fa fa-times'
                   style={{color: '#c18080', fontWeight: 'bold', cursor: 'pointer'}}
                 ></i>
+                {/* {'sssss' + checkValue} */}
               </button>
               <button
                 onClick={() => {
-                  console.log('clicked')
+                  handleUpdateCheckValue(true)
                 }}
                 className='btn btn-secondary btn-sm'
+                style={{background: checkValue == true ? '#3F4254' : '#E4E6EF'}}
               >
                 <i
-                  onClick={() => {
-                    console.log('clicked')
-                  }}
                   className='fa fa-check'
                   style={{color: '#1dd61d', fontWeight: 'bold', cursor: 'pointer'}}
                   aria-hidden='true'
@@ -120,17 +184,28 @@ const TableDataView = (props: any) => {
 }
 
 const TableFootView = (props: any) => {
-  const {flexValue, text, index, trainId} = props
-  const handleUpdateNote = (value: any) => {
-    setNotes(value)
+  const {flexValue, text, index, trainId, handleToastMessage} = props
+  const baseUrl = process.env.REACT_APP_API_URL
+  const SaveTrainCleaningNotes = `${baseUrl}/api/Common/SaveTrainDailyCleaningNotes`
+  const logged_user_detail: any = localStorage.getItem('logged_user_detail')
+  const loggedInUserDetails = JSON.parse(logged_user_detail)
+  const headerJson = {
+    headers: {
+      Authorization: `bearer ${loggedInUserDetails.access_token}`,
+    },
+  }
+  const handleUpdateNote = async () => {
     let date = new Date()
     let dateFormatted = moment(date).format('DD-MM-yyyy')
     const dataToSend = {
       trainId,
-      notes: value,
-      date: dateFormatted,
+      notes: notes,
+      // date: dateFormatted,
     }
     console.log({dataToSend})
+    const response = await axios.post(SaveTrainCleaningNotes, dataToSend, headerJson)
+    console.log({response})
+    handleToastMessage(`Notes Updated Successfully`)
   }
   const [notes, setNotes] = useState('')
   useEffect(() => {
@@ -144,8 +219,9 @@ const TableFootView = (props: any) => {
           <input
             type='text'
             onChange={(e) => {
-              handleUpdateNote(e.target.value)
+              setNotes(e.target.value)
             }}
+            onBlur={() => handleUpdateNote()}
             value={notes}
             className='form-control-sm'
           />
@@ -160,58 +236,62 @@ const TableFootView = (props: any) => {
 const TableHeadView = (props: any) => {
   const {text, className, index, status, trainId} = props
 
-  const handleChangeTrainStatus = (statusToChange: number) => {
-    let date = new Date()
-    let dateFormatted = moment(date).format('DD-MM-yyyy')
-    console.log({dateFormatted})
-    const DataToSend = {
-      status: statusToChange,
-      trainId,
-      date: dateFormatted,
-    }
-    console.log({DataToSend})
-  }
+  // const handleChangeTrainStatus = (statusToChange: number) => {
+  //   let date = new Date()
+  //   let dateFormatted = moment(date).format('DD-MM-yyyy')
+  //   console.log({dateFormatted})
+  //   const DataToSend = {
+  //     status: statusToChange,
+  //     trainId,
+  //     date: dateFormatted,
+  //   }
+  //   console.log({DataToSend})
+  // }
 
   return (
     <th style={{minWidth: '530px !important'}} className={`${className}`}>
-      {index === 0 ? (
-        <span>{text}</span>
-      ) : (
-        <>
-          <span style={{float: 'right'}}>{text}</span>
-
-          {/* Status */}
-
-          <button
-            onClick={() => {
-              handleChangeTrainStatus(0)
-            }}
-            style={{marginRight: '20px', background: status === 0 ? '#3F4254' : '#E4E6EF'}}
-            className='btn btn-secondary btn-sm'
-          >
-            <i
-              className='fa fa-times'
-              style={{color: '#c18080', fontWeight: 'bold', cursor: 'pointer'}}
-            ></i>
-          </button>
-          <button
-            onClick={() => {
-              handleChangeTrainStatus(1)
-            }}
-            style={{background: status === 1 ? '#3F4254' : '#E4E6EF'}}
-            className='btn btn-secondary btn-sm'
-          >
-            <i
-              onClick={() => {
-                console.log('clicked')
-              }}
-              className='fa fa-check'
-              style={{color: '#1dd61d', fontWeight: 'bold', cursor: 'pointer'}}
-              aria-hidden='true'
-            ></i>
-          </button>
-        </>
-      )}
+      <span>{text}</span>
     </th>
+    //     <span>{text}</span>
+    // <th style={{minWidth: '530px !important'}} className={`${className}`}>
+    //   {index === 0 ? (
+    //     <span>{text}</span>
+    //   ) : (
+    //     <>
+    //       <span style={{float: 'right'}}>{text}</span>
+
+    //       {/* Status */}
+
+    //       <button
+    //         onClick={() => {
+    //           handleChangeTrainStatus(0)
+    //         }}
+    //         style={{marginRight: '20px', background: status === 0 ? '#3F4254' : '#E4E6EF'}}
+    //         className='btn btn-secondary btn-sm'
+    //       >
+    //         <i
+    //           className='fa fa-times'
+    //           style={{color: '#c18080', fontWeight: 'bold', cursor: 'pointer'}}
+    //         ></i>
+    //       </button>
+    //       <button
+    //         onClick={() => {
+    //           handleChangeTrainStatus(1)
+    //         }}
+    //         style={{background: status === 1 ? '#3F4254' : '#E4E6EF'}}
+    //         className='btn btn-secondary btn-sm'
+    //       >
+    //         <i
+    //           onClick={() => {
+    //             console.log('clicked')
+    //           }}
+    //           className='fa fa-check'
+    //           style={{color: '#1dd61d', fontWeight: 'bold', cursor: 'pointer'}}
+    //           aria-hidden='true'
+    //         ></i>
+    //       </button>
+    //     </>
+    //   )}
+    // </th>
   )
 }

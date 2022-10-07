@@ -12,7 +12,11 @@ import {ReportTable} from './Table'
 const DashboardPage: FC = () => {
   const [checks, setChecks] = useState<any>([])
   const [thData, setThData] = useState<any>([])
-  const [tBodyData, setBodyData] = useState([])
+  const [tBodyData, setBodyData] = useState<any>([])
+  const [search, setSearch] = useState('')
+  const [trains, setTrains] = useState<any>([])
+  const [actualThData, setActualThData] = useState([])
+
   const [loading, setLoading] = useState(true)
   const [drivers, setDrivers] = useState<any>([])
   const logged_user_detail: any = localStorage.getItem('logged_user_detail')
@@ -124,6 +128,8 @@ const DashboardPage: FC = () => {
       // })
       console.log({thData, tBodyData})
       setThData(thData)
+      setActualThData(thData)
+      setTrains(data.trains)
       setBodyData(tBodyData)
       setChecks(data.checks)
       setLoading(false)
@@ -153,12 +159,89 @@ const DashboardPage: FC = () => {
     } else if (type == 'trainStatus') {
       console.log({type, data})
       handleStatusUpdate(data)
+    } else if (type == 'checkValue') {
+      console.log('in it')
+      updateCheckValueData(data)
     }
     console.log('reloading api')
     // setLoading(true)
     // getMyTrainsDailyReport()
   }
+  const updateCheckValueData = (data: any) => {
+    console.log({data})
+    let updatedTrains: any = tBodyData.map((item: any) => {
+      // console.log({item});
+      return item.map((_item: any) => {
+        if (
+          _item.trainId == data.trainId &&
+          _item.checkId == data.checkid &&
+          _item.carId == data.carid
+        ) {
+          return {
+            ..._item,
+            checkValue: data.checkValue,
+          }
+          // return _item
+        } else {
+          return _item
+        }
+      })
+    })
+    setBodyData(updatedTrains)
+  }
+  const handleSearch = (value: any) => {
+    let searchedTrains: any = actualThData.filter((item: any) => {
+      if (item.trainName.indexOf(value) > -1) {
+        return item
+      }
+    })
+    let obj = {
+      driverId: 0,
+      driverName: null,
+      notes: null,
+      status: 1,
+      trainId: 0,
+      trainName: 'Header',
+    }
+    searchedTrains.unshift(obj)
+    let trainIds = searchedTrains.map((item: any) => {
+      return item.trainId
+    })
 
+    console.log({trainIds})
+    let _tBodyData: any = []
+    console.log({checks: checks.length})
+    let s = 0
+    for (let i = 0; i < checks.length; i++) {
+      let check: any = checks[i]
+      let trData = []
+      trData.push({
+        carId: check.id,
+        carName: check.name,
+        checkId: check.id,
+        checkValue: null,
+        trainId: 0,
+      })
+      console.log('ran', i)
+      for (let j = 0; j < trains.length; j++) {
+        let trainId = trains[j].trainId
+        if (trainIds.includes(trainId)) {
+          console.log('ran inner', j)
+          let trainCheck = trains[j].Checks[i]
+          trainCheck.trainId = trains[j].trainId
+          console.log({trainCheck})
+          trData.push(trainCheck)
+        }
+      }
+      s++
+      _tBodyData.push(trData)
+    }
+    console.log({_tBodyData, tBodyData, s})
+    console.log({searchedTrains})
+    setSearch(value)
+    setThData(searchedTrains)
+    setBodyData(_tBodyData)
+  }
   return (
     <>
       <div style={{height: 'auto'}} className='main-container-dashboard'>
@@ -175,13 +258,22 @@ const DashboardPage: FC = () => {
               <div className='col-lg-12'>
                 <div className='row'>
                   <div className='col-md-8 col-lg-8'>
-                    <input type='text' className='form-control' placeholder='Search' />
+                    <input
+                      type='text'
+                      value={search}
+                      onChange={(e) => {
+                        handleSearch(e.target.value)
+                      }}
+                      className='form-control'
+                      placeholder='Search'
+                    />
                   </div>
                   <div className='col-md-4 col-lg-4'>
-                    <button type='button' className='btn btn-primary'>
-                      Search
-                    </button>
-                    <button type='button' className='btn btn-danger mx-3'>
+                    <button
+                      type='button'
+                      onClick={(e) => handleSearch('')}
+                      className='btn btn-danger mx-3'
+                    >
                       Clear
                     </button>
                   </div>

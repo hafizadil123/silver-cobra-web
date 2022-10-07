@@ -140,7 +140,7 @@ const TableDataView = (props: any) => {
     handleToastMessage(`Check Status Updated Successfully`)
     // console.log({response})
 
-    // reloadApi()
+    reloadApi('checkValue', dataToSend)
   }
   const renderFields = () => {
     return (
