@@ -119,7 +119,6 @@ const CleaningReportpage: FC = () => {
           _item.checkId == data.checkid &&
           _item.carId == data.carid
         ) {
-          console.log('found------>', _item)
           return {
             ..._item,
             checkValue: data.checkValue,
