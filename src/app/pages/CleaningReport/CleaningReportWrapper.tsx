@@ -132,6 +132,27 @@ const CleaningReportpage: FC = () => {
         }
       })
     })
+    let updatedData = trains.map((item: any) => {
+      if (item.trainId === data.trainId) {
+        let updatedChecks = item.Checks.map((_item: any) => {
+          if (_item.checkId == data.checkid && _item.carId == data.carid) {
+            return {
+              ..._item,
+              checkValue: data.checkValue,
+            }
+          } else {
+            return _item
+          }
+        })
+        return {
+          ...item,
+          Checks: updatedChecks,
+        }
+      } else {
+        return item
+      }
+    })
+    setTrains(updatedData)
     setBodyData(updatedTrains)
   }
   const handleSearch = (value: any) => {
