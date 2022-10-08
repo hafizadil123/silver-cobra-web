@@ -99,7 +99,7 @@ const SingleTrainInspectionDashboardPage: FC = () => {
     const response = await axios.post(saveInspectionEndPoint, dataToSend, headerJson)
     console.log({response})
     setLoading(false)
-    addToast('Your Inspection Has Been Updated', {appearance: 'success'})
+    addToast('Your Inspection Has Been Updated', {appearance: 'success', autoDismiss: true})
   }
   const handleMarkAllChecked = (value: any) => {
     console.log({value})

@@ -70,7 +70,7 @@ const DashboardPage: FC = () => {
     const response = await axios.post(saveUserDetailsEndPoint, details, headerJson)
     if (response.data.result === false) {
       response.data.validationErrors.forEach((error: any) => {
-        addToast(error, {appearance: 'error'})
+        addToast(error, {appearance: 'error', autoDismiss: true})
       })
     } else {
       setLoading(true)

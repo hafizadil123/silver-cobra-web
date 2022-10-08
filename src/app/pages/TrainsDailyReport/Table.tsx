@@ -17,7 +17,7 @@ const baseUrl = process.env.REACT_APP_API_URL
 const ReportTable: React.FC<Props> = ({className, trData, thData, drivers, reloadApi}) => {
   const {addToast} = useToasts()
   const handleToastMessage = (message: any) => {
-    addToast(message, {appearance: 'success'})
+    addToast(message, {appearance: 'success', autoDismiss: true})
   }
   return (
     <div className={`card ${className}`}>

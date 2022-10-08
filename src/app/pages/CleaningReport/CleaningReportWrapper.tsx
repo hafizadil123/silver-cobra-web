@@ -2,6 +2,7 @@
 import React, {FC, useState, useEffect} from 'react'
 import {useIntl} from 'react-intl'
 import axios from 'axios'
+import moment from 'moment'
 import {PageTitle} from '../../../_metronic/layout/core'
 import {CleaningReportTable} from './CleaningReportTable'
 const CleaningReportpage: FC = () => {
@@ -45,9 +46,11 @@ const CleaningReportpage: FC = () => {
   }
 
   const GetTrainsDailyCleaningReport = async () => {
+    let date = new Date()
+    let dateFormatted = moment(date).format('yyyy-MM-DD')
     const response = await axios.post(
       getMyTrainsDailyCleaningReportEndPoint,
-      {date: '2022-10-07'},
+      {date: '2022-10-08'},
       // {},
       headerJson
     )
@@ -145,7 +148,9 @@ const CleaningReportpage: FC = () => {
       trainId: 0,
       trainName: 'Header',
     }
-    searchedTrains.unshift(obj)
+    if (value !== '') {
+      searchedTrains.unshift(obj)
+    }
     let trainIds = searchedTrains.map((item: any) => {
       return item.trainId
     })
@@ -164,11 +169,9 @@ const CleaningReportpage: FC = () => {
         checkValue: null,
         trainId: 0,
       })
-      console.log('ran', i)
       for (let j = 0; j < trains.length; j++) {
         let trainId = trains[j].trainId
         if (trainIds.includes(trainId)) {
-          console.log('ran inner', j)
           let trainCheck = trains[j].Checks[i]
           trainCheck.trainId = trains[j].trainId
           console.log({trainCheck})

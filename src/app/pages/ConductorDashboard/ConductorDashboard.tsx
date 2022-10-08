@@ -123,7 +123,7 @@ const ConductorDashboard: FC = () => {
     // console.log({dataToSend})
     const response = await axios.post(saveTrainActivationEndPoint, dataToSend, headerJson)
     console.log({saveResponse: response})
-    addToast('Your Train Activation Has Been Updated', {appearance: 'success'})
+    addToast('Your Train Activation Has Been Updated', {appearance: 'success', autoDismiss: true})
   }
   return (
     <>
