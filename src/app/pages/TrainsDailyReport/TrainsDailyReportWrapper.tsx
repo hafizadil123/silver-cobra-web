@@ -15,7 +15,7 @@ const DashboardPage: FC = () => {
   const [tBodyData, setBodyData] = useState<any>([])
   const [search, setSearch] = useState('')
   const [trains, setTrains] = useState<any>([])
-  const [actualThData, setActualThData] = useState([])
+  const [actualThData, setActualThData] = useState<any>([])
 
   const [loading, setLoading] = useState(true)
   const [drivers, setDrivers] = useState<any>([])
@@ -76,6 +76,30 @@ const DashboardPage: FC = () => {
         return item
       }
     })
+    let updatedData = trains.map((item: any) => {
+      if (item.trainId == data.trainId) {
+        return {
+          ...item,
+          status: data.status,
+        }
+      } else {
+        return item
+      }
+    })
+    let actualThDataUpdate = actualThData.map((item: any) => {
+      if (item.trainId == data.trainId) {
+        return {
+          ...item,
+          status: data.status,
+        }
+      } else {
+        return item
+      }
+    })
+    setActualThData(actualThDataUpdate)
+
+    console.log({updatedData, trains, actualThData})
+    setTrains(updatedData)
     setThData(updatedThData)
   }
   const getMyTrainsDailyReport = async () => {
@@ -187,6 +211,28 @@ const DashboardPage: FC = () => {
         }
       })
     })
+    let updatedData = trains.map((item: any) => {
+      if (item.trainId === data.trainId) {
+        let updatedChecks = item.Checks.map((_item: any) => {
+          if (_item.checkId == data.checkid && _item.carId == data.carid) {
+            return {
+              ..._item,
+              checkValue: data.checkValue,
+            }
+          } else {
+            return _item
+          }
+        })
+        return {
+          ...item,
+          Checks: updatedChecks,
+        }
+      } else {
+        return item
+      }
+    })
+    setTrains(updatedData)
+    console.log({trains, updatedData})
     setBodyData(updatedTrains)
   }
   const handleSearch = (value: any) => {
@@ -222,11 +268,9 @@ const DashboardPage: FC = () => {
         checkValue: null,
         trainId: 0,
       })
-      console.log('ran', i)
       for (let j = 0; j < trains.length; j++) {
         let trainId = trains[j].trainId
         if (trainIds.includes(trainId)) {
-          console.log('ran inner', j)
           let trainCheck = trains[j].Checks[i]
           trainCheck.trainId = trains[j].trainId
           console.log({trainCheck})
