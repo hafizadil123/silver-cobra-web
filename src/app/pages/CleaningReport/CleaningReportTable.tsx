@@ -16,7 +16,7 @@ type Props = {
 const CleaningReportTable: React.FC<Props> = ({className, trData, thData, drivers, updateData}) => {
   const {addToast} = useToasts()
   const handleToastMessage = (message: any) => {
-    addToast(message, {appearance: 'success'})
+    addToast(message, {appearance: 'success', autoDismiss: true})
   }
   return (
     <div className={`card ${className}`}>
