@@ -15,6 +15,11 @@ const routes: any = [
     role: ['Driver'],
   },
   {
+    title: 'Cleaner DashBoard',
+    route: '/cleaner-dashboard',
+    role: ['Cleaner'],
+  },
+  {
     title: ' דיווח ניקיון יומי',
     route: '/trains-cleaning-report',
     role: ['CleaningManager', 'Admin'],

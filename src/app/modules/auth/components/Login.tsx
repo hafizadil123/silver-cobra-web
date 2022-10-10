@@ -76,6 +76,8 @@ export function Login(props: any) {
             window.location.href = '/trains-daily-report'
           } else if (userRole === 'Conductor') {
             window.location.href = '/conductor-dashboard'
+          } else if (userRole === 'Cleaner') {
+            window.location.href = '/cleaner-dashboard'
           } else {
             window.location.href = '/trains-cleaning-report'
           }
