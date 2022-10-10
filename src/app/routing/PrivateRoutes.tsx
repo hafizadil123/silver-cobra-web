@@ -5,6 +5,7 @@ import TopBarProgress from 'react-topbar-progress-indicator'
 import {DashboardWrapper} from '../pages/dashboard/DashboardWrapper'
 import {TrainsDailyReportWrapper} from '../pages/TrainsDailyReport/TrainsDailyReportWrapper'
 import {CleaningReportWrapper} from '../pages/CleaningReport/CleaningReportWrapper'
+import {CleanerDashboardWrapper} from '../pages/CleanerDashBoard/CleanerDashboard'
 import {DriverDashboardWrapper} from '../pages/DriverDashBoard/DriverDashboardWrapper'
 import {ConductorDashboardWrapper} from '../pages/ConductorDashboard/ConductorDashboard'
 import {DriverSingleTrainInspectionWrapper} from '../pages/DriverTrainsInspection/TrainsInspection'
@@ -42,9 +43,8 @@ const PrivateRoutes = () => {
         <Route path='/trains-cleaning-report/*' element={<CleaningReportWrapper />} />
         <Route path='driver-dashboard/*' element={<DriverDashboardWrapper />} />
         <Route path='conductor-dashboard/*' element={<ConductorDashboardWrapper />} />
-        {/* <Route  path='cleaner-dashboard/*' element={<CleanerDashboardWrapper />} /> */}
+        <Route path='cleaner-dashboard/*' element={<CleanerDashboardWrapper />} />
         <Route path='/trains-inspection/*' element={<DriverSingleTrainInspectionWrapper />} />
-
         <Route path='/main-attendance' element={<DailyAttendancePage />} />
         <Route path='/documents' element={<DocumentsPage />} />
         <Route path='/upload-document' element={<UploadDocumentSection />} />
