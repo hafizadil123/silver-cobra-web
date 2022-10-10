@@ -2,7 +2,7 @@
 import React, {useState, useEffect} from 'react'
 import {KTSVG} from '../../../_metronic/helpers'
 import {useToasts} from 'react-toast-notifications'
-
+import './table.css'
 import moment from 'moment'
 import axios from 'axios'
 type Props = {
@@ -25,73 +25,75 @@ const ReportTable: React.FC<Props> = ({className, trData, thData, drivers, reloa
         {/* begin::Table container */}
         <div className='table-responsive'>
           {/* begin::Table */}
-          <table className='table table-row-bordered table-row-gray-100 align-middle gs-0 gy-3'>
-            {/* begin::Table head */}
-            <thead>
-              <tr className='fw-bolder text-muted'>
-                {thData.map((item: any, index) => {
-                  const {driverId, driverName, notes, status, trainId, trainName} = item
+          <div className='tscroll'>
+            <table className='table table-row-bordered table-row-gray-100 align-middle gs-0 gy-3'>
+              {/* begin::Table head */}
+              <thead>
+                <tr className='fw-bolder text-muted'>
+                  {thData.map((item: any, index) => {
+                    const {driverId, driverName, notes, status, trainId, trainName} = item
+                    return (
+                      <TableHeadView
+                        driverId={driverId}
+                        driverName={driverName}
+                        status={status}
+                        trainId={trainId}
+                        drivers={drivers}
+                        handleToastMessage={handleToastMessage}
+                        index={index}
+                        className='min-w-150px'
+                        text={trainName}
+                        reloadApi={reloadApi}
+                      />
+                    )
+                  })}
+                </tr>
+              </thead>
+              {/* end::Table head */}
+              {/* begin::Table body */}
+              <tbody>
+                {trData.map((item: any, index: any) => {
                   return (
-                    <TableHeadView
-                      driverId={driverId}
-                      driverName={driverName}
-                      status={status}
-                      trainId={trainId}
-                      drivers={drivers}
-                      handleToastMessage={handleToastMessage}
-                      index={index}
-                      className='min-w-150px'
-                      text={trainName}
-                      reloadApi={reloadApi}
-                    />
+                    <tr>
+                      {item.map((_item: any, index: any) => {
+                        const {carId, carName, checkId, checkValue, trainId, status} = _item
+                        return (
+                          <TableDataView
+                            index={index}
+                            carId={carId}
+                            status={status}
+                            carName={carName}
+                            handleToastMessage={handleToastMessage}
+                            checkId={checkId}
+                            trainId={trainId}
+                            reloadApi={reloadApi}
+                            checkValue={checkValue}
+                            flexValue={1}
+                            text={carName}
+                          />
+                        )
+                      })}
+                    </tr>
                   )
                 })}
-              </tr>
-            </thead>
-            {/* end::Table head */}
-            {/* begin::Table body */}
-            <tbody>
-              {trData.map((item: any, index: any) => {
-                return (
-                  <tr>
-                    {item.map((_item: any, index: any) => {
-                      const {carId, carName, checkId, checkValue, trainId, status} = _item
-                      return (
-                        <TableDataView
-                          index={index}
-                          carId={carId}
-                          status={status}
-                          carName={carName}
-                          handleToastMessage={handleToastMessage}
-                          checkId={checkId}
-                          trainId={trainId}
-                          reloadApi={reloadApi}
-                          checkValue={checkValue}
-                          flexValue={1}
-                          text={carName}
-                        />
-                      )
-                    })}
-                  </tr>
-                )
-              })}
-              <tr>
-                {thData.map((item: any, index: any) => {
-                  const {notes, trainId} = item
-                  return (
-                    <TableFootView
-                      index={index}
-                      handleToastMessage={handleToastMessage}
-                      trainId={trainId}
-                      flexValue={1}
-                      text={notes}
-                    />
-                  )
-                })}
-              </tr>
-            </tbody>
-            {/* end::Table body */}
-          </table>
+                <tr>
+                  {thData.map((item: any, index: any) => {
+                    const {notes, trainId} = item
+                    return (
+                      <TableFootView
+                        index={index}
+                        handleToastMessage={handleToastMessage}
+                        trainId={trainId}
+                        flexValue={1}
+                        text={notes}
+                      />
+                    )
+                  })}
+                </tr>
+              </tbody>
+              {/* end::Table body */}
+            </table>
+          </div>
           {/* end::Table */}
         </div>
         {/* end::Table container */}
@@ -144,7 +146,10 @@ const TableDataView = (props: any) => {
   }
   const renderFields = () => {
     return (
-      <td className={`${className} `} style={{minWidth: '530px'}}>
+      <td
+        className={`${className}  ${index === 0 ? 'table_header' : 'table_inner_rows'} `}
+        style={{minWidth: '530px'}}
+      >
         {index === 0 ? (
           <span style={{float: 'right'}}> {text}</span>
         ) : (
@@ -299,7 +304,10 @@ const TableHeadView = (props: any) => {
     reloadApi('driver', dataToSend)
   }
   return (
-    <th style={{minWidth: '530px !important'}} className={`${className}`}>
+    <th
+      style={{minWidth: '530px !important'}}
+      className={`${className}  ${index === 0 ? 'table_header' : 'table_inner_rows'}`}
+    >
       {index === 0 ? (
         <span>{text}</span>
       ) : (

@@ -255,9 +255,9 @@ const TableHeadView = (props: any) => {
 
   return (
     <>
-    <th style={{minWidth: '530px !important'}} className={`${className}`}>
-      <span>{text}</span>
-    </th>
+      <th style={{minWidth: '530px !important'}} className={`${className}`}>
+        <span>{text}</span>
+      </th>
     </>
     //     <span>{text}</span>
     // <th style={{minWidth: '530px !important'}} className={`${className}`}>
