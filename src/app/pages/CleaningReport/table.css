@@ -1,42 +1,19 @@
-.fixed-table {
-    border-collapse: separate;
-    border-spacing: 0;
-    border-top: 1px solid grey;
-}
-
-td,
-th {
-    margin: 0;
-    border: 1px solid grey;
-    white-space: nowrap;
-    border-top-width: 0px;
-}
-
-.main-fixed-table-div {
-    width: 600px;
+.tscroll {
+    width: 100%;
     overflow-x: scroll;
-    margin-left: 5em;
-    overflow-y: visible;
-    padding: 0;
-}
-
-.headcol {
-    position: absolute;
-    width: 5em;
-    left: 0;
-    direction:rtl;
-    top: auto;
-    border-top-width: 1px;
-    /*only relevant for first row*/
-    margin-top: -1px;
-    /*compensate for top border*/
-}
-
-.headcol:before {
-    content: 'Row ';
-}
-
-.long {
-    background: yellow;
-    letter-spacing: 1em;
-}
+    margin-bottom: 10px;
+    padding: 2px;
+  }
+  
+  .table_header {
+    position: sticky;
+    right: 0;
+    background: #fff;
+   
+  }
+  
+  .tscroll td, .tscroll th {
+    border-bottom: dashed #888 1px;
+    background: white;
+    z-index: 10;
+  }

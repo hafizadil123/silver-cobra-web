@@ -24,8 +24,8 @@ const CleaningReportTable: React.FC<Props> = ({className, trData, thData, driver
         {/* begin::Table container */}
         <div className='table-responsive'>
           {/* begin::Table */}
-          <div className='main-fixed-table-div'>
-            <table className='table table-row-bordered table-row-gray-100 align-middle gs-0 gy-3 fixed-table'>
+          <div className='tscroll'>
+            <table className='table fixed-table'>
               {/* begin::Table head */}
               <thead>
                 <tr className='fw-bolder text-muted'>
@@ -143,7 +143,7 @@ const TableDataView = (props: any) => {
   const renderFields = () => {
     return (
       <td
-        className={`${className}  ${index === 0 ? 'headcol' : 'long'}`}
+        className={`${className}  ${index === 0 ? 'table_header' : 'table_inner_rows'}`}
         style={{minWidth: '530px'}}
       >
         {index === 0 ? (
@@ -254,9 +254,11 @@ const TableHeadView = (props: any) => {
   // }
 
   return (
+    <>
     <th style={{minWidth: '530px !important'}} className={`${className}`}>
       <span>{text}</span>
     </th>
+    </>
     //     <span>{text}</span>
     // <th style={{minWidth: '530px !important'}} className={`${className}`}>
     //   {index === 0 ? (
