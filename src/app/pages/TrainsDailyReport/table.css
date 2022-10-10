@@ -2,19 +2,24 @@
     width: 100%;
     overflow-x: scroll;
     margin-bottom: 10px;
-    padding: 1px;
+    padding: 0px;
 }
 
+.header_fix {
+    position: relative !important;
+    right: 40px !important;
+}
 .table_header {
     position: sticky;
     right: 0;
     background: #fff;
+    width: 100px !important;
 
 }
 
 .tscroll td,
 .tscroll th {
-    border-bottom: dashed #888 1px;
+    border-bottom: dashed #888 1px !important;
     background: white;
     z-index: 10;
 }

@@ -26,7 +26,7 @@ const ReportTable: React.FC<Props> = ({className, trData, thData, drivers, reloa
         <div className='table-responsive'>
           {/* begin::Table */}
           <div className='tscroll'>
-            <table className='table table-row-bordered table-row-gray-100 align-middle gs-0 gy-3'>
+            <table className='table fixed-table'>
               {/* begin::Table head */}
               <thead>
                 <tr className='fw-bolder text-muted'>
@@ -312,8 +312,8 @@ const TableHeadView = (props: any) => {
         <span>{text}</span>
       ) : (
         <>
-          <span style={{float: 'right'}}>{text}</span>
-          {driverName !== null ? <span style={{float: 'left'}}>Driver : {driverName}</span> : null}
+        <div>
+          <span className='header_fix'>{text}</span><br />
 
           {/* Status */}
 
@@ -342,10 +342,12 @@ const TableHeadView = (props: any) => {
               aria-hidden='true'
             ></i>
           </button>
+          <br />
           {/* Status */}
+          {driverName !== null ? <span>Driver : {driverName}</span> : null}<br />
           <select
             className='form-control-sm'
-            style={{marginRight: '20px', marginTop: '-5px'}}
+            style={{marginRight: '20px', marginTop: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center'}}
             onChange={(e) => {
               handleDriverChangeUpdate(e.target.value)
             }}
@@ -355,6 +357,7 @@ const TableHeadView = (props: any) => {
               return <option value={driver.id}>{driver.name}</option>
             })}
           </select>
+          </div>
         </>
       )}
     </th>
