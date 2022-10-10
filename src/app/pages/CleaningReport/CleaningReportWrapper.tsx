@@ -50,7 +50,7 @@ const CleaningReportpage: FC = () => {
     let dateFormatted = moment(date).format('yyyy-MM-DD')
     const response = await axios.post(
       getMyTrainsDailyCleaningReportEndPoint,
-      {date: '2022-10-08'},
+      {date: dateFormatted},
       // {},
       headerJson
     )

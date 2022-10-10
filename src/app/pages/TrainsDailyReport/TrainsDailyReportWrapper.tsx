@@ -249,7 +249,10 @@ const DashboardPage: FC = () => {
       trainId: 0,
       trainName: 'Header',
     }
-    searchedTrains.unshift(obj)
+    if (value !== '') {
+      searchedTrains.unshift(obj)
+    }
+    // searchedTrains.unshift(obj)
     let trainIds = searchedTrains.map((item: any) => {
       return item.trainId
     })
