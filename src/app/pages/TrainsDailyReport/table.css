@@ -23,3 +23,15 @@
     background: white;
     z-index: 10;
 }
+.colum-divider td {
+    border-left: dashed #888 1px !important;
+    border-right: dashed #888 1px !important;
+}
+
+.colum-divider td:first-child {
+    border-right: none;
+}
+
+.colum-divider td:last-child {
+    border-right: dashed #888 1px !important;
+}
