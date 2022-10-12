@@ -59,14 +59,17 @@ const CleaningReportpage: FC = () => {
       const {data} = response
       console.log({data})
       let thData: any = []
-      thData.push({
-        driverId: 0,
-        driverName: null,
-        notes: null,
-        status: 1,
-        trainId: 0,
-        trainName: 'Header',
-      })
+      if (data.trains.length > 0 && data.checks.length > 0) {
+        thData.push({
+          driverId: 0,
+          driverName: null,
+          notes: null,
+          status: 1,
+          trainId: 0,
+          trainName: '',
+        })
+      }
+
       let tBodyData: any = []
       data.trains.forEach((item: any) => {
         thData.push({
@@ -167,7 +170,7 @@ const CleaningReportpage: FC = () => {
       notes: null,
       status: 1,
       trainId: 0,
-      trainName: 'Header',
+      trainName: '',
     }
     if (value !== '') {
       searchedTrains.unshift(obj)
