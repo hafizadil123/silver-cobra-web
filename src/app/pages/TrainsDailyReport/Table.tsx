@@ -27,7 +27,7 @@ const ReportTable: React.FC<Props> = ({className, trData, thData, drivers, reloa
           <div className='table-responsive'>
             {/* begin::Table */}
             <div className='tscroll'>
-              <table className='table fixed-table'>
+              <table className='table fixed-table colum-divider'>
                 {/* begin::Table head */}
                 <thead>
                   <tr className='fw-bolder text-muted'>
