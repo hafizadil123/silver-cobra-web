@@ -152,7 +152,7 @@ const TableDataView = (props: any) => {
     return (
       <td
         className={`${className}  ${index === 0 ? 'table_header' : 'table_inner_rows'} `}
-        style={{minWidth: '300px'}}
+        style={{minWidth: '100px'}}
       >
         {index === 0 ? (
           <span style={{float: 'right'}}> {text}</span>
@@ -231,7 +231,7 @@ const TableFootView = (props: any) => {
 
   const renderFields = () => {
     return (
-      <td style={{minWidth: '300px'}}>
+      <td style={{minWidth: '100px'}}>
         {index !== 0 ? (
           <input
             type='text'
@@ -312,7 +312,7 @@ const TableHeadView = (props: any) => {
   }
   return (
     <th
-      style={{minWidth: '300px !important'}}
+      style={{minWidth: '100px !important'}}
       className={`${className}  ${index === 0 ? 'table_header' : 'table_inner_rows'}`}
     >
       {index === 0 ? (
