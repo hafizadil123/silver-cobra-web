@@ -149,7 +149,7 @@ const TableDataView = (props: any) => {
     return (
       <td
         className={`${className}  ${index === 0 ? 'table_header' : 'table_inner_rows'}`}
-        style={{minWidth: '530px'}}
+        style={{minWidth: '300px'}}
       >
         {index === 0 ? (
           <span style={{float: 'right'}}> {text}</span>
@@ -162,7 +162,7 @@ const TableDataView = (props: any) => {
                   handleUpdateCheckValue(false)
                 }}
                 className='btn btn-secondary btn-sm'
-                style={{background: checkValue == false ? '#3F4254' : '#E4E6EF'}}
+                style={{background: checkValue == false ? '#3F4254' : '#E4E6EF',marginLeft:'16px'}}
               >
                 <i
                   className='fa fa-times'
@@ -224,7 +224,7 @@ const TableFootView = (props: any) => {
 
   const renderFields = () => {
     return (
-      <td style={{minWidth: '530px'}}>
+      <td style={{minWidth: '300px'}}>
         {index !== 0 ? (
           <input
             type='text'
@@ -260,7 +260,7 @@ const TableHeadView = (props: any) => {
 
   return (
     <>
-      <th style={{minWidth: '530px !important'}} className={`${className}`}>
+      <th style={{minWidth: '300px !important'}} className={`${className}`}>
         <span>{text}</span>
       </th>
     </>

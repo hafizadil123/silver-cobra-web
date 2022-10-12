@@ -152,7 +152,7 @@ const TableDataView = (props: any) => {
     return (
       <td
         className={`${className}  ${index === 0 ? 'table_header' : 'table_inner_rows'} `}
-        style={{minWidth: '530px'}}
+        style={{minWidth: '300px'}}
       >
         {index === 0 ? (
           <span style={{float: 'right'}}> {text}</span>
@@ -165,7 +165,10 @@ const TableDataView = (props: any) => {
                   handleUpdateCheckValue(false)
                 }}
                 className='btn btn-secondary btn-sm'
-                style={{background: checkValue == false ? '#3F4254' : '#E4E6EF'}}
+                style={{
+                  background: checkValue == false ? '#3F4254' : '#E4E6EF',
+                  marginLeft: '16px',
+                }}
               >
                 <i
                   className='fa fa-times'
@@ -228,7 +231,7 @@ const TableFootView = (props: any) => {
 
   const renderFields = () => {
     return (
-      <td style={{minWidth: '530px'}}>
+      <td style={{minWidth: '300px'}}>
         {index !== 0 ? (
           <input
             type='text'
@@ -309,7 +312,7 @@ const TableHeadView = (props: any) => {
   }
   return (
     <th
-      style={{minWidth: '530px !important'}}
+      style={{minWidth: '300px !important'}}
       className={`${className}  ${index === 0 ? 'table_header' : 'table_inner_rows'}`}
     >
       {index === 0 ? (
@@ -326,7 +329,11 @@ const TableHeadView = (props: any) => {
               onClick={() => {
                 handleChangeTrainStatus(2)
               }}
-              style={{marginRight: '20px', background: status === 2 ? '#3F4254' : '#E4E6EF'}}
+              style={{
+                marginRight: '20px',
+                background: status === 2 ? '#3F4254' : '#E4E6EF',
+                marginLeft: '16px',
+              }}
               className='btn btn-secondary btn-sm'
             >
               <i
@@ -349,8 +356,7 @@ const TableHeadView = (props: any) => {
             </button>
             <br />
             {/* Status */}
-            {driverName !== null ? <span>Driver : {driverName}</span> : null}
-            <br />
+            {/* {driverName !== null ? <span>Driver : {driverName}</span> : null}<br /> */}
             <select
               className='form-control-sm'
               style={{
