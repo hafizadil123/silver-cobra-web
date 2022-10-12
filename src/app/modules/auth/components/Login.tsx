@@ -101,9 +101,7 @@ export function Login(props: any) {
       {/* begin::Heading */}
 
       <div className='text-center mb-10'>
-        <h1 className='text-dark mb-3'>
-          {<FormattedMessage id='AUTH.GENERAL.ACCOUNT_DETAILS' />}1111
-        </h1>
+        <h1 className='text-dark mb-3'>מערכת צ'קליסט</h1>
       </div>
       {/* begin::Heading */}
 

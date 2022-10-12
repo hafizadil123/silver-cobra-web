@@ -214,7 +214,7 @@ const CleaningReportpage: FC = () => {
   return (
     <>
       <div style={{height: 'auto'}} className='main-container-dashboard'>
-        <h1>My Trains</h1>
+        <h1>דיווח בדיקות ניקיון יומיות</h1>
         <div className='row'>
           <div className='col-lg-12'>
             <div className='row'>
@@ -226,7 +226,7 @@ const CleaningReportpage: FC = () => {
                   onChange={(e) => {
                     handleSearch(e.target.value)
                   }}
-                  placeholder='Search'
+                  placeholder='חפש לפי שם רכבת'
                 />
               </div>
               <div className='col-md-4 col-lg-4'>
@@ -235,7 +235,7 @@ const CleaningReportpage: FC = () => {
                   onClick={(e) => handleSearch('')}
                   className='btn btn-danger mx-3'
                 >
-                  Clear
+                  נקה חיפוש
                 </button>
               </div>
             </div>

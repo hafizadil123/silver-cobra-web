@@ -220,7 +220,7 @@ const TableDataView = (props: any) => {
         </span>
       </td>
     ) : (
-      <td className={`${className} `} style={{minWidth: edit === false ? '40px' : '150px'}}>
+      <td className={`${className} `} style={{maxWidth: '40px'}}>
         <span>
           {edit === true ? (
             <i

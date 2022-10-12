@@ -89,7 +89,7 @@ const DashboardPage: FC = () => {
   return (
     <>
       <div style={{height: 'auto'}} className='main-container-dashboard'>
-        <h1>All Users</h1>
+        <h1>ניהול משתמשים </h1>
         <div className='row'>
           <div className='col-lg-12'>
             <div className='row'>
@@ -101,7 +101,7 @@ const DashboardPage: FC = () => {
                   onChange={(e) => {
                     handleSearch(e.target.value)
                   }}
-                  placeholder='Search'
+                  placeholder='חיפוש'
                 />
               </div>
               <div className='col-md-4 col-lg-4'>
@@ -110,7 +110,7 @@ const DashboardPage: FC = () => {
                   className='btn btn-danger mx-3'
                   onClick={(e) => handleSearch('')}
                 >
-                  Clear
+                  נקה חיפוש
                 </button>
               </div>
             </div>
