@@ -295,7 +295,7 @@ const DashboardPage: FC = () => {
   return (
     <>
       <div style={{height: 'auto'}} className='main-container-dashboard'>
-        <h1>My Trains</h1>
+        <h1>דיווח בדיקות מכאניות יומיות</h1>
         {loading ? (
           <div className='d-flex justify-content-center mb-5'>
             <div className='spinner-border text-primary'>
@@ -315,7 +315,7 @@ const DashboardPage: FC = () => {
                         handleSearch(e.target.value)
                       }}
                       className='form-control'
-                      placeholder='Search'
+                      placeholder='חפש לפי שם רכבת'
                     />
                   </div>
                   <div className='col-md-4 col-lg-4'>
@@ -324,7 +324,7 @@ const DashboardPage: FC = () => {
                       onClick={(e) => handleSearch('')}
                       className='btn btn-danger mx-3'
                     >
-                      Clear
+                      נקה חיפוש
                     </button>
                   </div>
                 </div>

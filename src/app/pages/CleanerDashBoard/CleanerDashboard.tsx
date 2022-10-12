@@ -69,7 +69,7 @@ const CleanerDashboardPage: FC = () => {
                     handleSearch(e.target.value)
                   }}
                   className='form-control'
-                  placeholder='Search'
+                  placeholder='חפש לפי שם רכבת'
                 />
               </div>
               <div className='col-md-2 col-lg-2'>
@@ -78,7 +78,7 @@ const CleanerDashboardPage: FC = () => {
                   className='btn btn-sm btn-danger btn-active-light-primary me-3'
                   onClick={(e) => handleSearch('')}
                 >
-                  Clear
+                  נקה חיפוש
                 </button>
               </div>
             </div>

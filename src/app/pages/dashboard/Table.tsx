@@ -22,12 +22,12 @@ const ReportTable: React.FC<Props> = ({users, className, getSelectedUser, saveUs
             {/* begin::Table head */}
             <thead>
               <tr className='fw-bolder text-muted'>
-                <TableHeadView className='min-w-150px' text={'Name'} />
-                <TableHeadView className='min-w-150px' text={'Email'} />
-                <TableHeadView className='min-w-150px' text={'Mobile'} />
-                <TableHeadView className='min-w-150px' text={'User Role Name'} />
-                <TableHeadView className='min-w-150px' text={'UserName'} />
-                <TableHeadView className='min-w-150px' text={'Action'} />
+                <TableHeadView className='min-w-150px' text={'שם'} />
+                <TableHeadView className='min-w-150px' text={'דוא"ל'} />
+                <TableHeadView className='min-w-150px' text={'מספר נייד'} />
+                <TableHeadView className='min-w-150px' text={'תפקיד'} />
+                <TableHeadView className='min-w-150px' text={'שם משתמש'} />
+                <TableHeadView className='min-w-150px' text={'פעולות'} />
               </tr>
             </thead>
             {/* end::Table head */}

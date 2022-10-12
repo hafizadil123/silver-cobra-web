@@ -7,6 +7,8 @@ import {PageTitle} from '../../../_metronic/layout/core'
 import {useToasts} from 'react-toast-notifications'
 import {TrainActiviationTable} from './TrainActivationTable'
 import moment from 'moment'
+import {confirmAlert} from 'react-confirm-alert' // Import
+import 'react-confirm-alert/src/react-confirm-alert.css' // Import css
 
 const ConductorDashboard: FC = () => {
   const location = useLocation()
@@ -68,6 +70,27 @@ const ConductorDashboard: FC = () => {
       setPreviousDayList(data.previousDayList)
       setLoading(false)
     }
+  }
+  const handlePrompt = () => {
+    confirmAlert({
+      title: ' העתק הגדרות מיום קודם',
+      message:
+        'כל ההגדרות היום ידרסו עלפי ההגדרות של יום קודם, האם בטוח להעתיק פעילות מיום קודם ? ',
+      buttons: [
+        {
+          label: 'Yes',
+          onClick: () => {
+            setTodayList(previousDayList)
+          },
+        },
+        {
+          label: 'No',
+          onClick: () => {
+            console.log('you clicked no')
+          },
+        },
+      ],
+    })
   }
   const getDrivers = async () => {
     console.log({headerJson})
@@ -137,12 +160,12 @@ const ConductorDashboard: FC = () => {
           </div>
         ) : (
           <>
-            <h3>Set Active Trains</h3>
+            <h3>הגדרת רכבות פעילות יומית</h3>
             <div className='row'>
-              <div className='col-md-5 col-lg-5'>
+              <div className='col-md-4 col-lg-4'>
                 <p>
                   {' '}
-                  <b>{getPreviosDate()} Trains For</b>
+                  <b>רשימת רכבות לתאריך :{getPreviosDate()} </b>
                 </p>
                 <TrainActiviationTable
                   className='mb-5 mb-xl-8'
@@ -154,21 +177,22 @@ const ConductorDashboard: FC = () => {
                   trains={previousDayList}
                 />
               </div>
-              <div className='col-md-1 col-lg-1'>
+              <div className='col-md-3 col-lg-3'>
                 <button
-                  className='btn btn-primary'
+                  className='btn btn-primary handle-copy'
                   onClick={(e) => {
                     e.preventDefault()
                     setTodayList(previousDayList)
+                    handlePrompt()
                   }}
                 >
-                  Copy
+                  העתק הגדרות מיום קודם
                 </button>
               </div>
 
-              <div className='col-md-6 col-lg-6'>
+              <div className='col-md-5 col-lg-5'>
                 <p>
-                  <b>{getToday()} Trains For</b>
+                  <b>רשימת רכבות לתאריך :{getToday()} </b>
                 </p>
 
                 <TrainActiviationTable
