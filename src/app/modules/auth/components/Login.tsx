@@ -152,13 +152,13 @@ export function Login(props: any) {
             {/* end::Label */}
             {/* begin::Link */}
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <Link
+            {/* <Link
               to='/auth/forgot-password'
               className='link-primary fs-6 fw-bolder'
               style={{marginLeft: '5px'}}
             >
               שכחת סיסמא ?
-            </Link>
+            </Link> */}
             {/* end::Link */}
           </div>
         </div>

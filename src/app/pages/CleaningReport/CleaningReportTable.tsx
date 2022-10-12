@@ -229,15 +229,18 @@ const TableFootView = (props: any) => {
     return (
       <td style={{minWidth: '100px'}}>
         {index !== 0 ? (
-          <input
-            type='text'
-            onChange={(e) => {
-              setNotes(e.target.value)
-            }}
-            onBlur={() => handleUpdateNote()}
-            value={notes}
-            className='form-control-sm'
-          />
+          <>
+            <label>הערות</label>
+            <input
+              type='text'
+              onChange={(e) => {
+                setNotes(e.target.value)
+              }}
+              onBlur={() => handleUpdateNote()}
+              value={notes}
+              className='form-control-sm'
+            />
+          </>
         ) : null}
       </td>
     )

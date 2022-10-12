@@ -233,15 +233,18 @@ const TableFootView = (props: any) => {
     return (
       <td style={{minWidth: '100px'}}>
         {index !== 0 ? (
-          <input
-            type='text'
-            onChange={(e) => setNotes(e.target.value)}
-            onBlur={(e) => {
-              handleUpdateNote(e.target.value)
-            }}
-            value={notes}
-            className='form-control-sm'
-          />
+          <>
+            <label>הערות</label>
+            <input
+              type='text'
+              onChange={(e) => setNotes(e.target.value)}
+              onBlur={(e) => {
+                handleUpdateNote(e.target.value)
+              }}
+              value={notes}
+              className='form-control-sm'
+            />
+          </>
         ) : null}
       </td>
     )
@@ -274,7 +277,7 @@ const TableHeadView = (props: any) => {
     reloadApi,
     handleToastMessage,
   } = props
-  const [selectedDriver, setSelectedDriver] = useState(drivers[0].id)
+  const [selectedDriver, setSelectedDriver] = useState('')
   useEffect(() => {
     if (driverId) {
       setSelectedDriver(driverId)
@@ -371,6 +374,7 @@ const TableHeadView = (props: any) => {
               }}
               value={selectedDriver}
             >
+              <option value=''>Select Driver</option>
               {drivers?.map((driver: any) => {
                 return <option value={driver.id}>{driver.name}</option>
               })}
