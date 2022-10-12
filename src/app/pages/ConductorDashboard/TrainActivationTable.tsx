@@ -221,7 +221,7 @@ const TableDataView = (props: any) => {
       </td>
     ) : (
       <td className={`${className} `} style={{minWidth: edit === false ? '40px' : '150px'}}>
-        <span style={{float: 'left'}}>
+        <span>
           {edit === true ? (
             <i
               style={{cursor: 'pointer'}}
