@@ -22,76 +22,81 @@ const CleaningReportTable: React.FC<Props> = ({className, trData, thData, driver
     <div className={`card ${className}`}>
       <div className='card-body py-3'>
         {/* begin::Table container */}
-        <div className='table-responsive'>
-          {/* begin::Table */}
-          <div className='tscroll'>
-            <table className='table fixed-table'>
-              {/* begin::Table head */}
-              <thead>
-                <tr className='fw-bolder text-muted'>
-                  {thData.map((item: any, index) => {
-                    const {driverId, driverName, notes, status, trainId, trainName} = item
+        {trData.length > 0 && thData.length > 0 ? (
+          <div className='table-responsive'>
+            {/* begin::Table */}
+            <div className='tscroll'>
+              <table className='table fixed-table'>
+                {/* begin::Table head */}
+                <thead>
+                  <tr className='fw-bolder text-muted'>
+                    {thData.map((item: any, index) => {
+                      const {driverId, driverName, notes, status, trainId, trainName} = item
+                      return (
+                        <TableHeadView
+                          driverId={driverId}
+                          driverName={driverName}
+                          status={status}
+                          trainId={trainId}
+                          drivers={drivers}
+                          index={index}
+                          className='min-w-150px'
+                          text={trainName}
+                        />
+                      )
+                    })}
+                  </tr>
+                </thead>
+                {/* end::Table head */}
+                {/* begin::Table body */}
+                <tbody>
+                  {trData.map((item: any, index: any) => {
                     return (
-                      <TableHeadView
-                        driverId={driverId}
-                        driverName={driverName}
-                        status={status}
-                        trainId={trainId}
-                        drivers={drivers}
-                        index={index}
-                        className='min-w-150px'
-                        text={trainName}
-                      />
+                      <tr>
+                        {item.map((_item: any, index: any) => {
+                          const {carId, carName, checkId, checkValue, trainId, status} = _item
+                          // const {carId, carName, checkId, checkValue} = _item
+                          return (
+                            <TableDataView
+                              handleToastMessage={handleToastMessage}
+                              index={index}
+                              flexValue={1}
+                              carId={carId}
+                              checkId={checkId}
+                              updateData={updateData}
+                              checkValue={checkValue}
+                              trainId={trainId}
+                              text={carName}
+                            />
+                          )
+                        })}
+                      </tr>
                     )
                   })}
-                </tr>
-              </thead>
-              {/* end::Table head */}
-              {/* begin::Table body */}
-              <tbody>
-                {trData.map((item: any, index: any) => {
-                  return (
-                    <tr>
-                      {item.map((_item: any, index: any) => {
-                        const {carId, carName, checkId, checkValue, trainId, status} = _item
-                        // const {carId, carName, checkId, checkValue} = _item
-                        return (
-                          <TableDataView
-                            handleToastMessage={handleToastMessage}
-                            index={index}
-                            flexValue={1}
-                            carId={carId}
-                            checkId={checkId}
-                            updateData={updateData}
-                            checkValue={checkValue}
-                            trainId={trainId}
-                            text={carName}
-                          />
-                        )
-                      })}
-                    </tr>
-                  )
-                })}
-                <tr>
-                  {thData.map((item: any, index: any) => {
-                    const {notes, trainId} = item
-                    return (
-                      <TableFootView
-                        handleToastMessage={handleToastMessage}
-                        index={index}
-                        trainId={trainId}
-                        flexValue={1}
-                        text={notes}
-                      />
-                    )
-                  })}
-                </tr>
-              </tbody>
-              {/* end::Table body */}
-            </table>
+                  <tr>
+                    {thData.map((item: any, index: any) => {
+                      const {notes, trainId} = item
+                      return (
+                        <TableFootView
+                          handleToastMessage={handleToastMessage}
+                          index={index}
+                          trainId={trainId}
+                          flexValue={1}
+                          text={notes}
+                        />
+                      )
+                    })}
+                  </tr>
+                </tbody>
+                {/* end::Table body */}
+              </table>
+            </div>
+            {/* end::Table */}
           </div>
-          {/* end::Table */}
-        </div>
+        ) : (
+          <p>No Data Available</p>
+        )}
+
         {/* end::Table container */}
       </div>
       {/* begin::Body */}

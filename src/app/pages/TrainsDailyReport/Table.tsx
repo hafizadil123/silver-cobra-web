@@ -23,79 +23,83 @@ const ReportTable: React.FC<Props> = ({className, trData, thData, drivers, reloa
     <div className={`card ${className}`}>
       <div className='card-body py-3'>
         {/* begin::Table container */}
-        <div className='table-responsive'>
-          {/* begin::Table */}
-          <div className='tscroll'>
-            <table className='table fixed-table'>
-              {/* begin::Table head */}
-              <thead>
-                <tr className='fw-bolder text-muted'>
-                  {thData.map((item: any, index) => {
-                    const {driverId, driverName, notes, status, trainId, trainName} = item
+        {trData.length > 0 && thData.length > 0 ? (
+          <div className='table-responsive'>
+            {/* begin::Table */}
+            <div className='tscroll'>
+              <table className='table fixed-table'>
+                {/* begin::Table head */}
+                <thead>
+                  <tr className='fw-bolder text-muted'>
+                    {thData.map((item: any, index) => {
+                      const {driverId, driverName, notes, status, trainId, trainName} = item
+                      return (
+                        <TableHeadView
+                          driverId={driverId}
+                          driverName={driverName}
+                          status={status}
+                          trainId={trainId}
+                          drivers={drivers}
+                          handleToastMessage={handleToastMessage}
+                          index={index}
+                          className='min-w-150px'
+                          text={trainName}
+                          reloadApi={reloadApi}
+                        />
+                      )
+                    })}
+                  </tr>
+                </thead>
+                {/* end::Table head */}
+                {/* begin::Table body */}
+                <tbody>
+                  {trData.map((item: any, index: any) => {
                     return (
-                      <TableHeadView
-                        driverId={driverId}
-                        driverName={driverName}
-                        status={status}
-                        trainId={trainId}
-                        drivers={drivers}
-                        handleToastMessage={handleToastMessage}
-                        index={index}
-                        className='min-w-150px'
-                        text={trainName}
-                        reloadApi={reloadApi}
-                      />
+                      <tr>
+                        {item.map((_item: any, index: any) => {
+                          const {carId, carName, checkId, checkValue, trainId, status} = _item
+                          return (
+                            <TableDataView
+                              index={index}
+                              carId={carId}
+                              status={status}
+                              carName={carName}
+                              handleToastMessage={handleToastMessage}
+                              checkId={checkId}
+                              trainId={trainId}
+                              reloadApi={reloadApi}
+                              checkValue={checkValue}
+                              flexValue={1}
+                              text={carName}
+                            />
+                          )
+                        })}
+                      </tr>
                     )
                   })}
-                </tr>
-              </thead>
-              {/* end::Table head */}
-              {/* begin::Table body */}
-              <tbody>
-                {trData.map((item: any, index: any) => {
-                  return (
-                    <tr>
-                      {item.map((_item: any, index: any) => {
-                        const {carId, carName, checkId, checkValue, trainId, status} = _item
-                        return (
-                          <TableDataView
-                            index={index}
-                            carId={carId}
-                            status={status}
-                            carName={carName}
-                            handleToastMessage={handleToastMessage}
-                            checkId={checkId}
-                            trainId={trainId}
-                            reloadApi={reloadApi}
-                            checkValue={checkValue}
-                            flexValue={1}
-                            text={carName}
-                          />
-                        )
-                      })}
-                    </tr>
-                  )
-                })}
-                <tr>
-                  {thData.map((item: any, index: any) => {
-                    const {notes, trainId} = item
-                    return (
-                      <TableFootView
-                        index={index}
-                        handleToastMessage={handleToastMessage}
-                        trainId={trainId}
-                        flexValue={1}
-                        text={notes}
-                      />
-                    )
-                  })}
-                </tr>
-              </tbody>
-              {/* end::Table body */}
-            </table>
+                  <tr>
+                    {thData.map((item: any, index: any) => {
+                      const {notes, trainId} = item
+                      return (
+                        <TableFootView
+                          index={index}
+                          handleToastMessage={handleToastMessage}
+                          trainId={trainId}
+                          flexValue={1}
+                          text={notes}
+                        />
+                      )
+                    })}
+                  </tr>
+                </tbody>
+                {/* end::Table body */}
+              </table>
+            </div>
+            {/* end::Table */}
           </div>
-          {/* end::Table */}
-        </div>
+        ) : (
+          <p>No Data Available</p>
+        )}
         {/* end::Table container */}
       </div>
       {/* begin::Body */}
@@ -312,51 +316,59 @@ const TableHeadView = (props: any) => {
         <span>{text}</span>
       ) : (
         <>
-        <div>
-          <span className='header_fix'>{text}</span><br />
+          <div>
+            <span className='header_fix'>{text}</span>
+            <br />
 
-          {/* Status */}
+            {/* Status */}
 
-          <button
-            onClick={() => {
-              handleChangeTrainStatus(2)
-            }}
-            style={{marginRight: '20px', background: status === 2 ? '#3F4254' : '#E4E6EF'}}
-            className='btn btn-secondary btn-sm'
-          >
-            <i
-              className='fa fa-times'
-              style={{color: '#c18080', fontWeight: 'bold', cursor: 'pointer'}}
-            ></i>
-          </button>
-          <button
-            onClick={() => {
-              handleChangeTrainStatus(1)
-            }}
-            style={{background: status === 1 ? '#3F4254' : '#E4E6EF'}}
-            className='btn btn-secondary btn-sm'
-          >
-            <i
-              className='fa fa-check'
-              style={{color: '#1dd61d', fontWeight: 'bold', cursor: 'pointer'}}
-              aria-hidden='true'
-            ></i>
-          </button>
-          <br />
-          {/* Status */}
-          {driverName !== null ? <span>Driver : {driverName}</span> : null}<br />
-          <select
-            className='form-control-sm'
-            style={{marginRight: '20px', marginTop: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center'}}
-            onChange={(e) => {
-              handleDriverChangeUpdate(e.target.value)
-            }}
-            value={selectedDriver}
-          >
-            {drivers?.map((driver: any) => {
-              return <option value={driver.id}>{driver.name}</option>
-            })}
-          </select>
+            <button
+              onClick={() => {
+                handleChangeTrainStatus(2)
+              }}
+              style={{marginRight: '20px', background: status === 2 ? '#3F4254' : '#E4E6EF'}}
+              className='btn btn-secondary btn-sm'
+            >
+              <i
+                className='fa fa-times'
+                style={{color: '#c18080', fontWeight: 'bold', cursor: 'pointer'}}
+              ></i>
+            </button>
+            <button
+              onClick={() => {
+                handleChangeTrainStatus(1)
+              }}
+              style={{background: status === 1 ? '#3F4254' : '#E4E6EF'}}
+              className='btn btn-secondary btn-sm'
+            >
+              <i
+                className='fa fa-check'
+                style={{color: '#1dd61d', fontWeight: 'bold', cursor: 'pointer'}}
+                aria-hidden='true'
+              ></i>
+            </button>
+            <br />
+            {/* Status */}
+            {driverName !== null ? <span>Driver : {driverName}</span> : null}
+            <br />
+            <select
+              className='form-control-sm'
+              style={{
+                marginRight: '20px',
+                marginTop: '20px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+              onChange={(e) => {
+                handleDriverChangeUpdate(e.target.value)
+              }}
+              value={selectedDriver}
+            >
+              {drivers?.map((driver: any) => {
+                return <option value={driver.id}>{driver.name}</option>
+              })}
+            </select>
           </div>
         </>
       )}
