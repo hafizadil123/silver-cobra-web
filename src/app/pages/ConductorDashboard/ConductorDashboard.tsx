@@ -78,13 +78,13 @@ const ConductorDashboard: FC = () => {
         'כל ההגדרות היום ידרסו עלפי ההגדרות של יום קודם, האם בטוח להעתיק פעילות מיום קודם ? ',
       buttons: [
         {
-          label: 'Yes',
+          label: 'כן',
           onClick: () => {
             setTodayList(previousDayList)
           },
         },
         {
-          label: 'No',
+          label: 'לא',
           onClick: () => {
             console.log('you clicked no')
           },

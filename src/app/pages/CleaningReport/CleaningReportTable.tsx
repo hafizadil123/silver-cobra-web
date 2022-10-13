@@ -83,6 +83,7 @@ const CleaningReportTable: React.FC<Props> = ({className, trData, thData, driver
                           trainId={trainId}
                           flexValue={1}
                           text={notes}
+                          updateData={updateData}
                         />
                       )
                     })}
@@ -197,7 +198,7 @@ const TableDataView = (props: any) => {
 }
 
 const TableFootView = (props: any) => {
-  const {flexValue, text, index, trainId, handleToastMessage} = props
+  const {flexValue, text, index, trainId, handleToastMessage, updateData} = props
   const baseUrl = process.env.REACT_APP_API_URL
   const SaveTrainCleaningNotes = `${baseUrl}/api/Common/SaveTrainDailyCleaningNotes`
   const logged_user_detail: any = localStorage.getItem('logged_user_detail')
@@ -218,12 +219,15 @@ const TableFootView = (props: any) => {
     console.log({dataToSend})
     const response = await axios.post(SaveTrainCleaningNotes, dataToSend, headerJson)
     console.log({response})
+
     handleToastMessage(`Notes Updated Successfully`)
+    updateData(dataToSend, 'notes')
   }
   const [notes, setNotes] = useState('')
   useEffect(() => {
+    // console.log('effect', text)
     setNotes(text)
-  }, [])
+  }, [text])
 
   const renderFields = () => {
     return (

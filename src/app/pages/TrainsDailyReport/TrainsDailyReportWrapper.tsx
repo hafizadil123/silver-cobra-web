@@ -63,7 +63,29 @@ const DashboardPage: FC = () => {
         return item
       }
     })
+    let actualThDataUpdate = actualThData.map((item: any) => {
+      if (item.trainId == data.trainId) {
+        return {
+          ...item,
+          driverId: data.driverId,
+        }
+      } else {
+        return item
+      }
+    })
+    let updatedData = trains.map((item: any) => {
+      if (item.trainId == data.trainId) {
+        return {
+          ...item,
+          driverId: data.driverId,
+        }
+      } else {
+        return item
+      }
+    })
     setThData(updatedThData)
+    setActualThData(actualThDataUpdate)
+    setTrains(updatedData)
   }
   const handleStatusUpdate = (data: any) => {
     let updatedThData = thData.map((item: any) => {
@@ -91,6 +113,43 @@ const DashboardPage: FC = () => {
         return {
           ...item,
           status: data.status,
+        }
+      } else {
+        return item
+      }
+    })
+    setActualThData(actualThDataUpdate)
+
+    console.log({updatedData, trains, actualThData})
+    setTrains(updatedData)
+    setThData(updatedThData)
+  }
+  const handleNotesUpdate = (data: any) => {
+    let updatedThData = thData.map((item: any) => {
+      if (item.trainId == data.trainId) {
+        return {
+          ...item,
+          notes: data.notes,
+        }
+      } else {
+        return item
+      }
+    })
+    let updatedData = trains.map((item: any) => {
+      if (item.trainId == data.trainId) {
+        return {
+          ...item,
+          notes: data.notes,
+        }
+      } else {
+        return item
+      }
+    })
+    let actualThDataUpdate = actualThData.map((item: any) => {
+      if (item.trainId == data.trainId) {
+        return {
+          ...item,
+          notes: data.notes,
         }
       } else {
         return item
@@ -189,6 +248,9 @@ const DashboardPage: FC = () => {
     } else if (type == 'checkValue') {
       console.log('in it')
       updateCheckValueData(data)
+    } else if (type == 'notes') {
+      console.log('notes', data)
+      handleNotesUpdate(data)
     }
     console.log('reloading api')
     // setLoading(true)
@@ -241,9 +303,11 @@ const DashboardPage: FC = () => {
   const handleSearch = (value: any) => {
     let searchedTrains: any = actualThData.filter((item: any) => {
       if (item.trainName.indexOf(value) > -1) {
+        console.log({item})
         return item
       }
     })
+    console.log({searchedTrains})
     let obj = {
       driverId: 0,
       driverName: null,
@@ -260,7 +324,6 @@ const DashboardPage: FC = () => {
       return item.trainId
     })
 
-    console.log({trainIds})
     let _tBodyData: any = []
     console.log({checks: checks.length})
     let s = 0
@@ -279,7 +342,7 @@ const DashboardPage: FC = () => {
         if (trainIds.includes(trainId)) {
           let trainCheck = trains[j].Checks[i]
           trainCheck.trainId = trains[j].trainId
-          console.log({trainCheck})
+          // console.log({trainCheck})
           trData.push(trainCheck)
         }
       }

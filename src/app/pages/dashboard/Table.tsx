@@ -146,6 +146,7 @@ const TableDataView = (props: any) => {
             ></i>
             <Modal
               show={showModal}
+              style={{direction: 'rtl'}}
               onHide={() => {
                 setShowModal(false)
               }}
@@ -158,7 +159,7 @@ const TableDataView = (props: any) => {
               <Modal.Body>
                 <form>
                   <div className='form-group'>
-                    <label>Name</label>
+                    <label>שם</label>
                     <input
                       type='text'
                       value={activeUser.name}
@@ -172,7 +173,7 @@ const TableDataView = (props: any) => {
                     />
                   </div>
                   <div className='form-group'>
-                    <label>Email</label>
+                    <label>דוא"ל</label>
                     <input
                       type='text'
                       onChange={(e) => {
@@ -186,7 +187,7 @@ const TableDataView = (props: any) => {
                     />
                   </div>
                   <div className='form-group'>
-                    <label>User Role Name</label>
+                    <label>תפקיד</label>
                     <input
                       type='text'
                       value={activeUser.UserRoleName}
@@ -200,7 +201,7 @@ const TableDataView = (props: any) => {
                     />
                   </div>
                   <div className='form-group'>
-                    <label>Mobile</label>
+                    <label>מספר נייד</label>
                     <input
                       type='text'
                       value={activeUser.mobile}
@@ -214,7 +215,7 @@ const TableDataView = (props: any) => {
                     />
                   </div>
                   <div className='form-group'>
-                    <label>UserName</label>
+                    <label>שם משתמש</label>
                     <input
                       type='text'
                       value={activeUser.userName}
@@ -247,7 +248,7 @@ const TableDataView = (props: any) => {
                     }}
                     className='btn btn-primary'
                   >
-                    Submit
+                    שמירה
                   </button>
                 </div>
               </Modal.Footer>
