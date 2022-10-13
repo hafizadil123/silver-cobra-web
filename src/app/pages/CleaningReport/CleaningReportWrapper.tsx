@@ -8,8 +8,8 @@ import {CleaningReportTable} from './CleaningReportTable'
 const CleaningReportpage: FC = () => {
   const [checks, setChecks] = useState([])
   const [actualChecks, setActualChecks] = useState([])
-  const [thData, setThData] = useState([])
-  const [actualThData, setActualThData] = useState([])
+  const [thData, setThData] = useState<any>([])
+  const [actualThData, setActualThData] = useState<any>([])
   const [tBodyData, setBodyData] = useState([])
   const [actualTBodyData, setActualBodyData] = useState([])
   const [drivers, setDrivers] = useState<any>([])
@@ -114,8 +114,50 @@ const CleaningReportpage: FC = () => {
       setLoading(false)
     }
   }
+  const handleNotesUpdate = (data: any) => {
+    let updatedThData = thData.map((item: any) => {
+      if (item.trainId == data.trainId) {
+        return {
+          ...item,
+          notes: data.notes,
+        }
+      } else {
+        return item
+      }
+    })
+    let updatedData = trains.map((item: any) => {
+      if (item.trainId == data.trainId) {
+        return {
+          ...item,
+          notes: data.notes,
+        }
+      } else {
+        return item
+      }
+    })
+    let actualThDataUpdate = actualThData.map((item: any) => {
+      if (item.trainId == data.trainId) {
+        return {
+          ...item,
+          notes: data.notes,
+        }
+      } else {
+        return item
+      }
+    })
+    setActualThData(actualThDataUpdate)
 
+    console.log({updatedData, trains, actualThData})
+    setTrains(updatedData)
+    setThData(updatedThData)
+  }
   const updateData = (data: any, type: any) => {
+    if (type == 'notes') {
+      console.log('type', type)
+      console.log('data')
+      handleNotesUpdate(data)
+      return
+    }
     console.log({data, type})
     let updatedTrains: any = tBodyData.map((item: any) => {
       // console.log({item});
