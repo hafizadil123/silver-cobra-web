@@ -78,6 +78,7 @@ const ReportTable: React.FC<Props> = ({className, trData, thData, drivers, reloa
                     )
                   })}
                   <tr>
+                    {console.log({thData})}
                     {thData.map((item: any, index: any) => {
                       const {notes, trainId} = item
                       return (
@@ -87,6 +88,7 @@ const ReportTable: React.FC<Props> = ({className, trData, thData, drivers, reloa
                           trainId={trainId}
                           flexValue={1}
                           text={notes}
+                          reloadApi={reloadApi}
                         />
                       )
                     })}
@@ -200,6 +202,9 @@ const TableDataView = (props: any) => {
 }
 
 const TableFootView = (props: any) => {
+  const {flexValue, text, index, trainId, handleToastMessage, reloadApi} = props
+  const [notes, setNotes] = useState('')
+
   const logged_user_detail: any = localStorage.getItem('logged_user_detail')
   const loggedInUserDetails = JSON.parse(logged_user_detail)
   const headerJson = {
@@ -209,7 +214,6 @@ const TableFootView = (props: any) => {
   }
 
   const SaveTrainDailyNotes = `${baseUrl}/api/Common/SaveTrainDailyNotes`
-  const {flexValue, text, index, trainId, handleToastMessage} = props
   const handleUpdateNote = async (value: any) => {
     setNotes(value)
     let date = new Date()
@@ -222,13 +226,13 @@ const TableFootView = (props: any) => {
     console.log({dataToSend})
     const response = await axios.post(SaveTrainDailyNotes, dataToSend, headerJson)
     console.log({response})
+    reloadApi('notes', dataToSend)
     handleToastMessage(`Notes Updated Successfully`)
   }
-  const [notes, setNotes] = useState('')
   useEffect(() => {
+    // console.log('effect', text)
     setNotes(text)
-  }, [])
-
+  }, [text])
   const renderFields = () => {
     return (
       <td style={{minWidth: '100px'}}>
@@ -279,10 +283,14 @@ const TableHeadView = (props: any) => {
   } = props
   const [selectedDriver, setSelectedDriver] = useState('')
   useEffect(() => {
-    if (driverId) {
+    if (driverId == null || driverId === undefined || driverId == '') {
+      console.log({driverId})
+      setSelectedDriver('')
+    } else {
       setSelectedDriver(driverId)
     }
-  }, [])
+    console.log(driverId, trainId)
+  }, [driverId])
   const handleChangeTrainStatus = async (statusToChange: number) => {
     let date = new Date()
     let dateFormatted = moment(date).format('DD-MM-yyyy')
