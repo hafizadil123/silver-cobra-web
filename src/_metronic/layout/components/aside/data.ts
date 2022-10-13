@@ -1,6 +1,6 @@
 const routes: any = [
   {
-    title: 'Dashboard',
+    title: ' ניהול משתמשים',
     route: '/user-management',
     role: ['Admin'],
   },
@@ -25,7 +25,7 @@ const routes: any = [
     role: ['CleaningManager', 'Admin'],
   },
   {
-    title: 'Conductor Dashboard',
+    title: 'דיווח פעילות יומי',
     route: '/conductor-dashboard',
     role: ['Conductor', 'Admin'],
   },
