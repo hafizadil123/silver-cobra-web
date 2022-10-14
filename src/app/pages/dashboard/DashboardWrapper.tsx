@@ -63,6 +63,10 @@ const DashboardPage: FC = () => {
     if (response && response.data) {
       const {data} = response
       setUserRoles(data.userRoles)
+      setActiveUesr({
+        ...activeUser,
+        UserRoleName: data.userRoles[0].id,
+      })
     }
   }
   const getLoggedInUserdata = async () => {
