@@ -235,7 +235,7 @@ const TableFootView = (props: any) => {
   }, [text])
   const renderFields = () => {
     return (
-      <td style={{minWidth: '100px'}}>
+      <td style={{minWidth: '100px'}} className={` ${index === 0 ? 'table_header' : ''}`}>
         {index !== 0 ? (
           <>
             <label>הערות</label>
