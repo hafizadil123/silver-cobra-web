@@ -15,6 +15,7 @@ import Modal from 'react-bootstrap/Modal'
 const DashboardPage: FC = () => {
   const [showModal, setShowModal] = useState(false)
   const [users, setUsers] = useState<any>([])
+  const [userRoles, setUserRoles] = useState<any>([])
   const [search, setSearch] = useState('')
   const [actualUsers, setActualUsers] = useState<any>([])
   const [loading, setLoading] = useState(true)
@@ -28,7 +29,7 @@ const DashboardPage: FC = () => {
   })
   const handleUpdateUser = () => {
     // console.log({activeUser})
-    saveUserDetails(activeUser)
+    saveUserDetails(activeUser, 'Created')
   }
   const loggedInUserDetails = JSON.parse(logged_user_detail)
 
@@ -36,7 +37,7 @@ const DashboardPage: FC = () => {
 
   const baseUrl = process.env.REACT_APP_API_URL
   const getLoggedInUserEndPoint = `${baseUrl}/api/Common/GetLoggedInUser`
-  const getDriversEndPoint = `${baseUrl}/api/Common/GetDrivers`
+  const getDataEndPoint = `${baseUrl}/api/Common/GetData`
   const getUsersEndPoint = `${baseUrl}/api/Common/GetUsers`
   const saveUserDetailsEndPoint = `${baseUrl}/api/Common/SaveUserDetails`
 
@@ -52,8 +53,18 @@ const DashboardPage: FC = () => {
     setLoading(true)
     getUsers()
     getLoggedInUserdata()
+    getData()
   }, [])
+  const getData = async () => {
+    console.log({headerJson})
+    const response = await axios.post(getDataEndPoint, {}, headerJson)
 
+    console.log({response})
+    if (response && response.data) {
+      const {data} = response
+      setUserRoles(data.userRoles)
+    }
+  }
   const getLoggedInUserdata = async () => {
     console.log({headerJson})
     const response = await axios.post(getLoggedInUserEndPoint, {}, headerJson)
@@ -79,7 +90,7 @@ const DashboardPage: FC = () => {
       setLoading(false)
     }
   }
-  const saveUserDetails = async (details: any) => {
+  const saveUserDetails = async (details: any, type = 'Updated') => {
     console.log({details})
     const response = await axios.post(saveUserDetailsEndPoint, details, headerJson)
     if (response.data.result === false) {
@@ -88,12 +99,19 @@ const DashboardPage: FC = () => {
       })
     } else {
       setLoading(true)
+      addToast(`User ${type} successfully`, {appearance: 'success', autoDismiss: true})
       getUsers()
     }
   }
   const handleSearch = (value: any) => {
     let searchedUsers = actualUsers.filter((item: any) => {
-      if (item.name.indexOf(value) > -1) {
+      if (
+        item.name.indexOf(value) > -1 ||
+        item.email.indexOf(value) > -1 ||
+        item.userName.indexOf(value) > -1 ||
+        item.mobile.indexOf(value) > -1 ||
+        item.UserRoleName.indexOf(value) > -1
+      ) {
         return item
       }
     })
@@ -149,6 +167,7 @@ const DashboardPage: FC = () => {
                 <ReportTable
                   className='mb-5 mb-xl-8'
                   getSelectedUser={getSelectedUser}
+                  userRoles={userRoles}
                   saveUserDetails={saveUserDetails}
                   users={users}
                 />
@@ -201,7 +220,21 @@ const DashboardPage: FC = () => {
             </div>
             <div className='form-group'>
               <label>תפקיד</label>
-              <input
+              <select
+                value={activeUser.UserRoleName}
+                onChange={(e) => {
+                  setActiveUesr({
+                    ...activeUser,
+                    UserRoleName: e.target.value,
+                  })
+                }}
+                className='form-control'
+              >
+                {userRoles.map((role: any) => {
+                  return <option value={role.id}>{role.name}</option>
+                })}
+              </select>
+              {/* <input
                 type='text'
                 value={activeUser.UserRoleName}
                 onChange={(e) => {
@@ -211,7 +244,7 @@ const DashboardPage: FC = () => {
                   })
                 }}
                 className='form-control'
-              />
+              /> */}
             </div>
             <div className='form-group'>
               <label>מספר נייד</label>

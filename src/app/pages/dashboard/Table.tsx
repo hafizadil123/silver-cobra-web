@@ -7,11 +7,18 @@ import Modal from 'react-bootstrap/Modal'
 type Props = {
   className: string
   users: any[]
+  userRoles: any[]
   getSelectedUser: (id: any) => any
   saveUserDetails: (detalis: any) => any
 }
 
-const ReportTable: React.FC<Props> = ({users, className, getSelectedUser, saveUserDetails}) => {
+const ReportTable: React.FC<Props> = ({
+  users,
+  className,
+  getSelectedUser,
+  saveUserDetails,
+  userRoles,
+}) => {
   return (
     <div className={`card ${className}`}>
       <div className='card-body py-3'>
@@ -41,6 +48,7 @@ const ReportTable: React.FC<Props> = ({users, className, getSelectedUser, saveUs
                       index={index}
                       flexValue={1}
                       text={item.name}
+                      userRoles={userRoles}
                       getSelectedUser={getSelectedUser}
                       saveUserDetails={saveUserDetails}
                       userId={item.userId}
@@ -50,6 +58,7 @@ const ReportTable: React.FC<Props> = ({users, className, getSelectedUser, saveUs
                       className='min-w-150px'
                       index={index}
                       flexValue={1}
+                      userRoles={userRoles}
                       text={item.email}
                       getSelectedUser={getSelectedUser}
                       userId={item.userId}
@@ -60,6 +69,7 @@ const ReportTable: React.FC<Props> = ({users, className, getSelectedUser, saveUs
                       className='min-w-150px'
                       index={index}
                       flexValue={1}
+                      userRoles={userRoles}
                       text={item.mobile}
                       getSelectedUser={getSelectedUser}
                       saveUserDetails={saveUserDetails}
@@ -71,6 +81,7 @@ const ReportTable: React.FC<Props> = ({users, className, getSelectedUser, saveUs
                       index={index}
                       flexValue={1}
                       text={item.UserRoleName}
+                      userRoles={userRoles}
                       userId={item.userId}
                       getSelectedUser={getSelectedUser}
                       saveUserDetails={saveUserDetails}
@@ -83,6 +94,7 @@ const ReportTable: React.FC<Props> = ({users, className, getSelectedUser, saveUs
                       text={item.userName}
                       userId={item.userId}
                       getSelectedUser={getSelectedUser}
+                      userRoles={userRoles}
                       saveUserDetails={saveUserDetails}
                       isEdit={false}
                     />
@@ -93,6 +105,7 @@ const ReportTable: React.FC<Props> = ({users, className, getSelectedUser, saveUs
                       text={`edit`}
                       getSelectedUser={getSelectedUser}
                       saveUserDetails={saveUserDetails}
+                      userRoles={userRoles}
                       userId={item.userId}
                       isEdit={true}
                     />
@@ -113,7 +126,7 @@ const ReportTable: React.FC<Props> = ({users, className, getSelectedUser, saveUs
 
 export {ReportTable}
 const TableDataView = (props: any) => {
-  const {isEdit, text, className, getSelectedUser, userId, saveUserDetails} = props
+  const {isEdit, text, className, getSelectedUser, userId, saveUserDetails, userRoles} = props
   const [activeUser, setActiveUesr] = useState({
     name: '',
     email: '',
@@ -187,9 +200,7 @@ const TableDataView = (props: any) => {
                     />
                   </div>
                   <div className='form-group'>
-                    <label>תפקיד</label>
-                    <input
-                      type='text'
+                    <select
                       value={activeUser.UserRoleName}
                       onChange={(e) => {
                         setActiveUesr({
@@ -198,7 +209,11 @@ const TableDataView = (props: any) => {
                         })
                       }}
                       className='form-control'
-                    />
+                    >
+                      {userRoles.map((role: any) => {
+                        return <option value={role.id}>{role.name}</option>
+                      })}
+                    </select>
                   </div>
                   <div className='form-group'>
                     <label>מספר נייד</label>
