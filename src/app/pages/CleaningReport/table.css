@@ -29,3 +29,16 @@
 .colum-divider td:last-child {
   border-right: dashed #888 1px !important;
 }
+.sticky-header {
+  position: sticky;
+  left: 0;
+  background: white !important;
+  z-index: 1 !important;
+  padding: 3px;
+  top: 0;
+}
+.table-row-sticky {
+  position: sticky;
+  left: 0;
+  z-index: 2 !important;
+}

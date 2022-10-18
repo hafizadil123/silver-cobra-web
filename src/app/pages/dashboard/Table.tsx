@@ -133,6 +133,7 @@ const TableDataView = (props: any) => {
     UserRoleName: '',
     mobile: '',
     userName: '',
+    userId: '',
   })
   const [showModal, setShowModal] = useState(false)
   const handleUpdateUser = () => {
@@ -152,7 +153,14 @@ const TableDataView = (props: any) => {
               onClick={(e) => {
                 let user = getSelectedUser(userId)
                 console.log({user})
-                setActiveUesr(user)
+                setActiveUesr({
+                  name: user.name,
+                  email: user.email,
+                  UserRoleName: user.userRoleId,
+                  mobile: user.mobile,
+                  userName: user.userName,
+                  userId: user.userId,
+                })
                 setShowModal(true)
               }}
               className='fa fa-edit'

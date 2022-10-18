@@ -108,13 +108,14 @@ const DashboardPage: FC = () => {
     }
   }
   const handleSearch = (value: any) => {
+    value = value.toLowerCase()
     let searchedUsers = actualUsers.filter((item: any) => {
       if (
-        item.name.indexOf(value) > -1 ||
-        item.email.indexOf(value) > -1 ||
-        item.userName.indexOf(value) > -1 ||
-        item.mobile.indexOf(value) > -1 ||
-        item.UserRoleName.indexOf(value) > -1
+        item.name.toLowerCase().indexOf(value) > -1 ||
+        item.email.toLowerCase().indexOf(value) > -1 ||
+        item.userName.toLowerCase().indexOf(value) > -1 ||
+        item.mobile.toLowerCase().indexOf(value) > -1 ||
+        item.UserRoleName.toLowerCase().indexOf(value) > -1
       ) {
         return item
       }
