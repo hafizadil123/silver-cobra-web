@@ -29,7 +29,7 @@ const CleaningReportTable: React.FC<Props> = ({className, trData, thData, driver
               <table className='table fixed-table colum-divider'>
                 {/* begin::Table head */}
                 <thead>
-                  <tr className='fw-bolder text-muted'>
+                  <tr className='fw-bolder text-muted table-row-sticky'>
                     {thData.map((item: any, index) => {
                       const {driverId, driverName, notes, status, trainId, trainName} = item
                       return (
@@ -270,7 +270,10 @@ const TableHeadView = (props: any) => {
 
   return (
     <>
-      <th style={{minWidth: '100px !important'}} className={`${className}`}>
+      <th
+        style={{minWidth: '100px !important'}}
+        className={`sticky-header ${className} ${index === 0 ? 'table_header' : ''}`}
+      >
         <span>{text}</span>
       </th>
     </>

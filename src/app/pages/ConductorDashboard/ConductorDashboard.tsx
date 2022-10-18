@@ -80,6 +80,7 @@ const ConductorDashboard: FC = () => {
         {
           label: 'כן',
           onClick: () => {
+            console.log('you clicked yes')
             setTodayList(previousDayList)
           },
         },
@@ -182,7 +183,7 @@ const ConductorDashboard: FC = () => {
                   className='btn btn-primary handle-copy'
                   onClick={(e) => {
                     e.preventDefault()
-                    setTodayList(previousDayList)
+                    // setTodayList(previousDayList)
                     handlePrompt()
                   }}
                 >
