@@ -11,32 +11,39 @@ type Props = {
   thData: any[]
   drivers: any[]
   reloadApi: (type: string, data: any) => any
+  selectedDate: any
 }
 const baseUrl = process.env.REACT_APP_API_URL
 
-const ReportTable: React.FC<Props> = ({className, trData, thData, drivers, reloadApi}) => {
+const ReportTable: React.FC<Props> = ({
+  className,
+  trData,
+  thData,
+  drivers,
+  reloadApi,
+  selectedDate,
+}) => {
   const {addToast} = useToasts()
-  const [y, setY] = useState(0);
+  const [y, setY] = useState(0)
   const handleToastMessage = (message: any) => {
     addToast(message, {appearance: 'success', autoDismiss: true})
   }
   const handleNavigation = (e: any) => {
-    const window = e.currentTarget;
+    const window = e.currentTarget
     if (y > window.scrollY) {
-      console.log("scrolling up", window.scrollY, y);
-  
+      console.log('scrolling up', window.scrollY, y)
     } else if (y < window.scrollY) {
-      console.log("scrolling down", window.scrollY, y);
-      console.log("scrolling down");
+      console.log('scrolling down', window.scrollY, y)
+      console.log('scrolling down')
     }
-    setY(window.scrollY);
-  };
+    setY(window.scrollY)
+  }
 
   useEffect(() => {
-    setY(window.scrollY);
+    setY(window.scrollY)
 
-    window.addEventListener("scroll", (e) => handleNavigation(e));
-  }, []);
+    window.addEventListener('scroll', (e) => handleNavigation(e))
+  }, [])
 
   return (
     <div className={`card ${className}`}>
@@ -64,6 +71,7 @@ const ReportTable: React.FC<Props> = ({className, trData, thData, drivers, reloa
                           className='min-w-150px'
                           text={trainName}
                           reloadApi={reloadApi}
+                          selectedDate={selectedDate}
                         />
                       )
                     })}
@@ -90,6 +98,7 @@ const ReportTable: React.FC<Props> = ({className, trData, thData, drivers, reloa
                               checkValue={checkValue}
                               flexValue={1}
                               text={carName}
+                              selectedDate={selectedDate}
                             />
                           )
                         })}
@@ -108,6 +117,7 @@ const ReportTable: React.FC<Props> = ({className, trData, thData, drivers, reloa
                           flexValue={1}
                           text={notes}
                           reloadApi={reloadApi}
+                          selectedDate={selectedDate}
                         />
                       )
                     })}
@@ -142,6 +152,7 @@ const TableDataView = (props: any) => {
     trainId,
     reloadApi,
     handleToastMessage,
+    selectedDate,
   } = props
   const SaveTrainDailyCheckValue = `${baseUrl}/api/Common/SaveTrainDailyCheckValue`
   const logged_user_detail: any = localStorage.getItem('logged_user_detail')
@@ -153,14 +164,23 @@ const TableDataView = (props: any) => {
   }
 
   const handleUpdateCheckValue = async (statusToChange: boolean) => {
-    let date = new Date()
-    let dateFormatted = moment(date).format('DD-MM-yyyy')
+    let date
+    let dateFormatted
+    // let date = new Date()
+    // let dateFormatted = moment(date).format('DD-MM-yyyy')
+    if (selectedDate == '') {
+      date = new Date()
+      dateFormatted = moment(date).format('DD-MM-yyyy')
+    } else {
+      date = new Date(selectedDate)
+      dateFormatted = moment(date).format('DD-MM-yyyy')
+    }
     const dataToSend = {
       trainId,
       checkValue: statusToChange,
       checkid: checkId,
       carid: carId,
-      // date: dateFormatted,
+      date: dateFormatted,
     }
     console.log({dataToSend})
     const response = await axios.post(SaveTrainDailyCheckValue, dataToSend, headerJson)
@@ -221,7 +241,7 @@ const TableDataView = (props: any) => {
 }
 
 const TableFootView = (props: any) => {
-  const {flexValue, text, index, trainId, handleToastMessage, reloadApi} = props
+  const {flexValue, text, index, trainId, handleToastMessage, reloadApi, selectedDate} = props
   const [notes, setNotes] = useState('')
 
   const logged_user_detail: any = localStorage.getItem('logged_user_detail')
@@ -235,12 +255,21 @@ const TableFootView = (props: any) => {
   const SaveTrainDailyNotes = `${baseUrl}/api/Common/SaveTrainDailyNotes`
   const handleUpdateNote = async (value: any) => {
     setNotes(value)
-    let date = new Date()
-    let dateFormatted = moment(date).format('DD-MM-yyyy')
+    let date
+    let dateFormatted
+    // let date = new Date()
+    // let dateFormatted = moment(date).format('DD-MM-yyyy')
+    if (selectedDate == '') {
+      date = new Date()
+      dateFormatted = moment(date).format('DD-MM-yyyy')
+    } else {
+      date = new Date(selectedDate)
+      dateFormatted = moment(date).format('DD-MM-yyyy')
+    }
     const dataToSend = {
       trainId,
       notes: value,
-      // date: dateFormatted,
+      date: dateFormatted,
     }
     console.log({dataToSend})
     const response = await axios.post(SaveTrainDailyNotes, dataToSend, headerJson)
@@ -299,6 +328,7 @@ const TableHeadView = (props: any) => {
     trainId,
     reloadApi,
     handleToastMessage,
+    selectedDate,
   } = props
   const [selectedDriver, setSelectedDriver] = useState('')
   useEffect(() => {
@@ -311,13 +341,22 @@ const TableHeadView = (props: any) => {
     console.log(driverId, trainId)
   }, [driverId])
   const handleChangeTrainStatus = async (statusToChange: number) => {
-    let date = new Date()
-    let dateFormatted = moment(date).format('DD-MM-yyyy')
+    let date
+    let dateFormatted
+    // let date = new Date()
+    // let dateFormatted = moment(date).format('DD-MM-yyyy')
+    if (selectedDate == '') {
+      date = new Date()
+      dateFormatted = moment(date).format('DD-MM-yyyy')
+    } else {
+      date = new Date(selectedDate)
+      dateFormatted = moment(date).format('DD-MM-yyyy')
+    }
     console.log({dateFormatted})
     const DataToSend = {
       status: statusToChange,
       trainId,
-      // date: dateFormatted,
+      date: dateFormatted,
     }
     console.log({DataToSend})
     const response = await axios.post(SaveTrainDailyStatus, DataToSend, headerJson)
@@ -328,11 +367,20 @@ const TableHeadView = (props: any) => {
   }
   const handleDriverChangeUpdate = async (value: any) => {
     setSelectedDriver(value)
-    let date = new Date()
-    let dateFormatted = moment(date).format('DD-MM-yyyy')
+    let date
+    let dateFormatted
+    // let date = new Date()
+    // let dateFormatted = moment(date).format('DD-MM-yyyy')
+    if (selectedDate == '') {
+      date = new Date()
+      dateFormatted = moment(date).format('DD-MM-yyyy')
+    } else {
+      date = new Date(selectedDate)
+      dateFormatted = moment(date).format('DD-MM-yyyy')
+    }
     const dataToSend = {
       trainId,
-      // date: dateFormatted,
+      date: dateFormatted,
       driverId: Number(value),
     }
     const response = await axios.post(SaveTrainDailyDriverEndPoint, dataToSend, headerJson)

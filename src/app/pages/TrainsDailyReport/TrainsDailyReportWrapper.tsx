@@ -11,6 +11,8 @@ import {ShowDataTable} from './ShowDataTable'
 import {ReportTable} from './Table'
 const DashboardPage: FC = () => {
   const [checks, setChecks] = useState<any>([])
+  const [selectedDate, setSelectedDate] = useState<any>('')
+
   const [thData, setThData] = useState<any>([])
   const [tBodyData, setBodyData] = useState<any>([])
   const [search, setSearch] = useState('')
@@ -33,11 +35,28 @@ const DashboardPage: FC = () => {
       Authorization: `bearer ${loggedInUserDetails.access_token}`,
     },
   }
-
   useEffect(() => {
+    console.log({selectedDate})
+    let date
+    let dateFormatted
+    setLoading(true)
+    if (selectedDate == '') {
+      date = new Date()
+      dateFormatted = moment(date).format('yyyy-MM-DD')
+      getMyTrainsDailyReport(dateFormatted)
+      return
+    }
+    date = new Date(selectedDate)
+    dateFormatted = moment(date).format('yyyy-MM-DD')
+    getMyTrainsDailyReport(dateFormatted)
+  }, [selectedDate])
+  useEffect(() => {
+    let date = new Date()
+    // let dateFormatted = moment(date).format('yyyy-MM-DD')
+    setSelectedDate(date)
     getLoggedInUserdata()
     getAllDrivers()
-    getMyTrainsDailyReport()
+    // getMyTrainsDailyReport()
     // getMyTrainsForInspection();
     // GetTrainsDailyCleaningReport();
   }, [])
@@ -161,8 +180,8 @@ const DashboardPage: FC = () => {
     setTrains(updatedData)
     setThData(updatedThData)
   }
-  const getMyTrainsDailyReport = async () => {
-    const response = await axios.post(getMyTrainsDailyReportEndPoint, {}, headerJson)
+  const getMyTrainsDailyReport = async (date: any) => {
+    const response = await axios.post(getMyTrainsDailyReportEndPoint, {date: date}, headerJson)
 
     if (response && response.data) {
       const {data} = response
@@ -370,6 +389,18 @@ const DashboardPage: FC = () => {
             <div className='row'>
               <div className='col-lg-12'>
                 <div className='row'>
+                  <div className='row'>
+                    <div className='col-md-5'>
+                      <input
+                        type='date'
+                        className='form-control-sm mb-5'
+                        value={selectedDate}
+                        onChange={(e) => {
+                          setSelectedDate(e.target.value)
+                        }}
+                      />
+                    </div>
+                  </div>
                   <div className='col-md-8 col-lg-8'>
                     <input
                       type='text'
@@ -397,6 +428,7 @@ const DashboardPage: FC = () => {
                   trData={tBodyData}
                   thData={thData}
                   reloadApi={reloadApi}
+                  selectedDate={selectedDate}
                 />
               </div>
             </div>

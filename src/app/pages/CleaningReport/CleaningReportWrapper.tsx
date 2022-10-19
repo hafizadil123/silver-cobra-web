@@ -7,6 +7,7 @@ import {PageTitle} from '../../../_metronic/layout/core'
 import {CleaningReportTable} from './CleaningReportTable'
 const CleaningReportpage: FC = () => {
   const [checks, setChecks] = useState([])
+  const [selectedDate, setSelectedDate] = useState<any>('')
   const [actualChecks, setActualChecks] = useState([])
   const [thData, setThData] = useState<any>([])
   const [actualThData, setActualThData] = useState<any>([])
@@ -31,9 +32,27 @@ const CleaningReportpage: FC = () => {
   }
 
   useEffect(() => {
-    GetTrainsDailyCleaningReport()
+    let date = new Date()
+    // let dateFormatted = moment(date).format('yyyy-MM-DD')
+    setSelectedDate(date)
+    // GetTrainsDailyCleaningReport(dateFormatted)
     getLoggedInUserdata()
   }, [])
+  useEffect(() => {
+    console.log({selectedDate})
+    let date
+    let dateFormatted
+    setLoading(true)
+    if (selectedDate == '') {
+      date = new Date()
+      dateFormatted = moment(date).format('yyyy-MM-DD')
+      GetTrainsDailyCleaningReport(dateFormatted)
+      return
+    }
+    date = new Date(selectedDate)
+    dateFormatted = moment(date).format('yyyy-MM-DD')
+    GetTrainsDailyCleaningReport(dateFormatted)
+  }, [selectedDate])
 
   const getLoggedInUserdata = async () => {
     console.log({headerJson})
@@ -45,12 +64,10 @@ const CleaningReportpage: FC = () => {
     }
   }
 
-  const GetTrainsDailyCleaningReport = async () => {
-    let date = new Date()
-    let dateFormatted = moment(date).format('yyyy-MM-DD')
+  const GetTrainsDailyCleaningReport = async (date: any) => {
     const response = await axios.post(
       getMyTrainsDailyCleaningReportEndPoint,
-      {date: dateFormatted},
+      {date: date},
       // {},
       headerJson
     )
@@ -260,6 +277,18 @@ const CleaningReportpage: FC = () => {
         <div className='row'>
           <div className='col-lg-12'>
             <div className='row'>
+              <div className='row'>
+                <div className='col-md-5'>
+                  <input
+                    type='date'
+                    className='form-control-sm mb-5'
+                    value={selectedDate}
+                    onChange={(e) => {
+                      setSelectedDate(e.target.value)
+                    }}
+                  />
+                </div>
+              </div>
               <div className='col-md-8 col-lg-8'>
                 <input
                   type='text'
@@ -293,6 +322,7 @@ const CleaningReportpage: FC = () => {
                 drivers={drivers}
                 trData={tBodyData}
                 thData={thData}
+                selectedDate={selectedDate}
                 updateData={updateData}
               />
             )}
