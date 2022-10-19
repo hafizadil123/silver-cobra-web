@@ -14,8 +14,11 @@ import Modal from 'react-bootstrap/Modal'
 
 const DashboardPage: FC = () => {
   const [showModal, setShowModal] = useState(false)
+  
   const [users, setUsers] = useState<any>([])
   const [userRoles, setUserRoles] = useState<any>([])
+  const [y, setY] = useState(0);
+  const [stickyCss, setStickyCss] = useState('')
   const [search, setSearch] = useState('')
   const [actualUsers, setActualUsers] = useState<any>([])
   const [loading, setLoading] = useState(true)
@@ -48,6 +51,11 @@ const DashboardPage: FC = () => {
       Authorization: `bearer ${loggedInUserDetails.access_token}`,
     },
   }
+  useEffect(() => {
+    setY(window.scrollY);
+
+    window.addEventListener("scroll", (e) => handleNavigation(e));
+  }, [stickyCss]);
 
   useEffect(() => {
     setLoading(true)
@@ -87,13 +95,24 @@ const DashboardPage: FC = () => {
 
     if (response && response.data) {
       const {data} = response
-      console.log({dataaaaa: data})
-      console.log({dataaaaaaaaaaaaaaa: data.users})
       setUsers(data.users)
       setActualUsers(data.users)
       setLoading(false)
     }
   }
+  const handleNavigation = (e: any) => {
+    const window = e.currentTarget;
+    if (y > window.scrollY && window.scrollY === 238) {
+      console.log("scrolling up", window.scrollY === 238);
+      setStickyCss('white')
+  
+    } else if (y < window.scrollY) {
+      setStickyCss('')
+    }
+    setY(window.scrollY);
+  };
+
+ 
   const saveUserDetails = async (details: any, type = 'Updated') => {
     console.log({details})
     const response = await axios.post(saveUserDetailsEndPoint, details, headerJson)
@@ -175,6 +194,7 @@ const DashboardPage: FC = () => {
                   userRoles={userRoles}
                   saveUserDetails={saveUserDetails}
                   users={users}
+                  css= {stickyCss}
                 />
               </>
             )}

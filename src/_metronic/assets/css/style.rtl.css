@@ -1992,6 +1992,9 @@ progress {
 }
 .table > thead {
   vertical-align: bottom;
+  position: sticky !important;
+  top: 65px !important;
+  z-index: 9999 !important;
 }
 
 .table-group-divider {

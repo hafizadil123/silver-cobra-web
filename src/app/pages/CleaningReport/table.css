@@ -1,14 +1,8 @@
 .tscroll {
   width: 100%;
-  overflow-x: scroll;
+  /* overflow-x: scroll; */
   margin-bottom: 10px;
   padding: 1px;
-}
-
-.table_header {
-  position: sticky;
-  right: 0;
-  background: #fff;
 }
 
 .tscroll td,
@@ -21,7 +15,9 @@
   border-left: dashed #888 1px !important;
   border-right: dashed #888 1px !important;
 }
-
+.table-responsive {
+  overflow: visible;
+}
 .colum-divider td:first-child {
   border-right: none;
 }
@@ -29,16 +25,11 @@
 .colum-divider td:last-child {
   border-right: dashed #888 1px !important;
 }
+
 .sticky-header {
-  position: sticky;
-  left: 0;
-  background: white !important;
-  z-index: 1 !important;
-  padding: 3px;
-  top: 0;
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 9999;
+  background: white;
 }
-.table-row-sticky {
-  position: sticky;
-  left: 0;
-  z-index: 2 !important;
-}
+

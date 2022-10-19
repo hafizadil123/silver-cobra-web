@@ -16,21 +16,40 @@ const baseUrl = process.env.REACT_APP_API_URL
 
 const ReportTable: React.FC<Props> = ({className, trData, thData, drivers, reloadApi}) => {
   const {addToast} = useToasts()
+  const [y, setY] = useState(0);
   const handleToastMessage = (message: any) => {
     addToast(message, {appearance: 'success', autoDismiss: true})
   }
+  const handleNavigation = (e: any) => {
+    const window = e.currentTarget;
+    if (y > window.scrollY) {
+      console.log("scrolling up", window.scrollY, y);
+  
+    } else if (y < window.scrollY) {
+      console.log("scrolling down", window.scrollY, y);
+      console.log("scrolling down");
+    }
+    setY(window.scrollY);
+  };
+
+  useEffect(() => {
+    setY(window.scrollY);
+
+    window.addEventListener("scroll", (e) => handleNavigation(e));
+  }, []);
+
   return (
     <div className={`card ${className}`}>
       <div className='card-body py-3'>
         {/* begin::Table container */}
         {trData.length > 0 && thData.length > 0 ? (
-          <div className='table-responsive'>
+          <div className='table-responsive' style={{overflow: 'visible'}}>
             {/* begin::Table */}
             <div className='tscroll'>
-              <table className='table fixed-table colum-divider'>
+              <table className='table fixed-table colum-divider' style={{position: 'relative'}}>
                 {/* begin::Table head */}
                 <thead>
-                  <tr className='fw-bolder text-muted'>
+                  <tr className='fw-bolder text-muted' style={{position: 'sticky', top: '65px'}}>
                     {thData.map((item: any, index) => {
                       const {driverId, driverName, notes, status, trainId, trainName} = item
                       return (

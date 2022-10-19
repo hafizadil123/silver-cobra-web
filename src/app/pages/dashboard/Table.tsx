@@ -10,6 +10,7 @@ type Props = {
   userRoles: any[]
   getSelectedUser: (id: any) => any
   saveUserDetails: (detalis: any) => any
+  css: string
 }
 
 const ReportTable: React.FC<Props> = ({
@@ -18,23 +19,49 @@ const ReportTable: React.FC<Props> = ({
   getSelectedUser,
   saveUserDetails,
   userRoles,
+  css
 }) => {
+  const [y, setY] = useState(0);
+  const [stickyCss, setStickyCss] = useState('')
+  const handleNavigation = (e: any) => {
+    const window = e.currentTarget;
+    if (window.scrollY >= 238) {
+      console.log("scrolling up", window.scrollY === 238);
+      setStickyCss('white')
+  
+    } else if (y < window.scrollY) {
+      setStickyCss('')
+    }
+    setY(window.scrollY);
+  };
+  
+  useEffect(() => {
+    setY(window.scrollY);
+
+    window.addEventListener("scroll", (e) => handleNavigation(e));
+  }, []);
+  console.log({
+    stickyCss,
+    y,
+    px: window.screenY
+  })
   return (
     <div className={`card ${className}`}>
       <div className='card-body py-3'>
         {/* begin::Table container */}
         <div className='table-responsive'>
           {/* begin::Table */}
-          <table className='table table-row-bordered table-row-gray-100 align-middle gs-0 gy-3'>
+          <table className={`table table-row-bordered table-row-gray-100 align-middle gs-0 gy-3`}>
             {/* begin::Table head */}
-            <thead>
+            <thead className='sticky-header-top' style={{background: stickyCss}}>
               <tr className='fw-bolder text-muted'>
-                <TableHeadView className='min-w-150px' text={'שם'} />
-                <TableHeadView className='min-w-150px' text={'דוא"ל'} />
-                <TableHeadView className='min-w-150px' text={'מספר נייד'} />
-                <TableHeadView className='min-w-150px' text={'תפקיד'} />
-                <TableHeadView className='min-w-150px' text={'שם משתמש'} />
-                <TableHeadView className='min-w-150px' text={'פעולות'} />
+                
+                <TableHeadView className='sticky-header-thead min-w-150px' text={'שם33 '} />
+                <TableHeadView className='sticky-header-thead min-w-150px' text={'דוא"ל'} />
+                <TableHeadView className='sticky-header-thead min-w-150px' text={'מספר נייד'} />
+                <TableHeadView className='sticky-header-thead min-w-150px' text={'תפקיד'} />
+                <TableHeadView className='sticky-header-thead min-w-150px' text={'שם משתמש'} />
+                <TableHeadView className='sticky-header-thead min-w-150px' text={'פעולות'} />
               </tr>
             </thead>
             {/* end::Table head */}

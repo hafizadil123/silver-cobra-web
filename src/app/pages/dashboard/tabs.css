@@ -8,6 +8,16 @@
     margin-left: 5px;
     cursor: pointer;
 }
+.table-responsive {
+    overflow: visible !important;
+}
+
+.table > thead {
+    vertical-align: bottom;
+    position: sticky !important;
+    top: 65px !important;
+    z-index: 9999 !important;
+}
 
 .general-tab {
     background: #E4E6EF !important;
