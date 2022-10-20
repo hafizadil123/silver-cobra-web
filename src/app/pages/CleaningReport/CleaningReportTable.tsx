@@ -18,6 +18,30 @@ const CleaningReportTable: React.FC<Props> = ({className, trData, thData, driver
   const handleToastMessage = (message: any) => {
     addToast(message, {appearance: 'success', autoDismiss: true})
   }
+  const [y, setY] = useState(0);
+  const [stickyCss, setStickyCss] = useState('')
+  const handleNavigation = (e: any) => {
+    const window = e.currentTarget;
+    if (window.scrollY >= 176) {
+      setStickyCss('white')
+  
+    } else if (y < window.scrollY) {
+      setStickyCss('')
+    }
+    setY(window.scrollY);
+  };
+  
+  useEffect(() => {
+    setY(window.scrollY);
+
+    window.addEventListener("scroll", (e) => handleNavigation(e));
+  }, []);
+  console.log({
+    stickyCss,
+    y,
+    px: window.screenY
+  })
+  let px = '65px';
   return (
     <div className={`card ${className}`}>
       <div className='card-body py-3'>
@@ -25,11 +49,11 @@ const CleaningReportTable: React.FC<Props> = ({className, trData, thData, driver
         {trData.length > 0 && thData.length > 0 ? (
           <div className='table-responsive'>
             {/* begin::Table */}
-            <div className='tscroll'>
+            <div className='tscroll' style={{overflow: `${stickyCss && 'visible'}`}}>
               <table className='table fixed-table colum-divider'>
                 {/* begin::Table head */}
-                <thead>
-                  <tr className='fw-bolder text-muted table-row-sticky'>
+                <thead style={{background: stickyCss, position: 'sticky', top: `${stickyCss ? px : 0}`, zIndex: `${stickyCss && '9999'}`}}>
+                  <tr className='fw-bolder text-muted'>
                     {thData.map((item: any, index) => {
                       const {driverId, driverName, notes, status, trainId, trainName} = item
                       return (
@@ -272,7 +296,7 @@ const TableHeadView = (props: any) => {
     <>
       <th
         style={{minWidth: '100px !important'}}
-        className={`sticky-header ${className} ${index === 0 ? 'table_header' : ''}`}
+        className={`${className} ${index === 0 ? 'table_header' : ''}`}
       >
         <span>{text}</span>
       </th>

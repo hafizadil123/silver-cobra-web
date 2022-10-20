@@ -17,17 +17,18 @@ const baseUrl = process.env.REACT_APP_API_URL
 const ReportTable: React.FC<Props> = ({className, trData, thData, drivers, reloadApi}) => {
   const {addToast} = useToasts()
   const [y, setY] = useState(0);
+  const [stickyCss, setStickyCss] = useState('')
   const handleToastMessage = (message: any) => {
     addToast(message, {appearance: 'success', autoDismiss: true})
   }
   const handleNavigation = (e: any) => {
     const window = e.currentTarget;
-    if (y > window.scrollY) {
-      console.log("scrolling up", window.scrollY, y);
+    if (window.scrollY >= 176) {
+      console.log("scrolling up", window.scrollY === 176);
+      setStickyCss('white')
   
     } else if (y < window.scrollY) {
-      console.log("scrolling down", window.scrollY, y);
-      console.log("scrolling down");
+      setStickyCss('')
     }
     setY(window.scrollY);
   };
@@ -45,10 +46,10 @@ const ReportTable: React.FC<Props> = ({className, trData, thData, drivers, reloa
         {trData.length > 0 && thData.length > 0 ? (
           <div className='table-responsive' style={{overflow: 'visible'}}>
             {/* begin::Table */}
-            <div className='tscroll'>
+            <div className='tscroll' style={{overflow: `${stickyCss && 'visible'}`}}>
               <table className='table fixed-table colum-divider' style={{position: 'relative'}}>
                 {/* begin::Table head */}
-                <thead>
+                <thead style={{background: stickyCss, top: `${stickyCss && '65px'}`}}>
                   <tr className='fw-bolder text-muted' style={{position: 'sticky', top: '65px'}}>
                     {thData.map((item: any, index) => {
                       const {driverId, driverName, notes, status, trainId, trainName} = item

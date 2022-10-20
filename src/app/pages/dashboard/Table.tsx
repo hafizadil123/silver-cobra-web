@@ -3,7 +3,7 @@ import React, {useState, useEffect} from 'react'
 import {KTSVG} from '../../../_metronic/helpers'
 import moment from 'moment'
 import Modal from 'react-bootstrap/Modal'
-
+import './user.css'
 type Props = {
   className: string
   users: any[]
@@ -53,15 +53,15 @@ const ReportTable: React.FC<Props> = ({
           {/* begin::Table */}
           <table className={`table table-row-bordered table-row-gray-100 align-middle gs-0 gy-3`}>
             {/* begin::Table head */}
-            <thead className='sticky-header-top' style={{background: stickyCss}}>
+            <thead style={{background: stickyCss, top: `${stickyCss && '65px'}`}}>
               <tr className='fw-bolder text-muted'>
                 
-                <TableHeadView className='sticky-header-thead min-w-150px' text={'שם33 '} />
-                <TableHeadView className='sticky-header-thead min-w-150px' text={'דוא"ל'} />
-                <TableHeadView className='sticky-header-thead min-w-150px' text={'מספר נייד'} />
-                <TableHeadView className='sticky-header-thead min-w-150px' text={'תפקיד'} />
-                <TableHeadView className='sticky-header-thead min-w-150px' text={'שם משתמש'} />
-                <TableHeadView className='sticky-header-thead min-w-150px' text={'פעולות'} />
+                <TableHeadView className='min-w-150px' text={'שם33 '} />
+                <TableHeadView className='min-w-150px' text={'דוא"ל'} />
+                <TableHeadView className='min-w-150px' text={'מספר נייד'} />
+                <TableHeadView className='min-w-150px' text={'תפקיד'} />
+                <TableHeadView className='min-w-150px' text={'שם משתמש'} />
+                <TableHeadView className='min-w-150px' text={'פעולות'} />
               </tr>
             </thead>
             {/* end::Table head */}

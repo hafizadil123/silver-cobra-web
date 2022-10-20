@@ -29,6 +29,11 @@
     min-width: 170px !important;
 }
 
+.table > thead {
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 9999 !important;
+}
 .button-parent-div {
     width: 100% ;
     display: flex ;
