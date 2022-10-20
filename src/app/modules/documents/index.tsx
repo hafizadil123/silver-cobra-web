@@ -29,7 +29,7 @@ const Documents = () => {
             const { result, rows } = response.data
             if (result) {
                 setListData(rows);
-                console.log('Data : ', response);
+                ;
             }
         }
     }

@@ -182,12 +182,12 @@ const TableDataView = (props: any) => {
       carid: carId,
       date: dateFormatted,
     }
-    console.log({dataToSend})
+    
     const response = await axios.post(SaveTrainCleaningCheckValue, dataToSend, headerJson)
-    console.log({response})
+    
     updateData(dataToSend, 'checkValue')
     handleToastMessage(`Check Value Updated Successfully`)
-    // console.log({response})
+    // 
 
     // reloadApi()
   }
@@ -270,16 +270,16 @@ const TableFootView = (props: any) => {
       notes: notes,
       // date: dateFormatted,
     }
-    console.log({dataToSend})
+    
     const response = await axios.post(SaveTrainCleaningNotes, dataToSend, headerJson)
-    console.log({response})
+    
 
     handleToastMessage(`Notes Updated Successfully`)
     updateData(dataToSend, 'notes')
   }
   const [notes, setNotes] = useState('')
   useEffect(() => {
-    // console.log('effect', text)
+    // 
     setNotes(text)
   }, [text])
 
@@ -313,13 +313,13 @@ const TableHeadView = (props: any) => {
   // const handleChangeTrainStatus = (statusToChange: number) => {
   //   let date = new Date()
   //   let dateFormatted = moment(date).format('DD-MM-yyyy')
-  //   console.log({dateFormatted})
+  //   
   //   const DataToSend = {
   //     status: statusToChange,
   //     trainId,
   //     date: dateFormatted,
   //   }
-  //   console.log({DataToSend})
+  //   
   // }
 
   return (
@@ -362,7 +362,7 @@ const TableHeadView = (props: any) => {
     //       >
     //         <i
     //           onClick={() => {
-    //             console.log('clicked')
+    //             
     //           }}
     //           className='fa fa-check'
     //           style={{color: '#1dd61d', fontWeight: 'bold', cursor: 'pointer'}}

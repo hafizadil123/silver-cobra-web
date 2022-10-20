@@ -33,7 +33,7 @@ const TrainActiviationTable: React.FC<Props> = ({
             <tbody>
               {trains.map((item: any) => {
                 const {name, id, driver, driverId, Status} = item
-                console.log({name, driver})
+                
                 return (
                   <tr>
                     <TableDataView
@@ -110,14 +110,14 @@ const TableDataView = (props: any) => {
   const [ActiveDriver, setDriver] = useState(1)
 
   const handleEditDriver = () => {
-    console.log({})
+    
     setShowModal(true)
   }
   useEffect(() => {
     setDriver(driverId)
   }, [])
   const renderDriversData = () => {
-    console.log({drivers})
+    
     return drivers?.map((item: any) => {
       return (
         <option key={item.id} value={item.id}>

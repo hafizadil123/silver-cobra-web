@@ -26,7 +26,7 @@ const ReportTable: React.FC<Props> = ({
   const handleNavigation = (e: any) => {
     const window = e.currentTarget;
     if (window.scrollY >= 238) {
-      console.log("scrolling up", window.scrollY === 238);
+      ;
       setStickyCss('white')
   
     } else if (y < window.scrollY) {
@@ -164,7 +164,7 @@ const TableDataView = (props: any) => {
   })
   const [showModal, setShowModal] = useState(false)
   const handleUpdateUser = () => {
-    console.log({activeUser})
+    
     saveUserDetails(activeUser)
   }
   const renderFields = () => {
@@ -179,7 +179,7 @@ const TableDataView = (props: any) => {
               style={{float: 'right', cursor: 'pointer'}}
               onClick={(e) => {
                 let user = getSelectedUser(userId)
-                console.log({user})
+                
                 setActiveUesr({
                   name: user.name,
                   email: user.email,

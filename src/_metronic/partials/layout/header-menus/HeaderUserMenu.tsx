@@ -45,7 +45,7 @@ const HeaderUserMenu: FC = () => {
     dispatch(auth.actions.logout())
     window.location.href = '/auth';
   }
-  console.log(user)
+  
   return (
     <div
       className='menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg menu-state-primary fw-bold py-4 fs-6 w-275px'

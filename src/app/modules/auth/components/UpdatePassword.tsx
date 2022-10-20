@@ -27,7 +27,7 @@ export function UpdatePassword() {
   const [loading, setLoading] = useState(false)
   const [hasErrors, setHasErrors] = useState<boolean | undefined>(undefined)
   const location = useLocation()
-  console.log('location', location)
+  
   const token = location.search.split('=')[1];
   const formik = useFormik({
     initialValues,

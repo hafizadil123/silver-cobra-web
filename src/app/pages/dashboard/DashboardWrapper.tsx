@@ -31,7 +31,7 @@ const DashboardPage: FC = () => {
     userName: '',
   })
   const handleUpdateUser = () => {
-    // console.log({activeUser})
+    // 
     saveUserDetails(activeUser, 'Created')
   }
   const loggedInUserDetails = JSON.parse(logged_user_detail)
@@ -64,10 +64,10 @@ const DashboardPage: FC = () => {
     getData()
   }, [])
   const getData = async () => {
-    console.log({headerJson})
+    
     const response = await axios.post(getDataEndPoint, {}, headerJson)
 
-    console.log({response})
+    
     if (response && response.data) {
       const {data} = response
       setUserRoles(data.userRoles)
@@ -78,10 +78,10 @@ const DashboardPage: FC = () => {
     }
   }
   const getLoggedInUserdata = async () => {
-    console.log({headerJson})
+    
     const response = await axios.post(getLoggedInUserEndPoint, {}, headerJson)
 
-    console.log({response})
+    
     if (response && response.data) {
       const {data} = response
     }
@@ -103,7 +103,7 @@ const DashboardPage: FC = () => {
   const handleNavigation = (e: any) => {
     const window = e.currentTarget;
     if (y > window.scrollY && window.scrollY === 238) {
-      console.log("scrolling up", window.scrollY === 238);
+      ;
       setStickyCss('white')
   
     } else if (y < window.scrollY) {
@@ -114,7 +114,7 @@ const DashboardPage: FC = () => {
 
  
   const saveUserDetails = async (details: any, type = 'Updated') => {
-    console.log({details})
+    
     const response = await axios.post(saveUserDetailsEndPoint, details, headerJson)
     if (response.data.result === false) {
       response.data.validationErrors.forEach((error: any) => {

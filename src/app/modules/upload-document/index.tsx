@@ -109,7 +109,7 @@ const UploadDocumentSection = () => {
 
     const postImageToServer = async () => {
         if (isValidated()) {
-            console.log('Data : ', file);
+            ;
             const data = new FormData()
 
 
@@ -127,7 +127,7 @@ const UploadDocumentSection = () => {
             reportDate && data.append('reportDate', reportDate.toString());
 
             const response = await axios.post(getDocumentsDetailsSaveEndpoint, data, authHeader)
-            console.log('response : ',response)
+            
             if (response && response.data) {
                 const { data } = response
                 const { result, message } = data;
@@ -185,7 +185,7 @@ const UploadDocumentSection = () => {
     function handleChange(event: any) {
         const selectedFile = event.target.files[0];
         if ((selectedFile.size / 1000000) < 2) {
-            console.log('DDD : ', selectedFile);
+            ;
             setFile(selectedFile);
         } else {
             inputFileRef.current.value = ''
@@ -205,7 +205,7 @@ const UploadDocumentSection = () => {
                                 setDocumentTypes(getTheUpdatedCategoryTypes(selectedItem && selectedItem.documentTypes))
                                 setSelectedCategoryType(selectedItem)
                                 setSelectedCategoryTypeId(selectedItem.id)
-                                console.log('DocumentTypes : ', selectedItem.documentTypes);
+                                ;
                             }}>
                             {
                                 categoryTypes.map((item: any, index) => {
@@ -224,7 +224,7 @@ const UploadDocumentSection = () => {
                             onChange={(event: any) => {
                                 const selectedItem = documentTypes.filter((item: any) => item.id == event.target.value)[0] || {}
                                 setSelectedDocumentType(selectedItem);
-                                console.log({selectedItem})
+                                
                                 setSelectedDocumentTypeId(selectedItem.id)
                             }}>
                             {

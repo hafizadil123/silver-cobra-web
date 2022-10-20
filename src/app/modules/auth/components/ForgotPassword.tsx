@@ -24,7 +24,7 @@ export function ForgotPassword() {
     initialValues,
     validationSchema: forgotPasswordSchema,
     onSubmit: async (values, {setStatus, setSubmitting}) => {
-      console.log('contanctInfo', values.contanctInfo, values.userName)
+      
       try {
         setLoading(true)
         setStatus('')
@@ -39,12 +39,12 @@ export function ForgotPassword() {
           }
         )
         if (response) {
-          console.log('Responseeee', response)
+          
           // setStatus(msg)
           setHasErrors(false)
           setLoading(false)
           const {data} = response
-          console.log('dataaa', data)
+          
           if(data.result) {
             setStatus('שחזור סיסמאות נשלח, אנא המתן מפנים אותך בכניסה')
             setTimeout(() => {

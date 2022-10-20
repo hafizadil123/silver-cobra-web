@@ -16,7 +16,7 @@ const SectionDataView = (props: any) => {
                 const { yearOneValue, yearTwoValue } = item;
                 if (item.parentKey === parentKey) {
                     if ((hasSecondYear && yearOneValue != null) || (yearOneValue != null && yearTwoValue != null)) {
-                        console.log('ITem : ',item)
+                        
                         return <AttendaneDetailItem
                             key={index}
                             item={item}
@@ -62,7 +62,7 @@ const AttendaneDetailItem = (props: any) => {
                 <p
                     style={{ marginLeft: '5px', color: color, flex: 3, textAlign: 'right', fontSize: '15px' }}
                     onClick={() => {
-                        console.log('Clicked')
+                        
                         onFieldClicked(listNo, type, hasSecondYear ? 2 : 1)
                     }}
                 >{`${label}`}</p>
@@ -172,7 +172,7 @@ const MainAttendance = () => {
         if (response && response.data.result) {
             const { data } = response;
             const { result, message, rows } = data;
-            console.log('Data : ',data);
+            ;
             if (result) {
                 setAlertList(rows);
             }
@@ -193,11 +193,11 @@ const MainAttendance = () => {
             if (!['result', 'message'].includes(item)) {
                 listData.forEach((temp, index) => {
                     if (temp.keyYearOne === item) {
-                        //console.log('YearOne : ',temp.keyYearOne, data[`${item}`]);
+                        //;
                         listData[index].yearOneValue = data[`${item}`]
                     }
                     if (temp.keyYearTwo === item) {
-                        //console.log('YearTwo : ',temp.keyYearTwo, data[`${item}`]);
+                        //;
                         listData[index].yearTwoValue = data[`${item}`]
                     }
                 })
@@ -207,10 +207,10 @@ const MainAttendance = () => {
     }
 
     const renderDynamicTable = () => {
-        console.log('Selected List : ',selectedList);
-        console.log('Selected Type : ',selectedType);
-        console.log('hihihihihihihihhih',selectedList,selectedType,alertList)
-        console.log('AlertList : ',alertList);
+        ;
+        ;
+        
+        ;
         if (selectedList === 1) {
             // === If list one is selected then this section will render === //
             return <div>
@@ -269,7 +269,7 @@ const MainAttendance = () => {
             </table>
         } else if (selectedList === 3) {
             // === If list three is selected then this section will render === //
-            console.log('List 3 : ', listThreeFields)
+            
             return <table style={{ width: '100%' }} >
                 <thead>
                     <tr style={{ display: 'flex', flexDirection: 'row', width: '100%', background: '#28b6e5' }}>
@@ -284,8 +284,8 @@ const MainAttendance = () => {
                     <tr>
                         {
                             alertList.map((item, index) => {
-                                console.log('ITem : ',item);
-                                console.log('EE : ',item[`${listThreeFields[index].key}`]);
+                                ;
+                                ;
                                 return <p style={{ flex: 1, textAlign: 'center', color: '#ffffff', height: '100%', justifyContent: 'center' }} key={index}>{item[`${listThreeFields[index].key}`]}</p>
                             })
                         }
@@ -368,7 +368,7 @@ const MainAttendance = () => {
                     <tr style={{  background: '#28b6e5',height:'50px',lineHeight:'50px' }}>
                         {
                             listFiveTypeOneFields.map((item) => {
-                                console.log({item})
+                                
                                 return (
                                     // < p style={{ flex: 1, textAlign: 'center', color: '#ffffff', height: '100%', justifyContent: 'center' }}>{item.key}</p>
                                     <th>{item.key}</th>

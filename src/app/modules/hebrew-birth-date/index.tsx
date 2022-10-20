@@ -30,7 +30,7 @@ export const HebrewBirthDate = (props: any) => {
         if (response && response.data.result) {
             const { data } = response;
             const { hebDays, hebMonths, hebYears } = data;
-            console.log('Data : ',hebYears);
+            ;
         }
     }
 

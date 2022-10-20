@@ -36,7 +36,7 @@ const DashboardPage: FC = () => {
     },
   }
   useEffect(() => {
-    console.log({selectedDate})
+    
     let date
     let dateFormatted
     setLoading(true)
@@ -62,10 +62,10 @@ const DashboardPage: FC = () => {
   }, [])
 
   const getLoggedInUserdata = async () => {
-    console.log({headerJson})
+    
     const response = await axios.post(getLoggedInUserEndPoint, {}, headerJson)
 
-    console.log({response})
+    
     if (response && response.data) {
       const {data} = response
     }
@@ -139,7 +139,7 @@ const DashboardPage: FC = () => {
     })
     setActualThData(actualThDataUpdate)
 
-    console.log({updatedData, trains, actualThData})
+    
     setTrains(updatedData)
     setThData(updatedThData)
   }
@@ -176,7 +176,7 @@ const DashboardPage: FC = () => {
     })
     setActualThData(actualThDataUpdate)
 
-    console.log({updatedData, trains, actualThData})
+    
     setTrains(updatedData)
     setThData(updatedThData)
   }
@@ -185,7 +185,7 @@ const DashboardPage: FC = () => {
 
     if (response && response.data) {
       const {data} = response
-      console.log({data})
+      
       let thData: any = []
       if (data.trains.length > 0 && data.checks.length > 0) {
         thData.push({
@@ -222,7 +222,7 @@ const DashboardPage: FC = () => {
         for (let j = 0; j < data.trains.length; j++) {
           let trainCheck = data.trains[j].Checks[i]
           trainCheck.trainId = data.trains[j].trainId
-          console.log({trainCheck})
+          
           trData.push(trainCheck)
         }
         tBodyData.push(trData)
@@ -231,7 +231,7 @@ const DashboardPage: FC = () => {
       // data.checks.forEach((item:any)=>{
 
       // })
-      console.log({thData, tBodyData})
+      
       setThData(thData)
       setActualThData(thData)
       setTrains(data.trains)
@@ -255,30 +255,30 @@ const DashboardPage: FC = () => {
     if (response && response.data) {
       const {data} = response
       setDrivers(data.Drivers)
-      // console.log({drivers:data})
+      // 
     }
   }
   const reloadApi = (type: string, data: any) => {
     if (type == 'driver') {
       handleDriverUpdate(data)
     } else if (type == 'trainStatus') {
-      console.log({type, data})
+      
       handleStatusUpdate(data)
     } else if (type == 'checkValue') {
-      console.log('in it')
+      
       updateCheckValueData(data)
     } else if (type == 'notes') {
-      console.log('notes', data)
+      
       handleNotesUpdate(data)
     }
-    console.log('reloading api')
+    
     // setLoading(true)
     // getMyTrainsDailyReport()
   }
   const updateCheckValueData = (data: any) => {
-    console.log({data})
+    
     let updatedTrains: any = tBodyData.map((item: any) => {
-      // console.log({item});
+      // ;
       return item.map((_item: any) => {
         if (
           _item.trainId == data.trainId &&
@@ -316,17 +316,17 @@ const DashboardPage: FC = () => {
       }
     })
     setTrains(updatedData)
-    console.log({trains, updatedData})
+    
     setBodyData(updatedTrains)
   }
   const handleSearch = (value: any) => {
     let searchedTrains: any = actualThData.filter((item: any) => {
       if (item.trainName.indexOf(value) > -1) {
-        console.log({item})
+        
         return item
       }
     })
-    console.log({searchedTrains})
+    
     let obj = {
       driverId: 0,
       driverName: null,
@@ -344,7 +344,7 @@ const DashboardPage: FC = () => {
     })
 
     let _tBodyData: any = []
-    console.log({checks: checks.length})
+    
     let s = 0
     for (let i = 0; i < checks.length; i++) {
       let check: any = checks[i]
@@ -361,15 +361,15 @@ const DashboardPage: FC = () => {
         if (trainIds.includes(trainId)) {
           let trainCheck = trains[j].Checks[i]
           trainCheck.trainId = trains[j].trainId
-          // console.log({trainCheck})
+          // 
           trData.push(trainCheck)
         }
       }
       s++
       _tBodyData.push(trData)
     }
-    console.log({_tBodyData, tBodyData, s})
-    console.log({searchedTrains})
+    
+    
     setSearch(value)
     setThData(searchedTrains)
     setBodyData(_tBodyData)

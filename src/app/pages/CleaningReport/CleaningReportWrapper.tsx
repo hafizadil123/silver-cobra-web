@@ -39,7 +39,7 @@ const CleaningReportpage: FC = () => {
     getLoggedInUserdata()
   }, [])
   useEffect(() => {
-    console.log({selectedDate})
+    
     let date
     let dateFormatted
     setLoading(true)
@@ -55,10 +55,10 @@ const CleaningReportpage: FC = () => {
   }, [selectedDate])
 
   const getLoggedInUserdata = async () => {
-    console.log({headerJson})
+    
     const response = await axios.post(getLoggedInUserEndPoint, {}, headerJson)
 
-    console.log({response})
+    
     if (response && response.data) {
       const {data} = response
     }
@@ -74,7 +74,7 @@ const CleaningReportpage: FC = () => {
 
     if (response && response.data) {
       const {data} = response
-      console.log({data})
+      
       let thData: any = []
       if (data.trains.length > 0 && data.checks.length > 0) {
         thData.push({
@@ -111,7 +111,7 @@ const CleaningReportpage: FC = () => {
         for (let j = 0; j < data.trains.length; j++) {
           let trainCheck = data.trains[j].Checks[i]
           trainCheck.trainId = data.trains[j].trainId
-          console.log({trainCheck})
+          
           trData.push(trainCheck)
         }
         tBodyData.push(trData)
@@ -120,7 +120,7 @@ const CleaningReportpage: FC = () => {
       // data.checks.forEach((item:any)=>{
 
       // })
-      console.log({thData, tBodyData})
+      
       setThData(thData)
       setActualThData(thData)
       setBodyData(tBodyData)
@@ -164,20 +164,20 @@ const CleaningReportpage: FC = () => {
     })
     setActualThData(actualThDataUpdate)
 
-    console.log({updatedData, trains, actualThData})
+    
     setTrains(updatedData)
     setThData(updatedThData)
   }
   const updateData = (data: any, type: any) => {
     if (type == 'notes') {
-      console.log('type', type)
-      console.log('data')
+      
+      
       handleNotesUpdate(data)
       return
     }
-    console.log({data, type})
+    
     let updatedTrains: any = tBodyData.map((item: any) => {
-      // console.log({item});
+      // ;
       return item.map((_item: any) => {
         if (
           _item.trainId == data.trainId &&
@@ -238,9 +238,9 @@ const CleaningReportpage: FC = () => {
       return item.trainId
     })
 
-    console.log({trainIds})
+    
     let _tBodyData: any = []
-    console.log({checks: checks.length})
+    
     let s = 0
     for (let i = 0; i < checks.length; i++) {
       let check: any = checks[i]
@@ -257,15 +257,15 @@ const CleaningReportpage: FC = () => {
         if (trainIds.includes(trainId)) {
           let trainCheck = trains[j].Checks[i]
           trainCheck.trainId = trains[j].trainId
-          console.log({trainCheck})
+          
           trData.push(trainCheck)
         }
       }
       s++
       _tBodyData.push(trData)
     }
-    console.log({_tBodyData, tBodyData, s})
-    console.log({searchedTrains})
+    
+    
     setSearch(value)
     setThData(searchedTrains)
     setBodyData(_tBodyData)

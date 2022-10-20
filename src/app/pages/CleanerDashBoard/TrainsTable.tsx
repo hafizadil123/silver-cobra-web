@@ -85,7 +85,7 @@ const TableFootView = (props: any) => {
       notes: value,
       date: dateFormatted,
     }
-    console.log({dataToSend})
+    
   }
   const [notes, setNotes] = useState('')
   useEffect(() => {

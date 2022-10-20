@@ -36,10 +36,10 @@ const SingleTrainInspectionDashboardPage: FC = () => {
   }, [])
 
   const getLoggedInUserdata = async () => {
-    console.log({headerJson})
+    
     const response = await axios.post(getLoggedInUserEndPoint, {}, headerJson)
 
-    console.log({response})
+    
     if (response && response.data) {
       const {data} = response
     }
@@ -55,7 +55,7 @@ const SingleTrainInspectionDashboardPage: FC = () => {
 
     if (response && response.data) {
       const {data} = response
-      console.log({data})
+      
       setNotes(data.notes)
       setTrains(data.assemblies)
       setApiData(data)
@@ -64,7 +64,7 @@ const SingleTrainInspectionDashboardPage: FC = () => {
   }
 
   const updateStatusHandler = (data: any) => {
-    console.log({data})
+    
     let updatedTrains = trains.map((item: any) => {
       if (item.id === data.assemblyId) {
         let updatedItems = item.items.map((assembly: any) => {
@@ -86,7 +86,7 @@ const SingleTrainInspectionDashboardPage: FC = () => {
       }
     })
     setTrains(updatedTrains)
-    console.log({updatedTrains})
+    
   }
   const handleSubmit = async (e: any) => {
     setLoading(true)
@@ -97,12 +97,12 @@ const SingleTrainInspectionDashboardPage: FC = () => {
       notes: notes,
     }
     const response = await axios.post(saveInspectionEndPoint, dataToSend, headerJson)
-    console.log({response})
+    
     setLoading(false)
     addToast('Your Inspection Has Been Updated', {appearance: 'success', autoDismiss: true})
   }
   const handleMarkAllChecked = (value: any) => {
-    console.log({value})
+    
     let updatedTrains = trains.map((item: any) => {
       let updatedItems = item.items.map((assembly: any) => {
         return {
@@ -117,7 +117,7 @@ const SingleTrainInspectionDashboardPage: FC = () => {
       }
     })
     setTrains(updatedTrains)
-    console.log({updatedTrains})
+    
   }
 
   return (

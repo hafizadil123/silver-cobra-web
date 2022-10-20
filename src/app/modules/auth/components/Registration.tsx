@@ -11,7 +11,7 @@ import {register} from '../redux/AuthCRUD'
 import {Link} from 'react-router-dom'
 import {toAbsoluteUrl} from '../../../../_metronic/helpers'
 import { PasswordMeterComponent } from "../../../../_metronic/assets/ts/components";
-console.log(process.env.REACT_APP_API_URL_BACKEND_LOCAL, process.env.REACT_APP_PREVIEW_DOCS_URL)
+
 const initialValues = {
   firstname: '',
   lastname: '',

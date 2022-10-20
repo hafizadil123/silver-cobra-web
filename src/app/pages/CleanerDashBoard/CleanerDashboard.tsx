@@ -25,10 +25,10 @@ const CleanerDashboardPage: FC = () => {
   }, [])
 
   const getLoggedInUserdata = async () => {
-    console.log({headerJson})
+    
     const response = await axios.post(getLoggedInUserEndPoint, {}, headerJson)
 
-    console.log({response})
+    
     if (response && response.data) {
       const {data} = response
     }
@@ -38,7 +38,7 @@ const CleanerDashboardPage: FC = () => {
 
     if (response && response.data) {
       const {data} = response
-      console.log({data})
+      
       setTrains(data.rows)
       setActualTrains(data.rows)
     }

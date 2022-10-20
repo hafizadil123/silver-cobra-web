@@ -22,7 +22,7 @@ params.append('grant_type', 'password')
 
 // Server should return AuthModel
 export function register(email: string, firstname: string, lastname: string, password: string, parsed: string) {
-  console.log('paaa', parsed);
+  ;
   return axios.post(`${REGISTER_URL}${parsed}`, {
     email,
     first_name: firstname,

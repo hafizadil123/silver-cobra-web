@@ -41,10 +41,10 @@ const ConductorDashboard: FC = () => {
   }, [])
 
   const getLoggedInUserdata = async () => {
-    console.log({headerJson})
+    
     const response = await axios.post(getLoggedInUserEndPoint, {}, headerJson)
 
-    console.log({response})
+    
     if (response && response.data) {
       const {data} = response
     }
@@ -60,10 +60,10 @@ const ConductorDashboard: FC = () => {
   }
 
   const getTrainsForActivation = async () => {
-    console.log({headerJson})
+    
     const response = await axios.post(getTrainActivationEndPoint, {}, headerJson)
 
-    console.log({response})
+    
     if (response && response.data) {
       const {data} = response
       setTodayList(data.todayList)
@@ -80,31 +80,31 @@ const ConductorDashboard: FC = () => {
         {
           label: 'כן',
           onClick: () => {
-            console.log('you clicked yes')
+            
             setTodayList(previousDayList)
           },
         },
         {
           label: 'לא',
           onClick: () => {
-            console.log('you clicked no')
+            
           },
         },
       ],
     })
   }
   const getDrivers = async () => {
-    console.log({headerJson})
+    
     const response = await axios.post(getDriversEndPoint, {}, headerJson)
 
     if (response && response.data) {
       const {data} = response
-      console.log({data})
+      
       setDrivers(data.Drivers)
     }
   }
   const updateDriver = (data: any) => {
-    console.log({data1: data})
+    
     let updatedTodaList = todayList.map((item: any) => {
       if (item.id == data.trainId) {
         return {
@@ -116,11 +116,11 @@ const ConductorDashboard: FC = () => {
         return item
       }
     })
-    console.log({updatedTodaList})
+    
     setTodayList(updatedTodaList)
   }
   const updateStatus = (data: any) => {
-    console.log({statusData: data})
+    
     let updatedTodaList = todayList.map((item: any) => {
       if (item.id == data.id) {
         return {
@@ -131,7 +131,7 @@ const ConductorDashboard: FC = () => {
         return item
       }
     })
-    console.log({updatedTodaList})
+    
     setTodayList(updatedTodaList)
   }
   const handleSubmitTrainActivation = async (e: any) => {
@@ -139,14 +139,14 @@ const ConductorDashboard: FC = () => {
     let trains = todayList
     let date = new Date()
     let dateFormatted = moment(date).format('DD-MM-yyyy')
-    console.log({trains, dateFormatted})
+    
     let dataToSend = {
       trains,
       // date: dateFormatted,
     }
-    // console.log({dataToSend})
+    // 
     const response = await axios.post(saveTrainActivationEndPoint, dataToSend, headerJson)
-    console.log({saveResponse: response})
+    
     addToast('Your Train Activation Has Been Updated', {appearance: 'success', autoDismiss: true})
   }
   return (

@@ -32,7 +32,7 @@ const ReportTable: React.FC<Props> = ({
   const handleNavigation = (e: any) => {
     const window = e.currentTarget;
     if (window.scrollY >= 176) {
-      console.log("scrolling up", window.scrollY === 176);
+      ;
       setStickyCss('white')
   
     } else if (y < window.scrollY) {
@@ -108,7 +108,7 @@ const ReportTable: React.FC<Props> = ({
                     )
                   })}
                   <tr>
-                    {console.log({thData})}
+                    {}
                     {thData.map((item: any, index: any) => {
                       const {notes, trainId} = item
                       return (
@@ -184,10 +184,10 @@ const TableDataView = (props: any) => {
       carid: carId,
       date: dateFormatted,
     }
-    console.log({dataToSend})
+    
     const response = await axios.post(SaveTrainDailyCheckValue, dataToSend, headerJson)
     handleToastMessage(`Check Status Updated Successfully`)
-    // console.log({response})
+    // 
 
     reloadApi('checkValue', dataToSend)
   }
@@ -273,14 +273,14 @@ const TableFootView = (props: any) => {
       notes: value,
       date: dateFormatted,
     }
-    console.log({dataToSend})
+    
     const response = await axios.post(SaveTrainDailyNotes, dataToSend, headerJson)
-    console.log({response})
+    
     reloadApi('notes', dataToSend)
     handleToastMessage(`Notes Updated Successfully`)
   }
   useEffect(() => {
-    // console.log('effect', text)
+    // 
     setNotes(text)
   }, [text])
   const renderFields = () => {
@@ -335,12 +335,12 @@ const TableHeadView = (props: any) => {
   const [selectedDriver, setSelectedDriver] = useState('')
   useEffect(() => {
     if (driverId == null || driverId === undefined || driverId == '') {
-      console.log({driverId})
+      
       setSelectedDriver('')
     } else {
       setSelectedDriver(driverId)
     }
-    console.log(driverId, trainId)
+    
   }, [driverId])
   const handleChangeTrainStatus = async (statusToChange: number) => {
     let date
@@ -354,18 +354,18 @@ const TableHeadView = (props: any) => {
       date = new Date(selectedDate)
       dateFormatted = moment(date).format('DD-MM-yyyy')
     }
-    console.log({dateFormatted})
+    
     const DataToSend = {
       status: statusToChange,
       trainId,
       date: dateFormatted,
     }
-    console.log({DataToSend})
+    
     const response = await axios.post(SaveTrainDailyStatus, DataToSend, headerJson)
     // reloadApi()
     reloadApi('trainStatus', DataToSend)
     handleToastMessage(`Train Status Updated Successfully`)
-    console.log({response})
+    
   }
   const handleDriverChangeUpdate = async (value: any) => {
     setSelectedDriver(value)
@@ -386,7 +386,7 @@ const TableHeadView = (props: any) => {
       driverId: Number(value),
     }
     const response = await axios.post(SaveTrainDailyDriverEndPoint, dataToSend, headerJson)
-    console.log({response})
+    
     handleToastMessage(`Driver Updated Successfully`)
     reloadApi('driver', dataToSend)
   }
