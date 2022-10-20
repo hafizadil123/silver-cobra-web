@@ -11,9 +11,17 @@ type Props = {
   thData: any[]
   drivers: any[]
   updateData: (data: any, type: any) => any
+  selectedDate: any
 }
 
-const CleaningReportTable: React.FC<Props> = ({className, trData, thData, drivers, updateData}) => {
+const CleaningReportTable: React.FC<Props> = ({
+  className,
+  trData,
+  thData,
+  drivers,
+  updateData,
+  selectedDate,
+}) => {
   const {addToast} = useToasts()
   const handleToastMessage = (message: any) => {
     addToast(message, {appearance: 'success', autoDismiss: true})
@@ -66,6 +74,7 @@ const CleaningReportTable: React.FC<Props> = ({className, trData, thData, driver
                           index={index}
                           className='min-w-150px'
                           text={trainName}
+                          selectedDate={selectedDate}
                         />
                       )
                     })}
@@ -91,6 +100,7 @@ const CleaningReportTable: React.FC<Props> = ({className, trData, thData, driver
                               checkValue={checkValue}
                               trainId={trainId}
                               text={carName}
+                              selectedDate={selectedDate}
                             />
                           )
                         })}
@@ -107,6 +117,7 @@ const CleaningReportTable: React.FC<Props> = ({className, trData, thData, driver
                           trainId={trainId}
                           flexValue={1}
                           text={notes}
+                          selectedDate={selectedDate}
                           updateData={updateData}
                         />
                       )
@@ -141,6 +152,7 @@ const TableDataView = (props: any) => {
     checkValue,
     handleToastMessage,
     updateData,
+    selectedDate,
   } = props
   const baseUrl = process.env.REACT_APP_API_URL
   const SaveTrainCleaningCheckValue = `${baseUrl}/api/Common/SaveTrainDailyCleaningCheckValue`
@@ -152,14 +164,23 @@ const TableDataView = (props: any) => {
     },
   }
   const handleUpdateCheckValue = async (statusToChange: boolean) => {
-    let date = new Date()
-    let dateFormatted = moment(date).format('DD-MM-yyyy')
+    let date
+    let dateFormatted
+    // let date = new Date()
+    // let dateFormatted = moment(date).format('DD-MM-yyyy')
+    if (selectedDate == '') {
+      date = new Date()
+      dateFormatted = moment(date).format('DD-MM-yyyy')
+    } else {
+      date = new Date(selectedDate)
+      dateFormatted = moment(date).format('DD-MM-yyyy')
+    }
     const dataToSend = {
       trainId,
       checkValue: statusToChange,
       checkid: checkId,
       carid: carId,
-      // date: dateFormatted,
+      date: dateFormatted,
     }
     console.log({dataToSend})
     const response = await axios.post(SaveTrainCleaningCheckValue, dataToSend, headerJson)
@@ -222,7 +243,7 @@ const TableDataView = (props: any) => {
 }
 
 const TableFootView = (props: any) => {
-  const {flexValue, text, index, trainId, handleToastMessage, updateData} = props
+  const {flexValue, text, index, trainId, handleToastMessage, updateData, selectedDate} = props
   const baseUrl = process.env.REACT_APP_API_URL
   const SaveTrainCleaningNotes = `${baseUrl}/api/Common/SaveTrainDailyCleaningNotes`
   const logged_user_detail: any = localStorage.getItem('logged_user_detail')
@@ -233,8 +254,17 @@ const TableFootView = (props: any) => {
     },
   }
   const handleUpdateNote = async () => {
-    let date = new Date()
-    let dateFormatted = moment(date).format('DD-MM-yyyy')
+    let date
+    let dateFormatted
+    // let date = new Date()
+    // let dateFormatted = moment(date).format('DD-MM-yyyy')
+    if (selectedDate == '') {
+      date = new Date()
+      dateFormatted = moment(date).format('DD-MM-yyyy')
+    } else {
+      date = new Date(selectedDate)
+      dateFormatted = moment(date).format('DD-MM-yyyy')
+    }
     const dataToSend = {
       trainId,
       notes: notes,
@@ -278,7 +308,7 @@ const TableFootView = (props: any) => {
 }
 
 const TableHeadView = (props: any) => {
-  const {text, className, index, status, trainId} = props
+  const {text, className, index, status, trainId, selectedDate} = props
 
   // const handleChangeTrainStatus = (statusToChange: number) => {
   //   let date = new Date()
