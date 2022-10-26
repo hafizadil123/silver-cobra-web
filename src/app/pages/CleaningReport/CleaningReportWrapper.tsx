@@ -33,25 +33,25 @@ const CleaningReportpage: FC = () => {
 
   useEffect(() => {
     let date = new Date()
-    // let dateFormatted = moment(date).format('yyyy-MM-DD')
+    let dateFormatted = moment(date).format('yyyy-MM-DD')
     setSelectedDate(date)
-    // GetTrainsDailyCleaningReport(dateFormatted)
+    GetTrainsDailyCleaningReport(dateFormatted)
     getLoggedInUserdata()
   }, [])
-  useEffect(() => {
-    let date
-    let dateFormatted
-    setLoading(true)
-    if (selectedDate == '') {
-      date = new Date()
-      dateFormatted = moment(date).format('yyyy-MM-DD')
-      GetTrainsDailyCleaningReport(dateFormatted)
-      return
-    }
-    date = new Date(selectedDate)
-    dateFormatted = moment(date).format('yyyy-MM-DD')
-    GetTrainsDailyCleaningReport(dateFormatted)
-  }, [selectedDate])
+  // useEffect(() => {
+  //   let date
+  //   let dateFormatted
+  //   setLoading(true)
+  //   if (selectedDate == '') {
+  //     date = new Date()
+  //     dateFormatted = moment(date).format('yyyy-MM-DD')
+  //     GetTrainsDailyCleaningReport(dateFormatted)
+  //     return
+  //   }
+  //   date = new Date(selectedDate)
+  //   dateFormatted = moment(date).format('yyyy-MM-DD')
+  //   GetTrainsDailyCleaningReport(dateFormatted)
+  // }, [selectedDate])
 
   const getLoggedInUserdata = async () => {
     const response = await axios.post(getLoggedInUserEndPoint, {}, headerJson)
@@ -274,10 +274,13 @@ const CleaningReportpage: FC = () => {
                   <input
                     type='date'
                     className='form-control-sm mb-5'
-                    value={selectedDate}
+                    onChange={(e) => setSelectedDate(e.target.value)}
                     onBlur={(e) => {
-                      setSelectedDate(e.target.value)
+                      let date = new Date(selectedDate)
+                      let dateFormatted = moment(date).format('yyyy-MM-DD')
+                      GetTrainsDailyCleaningReport(dateFormatted)
                     }}
+                    value={selectedDate}
                   />
                 </div>
               </div>
