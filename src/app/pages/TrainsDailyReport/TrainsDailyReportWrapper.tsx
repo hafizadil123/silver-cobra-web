@@ -35,27 +35,27 @@ const DashboardPage: FC = () => {
       Authorization: `bearer ${loggedInUserDetails.access_token}`,
     },
   }
-  useEffect(() => {
-    let date
-    let dateFormatted
-    setLoading(true)
-    if (selectedDate == '') {
-      date = new Date()
-      dateFormatted = moment(date).format('yyyy-MM-DD')
-      getMyTrainsDailyReport(dateFormatted)
-      return
-    }
-    date = new Date(selectedDate)
-    dateFormatted = moment(date).format('yyyy-MM-DD')
-    getMyTrainsDailyReport(dateFormatted)
-  }, [selectedDate])
+  // useEffect(() => {
+  //   let date
+  //   let dateFormatted
+  //   setLoading(true)
+  //   if (selectedDate == '') {
+  //     date = new Date()
+  //     dateFormatted = moment(date).format('yyyy-MM-DD')
+  //     getMyTrainsDailyReport(dateFormatted)
+  //     return
+  //   }
+  //   date = new Date(selectedDate)
+  //   dateFormatted = moment(date).format('yyyy-MM-DD')
+  //   getMyTrainsDailyReport(dateFormatted)
+  // }, [selectedDate])
   useEffect(() => {
     let date = new Date()
-    // let dateFormatted = moment(date).format('yyyy-MM-DD')
+    let dateFormatted = moment(date).format('yyyy-MM-DD')
     setSelectedDate(date)
     getLoggedInUserdata()
     getAllDrivers()
-    // getMyTrainsDailyReport()
+    getMyTrainsDailyReport(dateFormatted)
     // getMyTrainsForInspection();
     // GetTrainsDailyCleaningReport();
   }, [])
@@ -384,8 +384,11 @@ const DashboardPage: FC = () => {
                         type='date'
                         className='form-control-sm mb-5'
                         value={selectedDate}
+                        onChange={(e) => setSelectedDate(e.target.value)}
                         onBlur={(e) => {
-                          setSelectedDate(e.target.value)
+                          let date = new Date(selectedDate)
+                          let dateFormatted = moment(date).format('yyyy-MM-DD')
+                          getMyTrainsDailyReport(dateFormatted)
                         }}
                       />
                     </div>
