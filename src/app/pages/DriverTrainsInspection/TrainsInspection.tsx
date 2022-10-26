@@ -14,7 +14,7 @@ const SingleTrainInspectionDashboardPage: FC = () => {
   const [notes, setNotes] = useState('')
   const [apiData, setApiData] = useState({})
   const [loading, setLoading] = useState(true)
-  const [activeTrain, setActiveTrain] = useState(null)
+  const [activeTrain, setActiveTrain] = useState<any>(null)
   const [message, setMessage] = useState('')
   const logged_user_detail: any = localStorage.getItem('logged_user_detail')
   const loggedInUserDetails = JSON.parse(logged_user_detail)
@@ -36,10 +36,8 @@ const SingleTrainInspectionDashboardPage: FC = () => {
   }, [])
 
   const getLoggedInUserdata = async () => {
-    
     const response = await axios.post(getLoggedInUserEndPoint, {}, headerJson)
 
-    
     if (response && response.data) {
       const {data} = response
     }
@@ -48,6 +46,10 @@ const SingleTrainInspectionDashboardPage: FC = () => {
     let pathName = location.pathname
     let splitedPath = pathName.split('/')
     let activeTrainId = splitedPath[splitedPath.length - 1]
+    let activeTrainName = splitedPath[splitedPath.length - 2]
+    const urlText = activeTrainName.replaceAll('trainNameQuery', ' ')
+
+    setActiveTrain(urlText)
     let dataToSend = {
       trainId: Number(activeTrainId),
     }
@@ -55,7 +57,7 @@ const SingleTrainInspectionDashboardPage: FC = () => {
 
     if (response && response.data) {
       const {data} = response
-      
+
       setNotes(data.notes)
       setTrains(data.assemblies)
       setApiData(data)
@@ -64,7 +66,6 @@ const SingleTrainInspectionDashboardPage: FC = () => {
   }
 
   const updateStatusHandler = (data: any) => {
-    
     let updatedTrains = trains.map((item: any) => {
       if (item.id === data.assemblyId) {
         let updatedItems = item.items.map((assembly: any) => {
@@ -86,7 +87,6 @@ const SingleTrainInspectionDashboardPage: FC = () => {
       }
     })
     setTrains(updatedTrains)
-    
   }
   const handleSubmit = async (e: any) => {
     setLoading(true)
@@ -97,12 +97,11 @@ const SingleTrainInspectionDashboardPage: FC = () => {
       notes: notes,
     }
     const response = await axios.post(saveInspectionEndPoint, dataToSend, headerJson)
-    
+
     setLoading(false)
-    addToast('Your Inspection Has Been Updated', {appearance: 'success', autoDismiss: true})
+    addToast('הביקורת עודכנה בהצלחה', {appearance: 'success', autoDismiss: true})
   }
   const handleMarkAllChecked = (value: any) => {
-    
     let updatedTrains = trains.map((item: any) => {
       let updatedItems = item.items.map((assembly: any) => {
         return {
@@ -117,7 +116,6 @@ const SingleTrainInspectionDashboardPage: FC = () => {
       }
     })
     setTrains(updatedTrains)
-    
   }
 
   return (
@@ -134,7 +132,7 @@ const SingleTrainInspectionDashboardPage: FC = () => {
           <>
             <div className='row'>
               <h1>
-                {`Train Title`}
+                {`רכבת  ` + ' ' + activeTrain}
                 {userRole === 'Cleaner' ? (
                   <span style={{float: 'left', marginLeft: '50px'}}>
                     <button
@@ -144,7 +142,7 @@ const SingleTrainInspectionDashboardPage: FC = () => {
                       style={{marginLeft: '20px'}}
                       className='btn btn-danger btn-sm'
                     >
-                      Mark All{' '}
+                      הסר סימון{' '}
                       <i
                         className='fa fa-times'
                         style={{color: '#fff', fontWeight: 'bold', cursor: 'pointer'}}
@@ -157,7 +155,7 @@ const SingleTrainInspectionDashboardPage: FC = () => {
                       }}
                       className='btn btn-success btn-sm'
                     >
-                      Mark All{' '}
+                      בחר הכל{' '}
                       <i
                         className='fa fa-check'
                         style={{color: '#fff', fontWeight: 'bold', cursor: 'pointer'}}
@@ -184,7 +182,7 @@ const SingleTrainInspectionDashboardPage: FC = () => {
                 })}
             </div>
             <div className='row' style={{marginBottom: '50px'}}>
-              <label className=''>Notes:</label>
+              <label className=''>הערות</label>
               <div className='col-12'>
                 <textarea
                   value={notes}
@@ -194,10 +192,13 @@ const SingleTrainInspectionDashboardPage: FC = () => {
               </div>
               <div className='mt-5 text-center'>
                 {loading ? (
-                  <button className='btn btn-primary mr-2'>Loading....</button>
+                  <button className='btn btn-primary mr-2'>
+                    {' '}
+                    <span>דף בטעינה...</span>
+                  </button>
                 ) : (
                   <button type='button' onClick={handleSubmit} className='btn btn-primary'>
-                    Submit
+                    שמור
                   </button>
                 )}
               </div>

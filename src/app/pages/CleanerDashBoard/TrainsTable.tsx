@@ -59,13 +59,13 @@ const TrainsTable: React.FC<Props> = ({className, trains}) => {
 export {TrainsTable}
 const TableDataView = (props: any) => {
   const {text, id, className} = props
-
+  const urlText = text.replaceAll(' ', 'trainNameQuery')
   const renderFields = () => {
     return (
       <td className={`${className} `} style={{minWidth: '150px'}}>
         <span>
           {' '}
-          <Link to={`/trains-inspection/${id}`}>{text}</Link>{' '}
+          <Link to={`/trains-inspection/${urlText}/${id}`}>שם רכבת{text}</Link>{' '}
         </span>
       </td>
     )
@@ -85,7 +85,6 @@ const TableFootView = (props: any) => {
       notes: value,
       date: dateFormatted,
     }
-    
   }
   const [notes, setNotes] = useState('')
   useEffect(() => {

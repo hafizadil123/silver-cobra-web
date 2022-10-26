@@ -26,30 +26,25 @@ const CleaningReportTable: React.FC<Props> = ({
   const handleToastMessage = (message: any) => {
     addToast(message, {appearance: 'success', autoDismiss: true})
   }
-  const [y, setY] = useState(0);
+  const [y, setY] = useState(0)
   const [stickyCss, setStickyCss] = useState('')
   const handleNavigation = (e: any) => {
-    const window = e.currentTarget;
+    const window = e.currentTarget
     if (window.scrollY >= 176) {
       setStickyCss('white')
-  
     } else if (y < window.scrollY) {
       setStickyCss('')
     }
-    setY(window.scrollY);
-  };
-  
-  useEffect(() => {
-    setY(window.scrollY);
+    setY(window.scrollY)
+  }
 
-    window.addEventListener("scroll", (e) => handleNavigation(e));
-  }, []);
-  console.log({
-    stickyCss,
-    y,
-    px: window.screenY
-  })
-  let px = '65px';
+  useEffect(() => {
+    setY(window.scrollY)
+
+    window.addEventListener('scroll', (e) => handleNavigation(e))
+  }, [])
+
+  let px = '65px'
   return (
     <div className={`card ${className}`}>
       <div className='card-body py-3'>
@@ -57,10 +52,10 @@ const CleaningReportTable: React.FC<Props> = ({
         {trData.length > 0 && thData.length > 0 ? (
           <div className='table-responsive'>
             {/* begin::Table */}
-            <div className='tscroll' style={{overflow: `${stickyCss && 'visible'}`}}>
+            <div className='tscroll'>
               <table className='table fixed-table colum-divider'>
                 {/* begin::Table head */}
-                <thead style={{background: stickyCss, position: 'sticky', top: `${stickyCss ? px : 0}`, zIndex: `${stickyCss && '9999'}`}}>
+                <thead>
                   <tr className='fw-bolder text-muted'>
                     {thData.map((item: any, index) => {
                       const {driverId, driverName, notes, status, trainId, trainName} = item
@@ -130,7 +125,7 @@ const CleaningReportTable: React.FC<Props> = ({
             {/* end::Table */}
           </div>
         ) : (
-          <p>No Data Available</p>
+          <p>לא נמצאו נתונים</p>
         )}
 
         {/* end::Table container */}
@@ -182,12 +177,12 @@ const TableDataView = (props: any) => {
       carid: carId,
       date: dateFormatted,
     }
-    
+
     const response = await axios.post(SaveTrainCleaningCheckValue, dataToSend, headerJson)
-    
+
     updateData(dataToSend, 'checkValue')
-    handleToastMessage(`Check Value Updated Successfully`)
-    // 
+    handleToastMessage(`שדה בדיקה עודכן בהצלחה`)
+    //
 
     // reloadApi()
   }
@@ -270,16 +265,15 @@ const TableFootView = (props: any) => {
       notes: notes,
       // date: dateFormatted,
     }
-    
-    const response = await axios.post(SaveTrainCleaningNotes, dataToSend, headerJson)
-    
 
-    handleToastMessage(`Notes Updated Successfully`)
+    const response = await axios.post(SaveTrainCleaningNotes, dataToSend, headerJson)
+
+    handleToastMessage(`"שדה הערות עודכן בהצלחה`)
     updateData(dataToSend, 'notes')
   }
   const [notes, setNotes] = useState('')
   useEffect(() => {
-    // 
+    //
     setNotes(text)
   }, [text])
 
@@ -313,21 +307,18 @@ const TableHeadView = (props: any) => {
   // const handleChangeTrainStatus = (statusToChange: number) => {
   //   let date = new Date()
   //   let dateFormatted = moment(date).format('DD-MM-yyyy')
-  //   
+  //
   //   const DataToSend = {
   //     status: statusToChange,
   //     trainId,
   //     date: dateFormatted,
   //   }
-  //   
+  //
   // }
 
   return (
     <>
-      <th
-        style={{minWidth: '100px !important'}}
-        className={`${className} ${index === 0 ? 'table_header' : ''}`}
-      >
+      <th style={{minWidth: '100px !important'}} className={`${className} `}>
         <span>{text}</span>
       </th>
     </>
@@ -362,7 +353,7 @@ const TableHeadView = (props: any) => {
     //       >
     //         <i
     //           onClick={() => {
-    //             
+    //
     //           }}
     //           className='fa fa-check'
     //           style={{color: '#1dd61d', fontWeight: 'bold', cursor: 'pointer'}}

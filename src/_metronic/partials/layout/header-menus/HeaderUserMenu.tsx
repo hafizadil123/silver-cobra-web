@@ -1,15 +1,15 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import { FC, useState, useEffect } from 'react'
+import {FC, useState, useEffect} from 'react'
 import clsx from 'clsx'
-import { shallowEqual, useSelector } from 'react-redux'
-import { Link, useNavigate } from 'react-router-dom'
-import { UserModel } from '../../../../app/modules/auth/models/UserModel'
-import { RootState } from '../../../../setup'
-import axios from 'axios';
-import { Languages } from './Languages'
+import {shallowEqual, useSelector} from 'react-redux'
+import {Link, useNavigate} from 'react-router-dom'
+import {UserModel} from '../../../../app/modules/auth/models/UserModel'
+import {RootState} from '../../../../setup'
+import axios from 'axios'
+import {Languages} from './Languages'
 import * as auth from '../../../../app/modules/auth/redux/AuthRedux'
-import { useDispatch } from 'react-redux'
-import { toAbsoluteUrl } from '../../../helpers'
+import {useDispatch} from 'react-redux'
+import {toAbsoluteUrl} from '../../../helpers'
 
 const toolbarButtonMarginClass = 'ms-1 ms-lg-3',
   toolbarButtonHeightClass = 'w-30px h-30px w-md-40px h-md-40px',
@@ -17,35 +17,38 @@ const toolbarButtonMarginClass = 'ms-1 ms-lg-3',
   toolbarButtonIconSizeClass = 'svg-icon-1'
 
 const HeaderUserMenu: FC = () => {
-  const [user, setUser] = useState<any>({});
-  const API_URL = process.env.REACT_APP_API_URL;
+  const [user, setUser] = useState<any>({})
+  const API_URL = process.env.REACT_APP_API_URL
 
-  const getUserDetailUrl = `${API_URL}/api/Common/GetLoggedInUser`;
-  const logged_user_detail: any = localStorage.getItem('logged_user_detail');
-  const getUser = JSON.parse(logged_user_detail);
+  const getUserDetailUrl = `${API_URL}/api/Common/GetLoggedInUser`
+  const logged_user_detail: any = localStorage.getItem('logged_user_detail')
+  const getUser = JSON.parse(logged_user_detail)
   useEffect(() => {
     async function fetchMyAPI() {
-      const response = await axios.post(getUserDetailUrl, {}, {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `bearer ${getUser.access_token}`
+      const response = await axios.post(
+        getUserDetailUrl,
+        {},
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `bearer ${getUser.access_token}`,
+          },
         }
-      });
-      localStorage.setItem('userType', response.data.userRole);
-      localStorage.setItem('logged_in_user_firstName',response?.data?.name);
+      )
+      localStorage.setItem('userType', response.data.userRole)
+      localStorage.setItem('logged_in_user_firstName', response?.data?.name)
       setUser(response.data)
     }
 
     fetchMyAPI()
-   
-  }, []);
+  }, [])
   const dispatch = useDispatch()
   const logout = () => {
     localStorage.removeItem('logged_user_detail')
     dispatch(auth.actions.logout())
-    window.location.href = '/auth';
+    window.location.href = '/auth'
   }
-  
+
   return (
     <div
       className='menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg menu-state-primary fw-bold py-4 fs-6 w-275px'
@@ -59,21 +62,16 @@ const HeaderUserMenu: FC = () => {
 
           <div className='d-flex flex-column'>
             <div className='fw-bolder d-flex align-items-center fs-5'>
-             {user.firstName} {user.lastName}
+              {user.firstName} {user.lastName}
             </div>
             <a href='#' className='fw-bold text-muted text-hover-primary fs-7'>
               {user.email}
-             </a>
+            </a>
           </div>
         </div>
       </div>
 
       <div className='separator my-2'></div>
-
-
-    
-
-      
 
       <div className='menu-item px-5'>
         {/* <Link to='/profile/change-password' className='menu-link px-5'>
@@ -83,11 +81,11 @@ const HeaderUserMenu: FC = () => {
 
       <div className='menu-item px-5'>
         <a onClick={logout} className='menu-link px-5'>
-          Sign Out
+          התנתק מהמערכת
         </a>
       </div>
     </div>
   )
 }
 
-export { HeaderUserMenu }
+export {HeaderUserMenu}

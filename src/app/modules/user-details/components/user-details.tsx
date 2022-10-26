@@ -10,8 +10,8 @@ import {Link} from 'react-router-dom'
 import {toAbsoluteUrl} from '../../../../_metronic/helpers'
 import moment from 'moment'
 import {PasswordMeterComponent} from '../../../../_metronic/assets/ts/components'
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
+import DatePicker from 'react-datepicker'
+import 'react-datepicker/dist/react-datepicker.css'
 import './style.css'
 const API_URL = process.env.REACT_APP_API_URL
 
@@ -41,7 +41,10 @@ const userDetailValidation = Yup.object().shape({
     .required('שדה דרוש מספר דירה')
     .min(1, 'הגבלה מינימלית היא 1')
     .max(9999, 'ההגבלה המקסימלית היא 9999'),
-  houseEntrance: Yup.string().max(5, 'האורך המרבי הוא 5').required('הכניסה לבית נדרשת בשדה').nullable(),
+  houseEntrance: Yup.string()
+    .max(5, 'האורך המרבי הוא 5')
+    .required('הכניסה לבית נדרשת בשדה')
+    .nullable(),
   poBox: Yup.string().max(5, 'אורך מקסימלי הוא 10').required('נדרשת תיבת דואר').nullable(),
   zipCode: Yup.string()
     .max(7, 'האורך המרבי הוא 7')
@@ -51,13 +54,13 @@ const userDetailValidation = Yup.object().shape({
   passport: Yup.string().nullable().max(9, 'האורך המרבי הוא 9'),
   schoolCode: Yup.string().required('קוד בית ספר נדרש'),
   fatherName: Yup.string().required('שם האב נדרש').max(20, 'האורך המרבי הוא 20'),
-  motherName: Yup.string().required("שם האם נדרש").max(20, 'האורך המרבי הוא 20'),
+  motherName: Yup.string().required('שם האם נדרש').max(20, 'האורך המרבי הוא 20'),
   bankCode: Yup.string(),
   bankBranch: Yup.string(),
   bankAccount: Yup.string(),
   immigrationCountryCode: Yup.string(),
   educationYears: Yup.number()
-  .required('נדרש')
+    .required('נדרש')
     .nullable()
     .min(0, 'הגבול המינימלי הוא 0')
     .max(20, 'הגבלה מקסימלית היא 20'),
@@ -113,8 +116,7 @@ export function UserDetails() {
     // acceptTerms: false,
   }
 
-  console.log('User Details', moment(userDetails?.['birthDate']).format('dd-MM-yyyy'))
-  const [startDate, setStartDate] = useState(new Date());
+  const [startDate, setStartDate] = useState(new Date())
   useEffect(() => {
     getUserDetails()
   }, [])
@@ -139,12 +141,10 @@ export function UserDetails() {
       )
       if (response) {
         setLoading(false)
-        const {data} = response;
-        console.log({data});
+        const {data} = response
         // console.log('forammmm',new Date(data.birthDate))
-        setStartDate(new Date(data.birthDate));
+        setStartDate(new Date(data.birthDate))
         setUserDetails(data)
-        console.log('aAAAAAAAAAAAAAdataaa', data)
         if (data?.isArmyInterested) {
           setShowGender(true)
         } else {
@@ -164,7 +164,6 @@ export function UserDetails() {
         setLoading(false)
         const {data} = response
         setGetData(data)
-        console.log('dataaa', data)
       }
     } catch (err) {
       console.log('Errorrrr', err)
@@ -218,13 +217,13 @@ export function UserDetails() {
   //   }
   // }
   // console.log('Schollsssssssss', schools)
-  const handleChangeInSchoolCityTypes =(id:any) =>{
-      let schoolsToPopulate = dataForFields?.schoolCityTypes?.find((item:any)=>item.id==id);
-      // console.log({schoolsToPopulate});
-      setSchoolCodesArray(schoolsToPopulate?.schools || []);
-  } 
-  const onSchoolCityCodeChange = (e:any, setFieldValue:any) => {
-    const value = e.target.value;
+  const handleChangeInSchoolCityTypes = (id: any) => {
+    let schoolsToPopulate = dataForFields?.schoolCityTypes?.find((item: any) => item.id == id)
+    // console.log({schoolsToPopulate});
+    setSchoolCodesArray(schoolsToPopulate?.schools || [])
+  }
+  const onSchoolCityCodeChange = (e: any, setFieldValue: any) => {
+    const value = e.target.value
     console.log({value})
     // setFieldValue('mail.domain', domain, false)
   }
@@ -251,8 +250,7 @@ export function UserDetails() {
 
       {/* begin::Form group Firstname */}
       <div className='row'>
-
-      {userType === 'Volunteer' && (
+        {userType === 'Volunteer' && (
           <div className='col-xl-6'>
             <label className='class="form-label fw-bolder text-dark fs-6'>מספר מתנדב</label>
             <input
@@ -281,7 +279,7 @@ export function UserDetails() {
             )}
           </div>
         )}
-            <div className='col-xl-6'>
+        <div className='col-xl-6'>
           <label className='class="form-label fw-bolder text-dark fs-6'>שם פרטי</label>
           <input
             placeholder='שם פרטי'
@@ -307,12 +305,10 @@ export function UserDetails() {
             </div>
           )}
         </div>
-       
-       
       </div>
 
       <div className='row fv-row mb-7'>
-      <div className='col-xl-6'>
+        <div className='col-xl-6'>
           {/* begin::Form group Lastname */}
           <div className='fv-row mb-5'>
             <label className='form-label fw-bolder text-dark fs-6'>שם משפחה</label>
@@ -372,10 +368,9 @@ export function UserDetails() {
           </div>
           {/* end::Form group */}
         </div>
-      
       </div>
       <div className='row fv-row mb-7'>
-      <div className='col-xl-6'>
+        <div className='col-xl-6'>
           {/* begin::Form group Lastname */}
           <div className='fv-row mb-5'>
             <label className='form-label fw-bolder text-dark fs-6'>דרכון</label>
@@ -408,9 +403,14 @@ export function UserDetails() {
           {/* begin::Form group Lastname */}
           <div className='fv-row mb-5'>
             <label className='form-label fw-bolder text-dark fs-6'>תאריך לידה</label>
-            <DatePicker  className='form-control date-picker-custom-css'  dateFormat={'dd-MM-yyyy'} selected={startDate} onChange={ (date:Date)=>{
-             formik.setFieldValue('birthDate',date);
-            }} />
+            <DatePicker
+              className='form-control date-picker-custom-css'
+              dateFormat={'dd-MM-yyyy'}
+              selected={startDate}
+              onChange={(date: Date) => {
+                formik.setFieldValue('birthDate', date)
+              }}
+            />
             {/* <input
               // placeholder='Passport'
               type='date'
@@ -436,10 +436,9 @@ export function UserDetails() {
           </div>
           {/* end::Form group */}
         </div>
-     
       </div>
       <div className='row fv-row mb-7'>
-      <div className='col-xl-6'>
+        <div className='col-xl-6'>
           {/* begin::Form group Lastname */}
           <div className='fv-row mb-5'>
             <label className='form-label fw-bolder text-dark fs-6'>תאריך לידה</label>
@@ -517,7 +516,6 @@ export function UserDetails() {
           </div>
           {/* end::Form group */}
         </div>
-
       </div>
       <div className='row fv-row mb-7'>
         <div className='col-xl-6'>
@@ -570,11 +568,11 @@ export function UserDetails() {
             </div>
           )}
         </div>
-      </div>  
+      </div>
 
       <div className='row fv-row mb-7'>
-     {/* School city types */}
-     <div className='col-xl-6'>
+        {/* School city types */}
+        <div className='col-xl-6'>
           {/* begin::Form group Lastname */}
           <div className='fv-row mb-5'>
             <label className='form-label fw-bolder text-dark fs-6'>יישוב</label>
@@ -750,23 +748,21 @@ export function UserDetails() {
             </div>
           )}
         </div>
-         <div className='col-xl-6'>
+        <div className='col-xl-6'>
           <label className='form-label fw-bolder text-dark fs-6'>בית ספר</label>
           <select
-           
             aria-label='Select School City Code'
             data-control='select2'
             data-placeholder='date_period'
             className='form-select form-select-sm form-select-solid'
-            
             {...formik.getFieldProps('schoolCityCode')}
-            onBlur={e=>{
+            onBlur={(e) => {
               handleChangeInSchoolCityTypes(e.target.value)
             }}
             onChange={(e) => {
-              const value = e.target.value;
-              handleChangeInSchoolCityTypes(value);
-             formik.setFieldValue('schoolCityCode',value)
+              const value = e.target.value
+              handleChangeInSchoolCityTypes(value)
+              formik.setFieldValue('schoolCityCode', value)
               // form.setFieldValue('mail.domain', domain)
             }}
           >
@@ -787,7 +783,6 @@ export function UserDetails() {
 
           <label className='form-label fw-bolder text-dark fs-6'>בית ספר</label>
           <select
-          
             aria-label='Select School Code'
             data-control='select2'
             data-placeholder='date_period'
@@ -866,7 +861,7 @@ export function UserDetails() {
           </div>
           {/* end::Form group */}
         </div>
-    
+
         <div className='col-xl-6'>
           <div>
             <label className='class="form-label fw-bolder text-dark fs-6'> בנק</label>
@@ -886,18 +881,18 @@ export function UserDetails() {
               )}
             /> */}
             <select
-            // name='hebYear'
-            aria-label=''
-            data-control='select2'
-            data-placeholder='date_period'
-            className='form-select form-select-sm form-select-solid'
-            {...formik.getFieldProps('bankCode')}
-            onChange={formik.handleChange}
-          >
-            {dataForFields?.banks?.map((item: any) => (
-              <option value={item.id}>{item.name}</option>
-            ))}
-          </select>
+              // name='hebYear'
+              aria-label=''
+              data-control='select2'
+              data-placeholder='date_period'
+              className='form-select form-select-sm form-select-solid'
+              {...formik.getFieldProps('bankCode')}
+              onChange={formik.handleChange}
+            >
+              {dataForFields?.banks?.map((item: any) => (
+                <option value={item.id}>{item.name}</option>
+              ))}
+            </select>
             {formik.touched.bankCode && formik.errors.bankCode && (
               <div className='fv-plugins-message-container'>
                 <div className='fv-help-block'>
@@ -906,10 +901,9 @@ export function UserDetails() {
               </div>
             )}
           </div>
- 
         </div>
         <div className='col-xl-6'>
-        <div>
+          <div>
             <label className='class="form-label fw-bolder text-dark fs-6'>סניף בנק</label>
             <input
               placeholder='סניף בנק'
@@ -935,8 +929,7 @@ export function UserDetails() {
             )}
           </div>
         </div>
-           
-        
+
         <div className='col-xl-6'>
           <label className='class="form-label fw-bolder text-dark fs-6'>חשבון בנק</label>
           <input
@@ -1084,7 +1077,7 @@ export function UserDetails() {
               </div>
             </div>
           )}
-        </div> 
+        </div>
         <div className='col-xl-6'>
           {/* begin::Form group Lastname */}
           {console.log('Formikkkkkkkkk', formik.values)}
@@ -1134,7 +1127,7 @@ export function UserDetails() {
             )}
           </div>
         )}
-                {formik.values.serviceGuideCode == 2 && (
+        {formik.values.serviceGuideCode == 2 && (
           <div className='col-xl-6'>
             {/* begin::Form group Lastname */}
             <div>
@@ -1190,16 +1183,11 @@ export function UserDetails() {
             </div>
           </div>
         )}
-
       </div>
 
-    
+      {/* Unwanted Code Starts */}
 
-{/* Unwanted Code Starts */}
-
-
-
-{/*<div className='row fv-row mb-7'>
+      {/*<div className='row fv-row mb-7'>
         <div className='col-xl-6'>
           <label
             className='class="form-label fw-bolder text-dark fs-6'
@@ -1572,10 +1560,7 @@ export function UserDetails() {
    
       </div> */}
 
-
-
-
-{/* Unwanted Code ends this will gets removed once client confirmed */}
+      {/* Unwanted Code ends this will gets removed once client confirmed */}
       {/* begin::Form group */}
       {/* <div className='fv-row mb-10'>
         <div className='form-check form-check-custom form-check-solid'>

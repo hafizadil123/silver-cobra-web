@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, {FC, useState, useEffect} from 'react'
+import React, {FC, useState, useEffect, useLayoutEffect} from 'react'
 import {useIntl} from 'react-intl'
 import axios from 'axios'
 import {PageTitle} from '../../../_metronic/layout/core'
@@ -25,10 +25,8 @@ const DriverDashboardPage: FC = () => {
   }, [])
 
   const getLoggedInUserdata = async () => {
-    
     const response = await axios.post(getLoggedInUserEndPoint, {}, headerJson)
 
-    
     if (response && response.data) {
       const {data} = response
     }
@@ -38,7 +36,7 @@ const DriverDashboardPage: FC = () => {
 
     if (response && response.data) {
       const {data} = response
-      
+
       setTrains(data.rows)
       setActualTrains(data.rows)
     }
@@ -53,11 +51,20 @@ const DriverDashboardPage: FC = () => {
     setSearch(value)
     setTrains(searchedTrains)
   }
-
+  const type = localStorage.getItem('userType')
+  if (type == 'Admin') {
+    window.location.href = '/conductor-dashboard'
+  } else if (type == 'OccUser') {
+    window.location.href = '/trains-daily-report'
+  } else if (type == 'Cleaner') {
+    window.location.href = '/cleaner-dashboard'
+  } else if (type == 'Conductor') {
+    window.location.href = '/conductor-dashboard'
+  }
   return (
     <>
       <div style={{height: 'auto'}} className='main-container-dashboard'>
-        <h1>My Trains</h1>
+        <h1>רשימת רכבות לבחירה</h1>
         <div className='container-fluid row'>
           <div className='col-lg-12'>
             <div className='row'>
@@ -69,7 +76,7 @@ const DriverDashboardPage: FC = () => {
                     handleSearch(e.target.value)
                   }}
                   className='form-control'
-                  placeholder='Search'
+                  placeholder='חפש לפי שם רכבת'
                 />
               </div>
               <div className='col-md-2 col-lg-2'>
