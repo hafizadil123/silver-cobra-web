@@ -19,31 +19,29 @@ const ReportTable: React.FC<Props> = ({
   getSelectedUser,
   saveUserDetails,
   userRoles,
-  css
+  css,
 }) => {
-  const [y, setY] = useState(0);
+  const [y, setY] = useState(0)
   const [stickyCss, setStickyCss] = useState('')
   const handleNavigation = (e: any) => {
-    const window = e.currentTarget;
+    const window = e.currentTarget
     if (window.scrollY >= 238) {
-      ;
       setStickyCss('white')
-  
     } else if (y < window.scrollY) {
       setStickyCss('')
     }
-    setY(window.scrollY);
-  };
-  
-  useEffect(() => {
-    setY(window.scrollY);
+    setY(window.scrollY)
+  }
 
-    window.addEventListener("scroll", (e) => handleNavigation(e));
-  }, []);
+  useEffect(() => {
+    setY(window.scrollY)
+
+    window.addEventListener('scroll', (e) => handleNavigation(e))
+  }, [])
   console.log({
     stickyCss,
     y,
-    px: window.screenY
+    px: window.screenY,
   })
   return (
     <div className={`card ${className}`}>
@@ -55,7 +53,6 @@ const ReportTable: React.FC<Props> = ({
             {/* begin::Table head */}
             <thead style={{background: stickyCss, top: `${stickyCss && '65px'}`}}>
               <tr className='fw-bolder text-muted'>
-                
                 <TableHeadView className='min-w-150px' text={'שם33 '} />
                 <TableHeadView className='min-w-150px' text={'דוא"ל'} />
                 <TableHeadView className='min-w-150px' text={'מספר נייד'} />
@@ -164,7 +161,6 @@ const TableDataView = (props: any) => {
   })
   const [showModal, setShowModal] = useState(false)
   const handleUpdateUser = () => {
-    
     saveUserDetails(activeUser)
   }
   const renderFields = () => {
@@ -179,7 +175,7 @@ const TableDataView = (props: any) => {
               style={{float: 'right', cursor: 'pointer'}}
               onClick={(e) => {
                 let user = getSelectedUser(userId)
-                
+
                 setActiveUesr({
                   name: user.name,
                   email: user.email,

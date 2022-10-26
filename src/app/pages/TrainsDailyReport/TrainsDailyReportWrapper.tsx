@@ -36,7 +36,6 @@ const DashboardPage: FC = () => {
     },
   }
   useEffect(() => {
-    
     let date
     let dateFormatted
     setLoading(true)
@@ -62,10 +61,8 @@ const DashboardPage: FC = () => {
   }, [])
 
   const getLoggedInUserdata = async () => {
-    
     const response = await axios.post(getLoggedInUserEndPoint, {}, headerJson)
 
-    
     if (response && response.data) {
       const {data} = response
     }
@@ -139,7 +136,6 @@ const DashboardPage: FC = () => {
     })
     setActualThData(actualThDataUpdate)
 
-    
     setTrains(updatedData)
     setThData(updatedThData)
   }
@@ -176,7 +172,6 @@ const DashboardPage: FC = () => {
     })
     setActualThData(actualThDataUpdate)
 
-    
     setTrains(updatedData)
     setThData(updatedThData)
   }
@@ -185,7 +180,7 @@ const DashboardPage: FC = () => {
 
     if (response && response.data) {
       const {data} = response
-      
+
       let thData: any = []
       if (data.trains.length > 0 && data.checks.length > 0) {
         thData.push({
@@ -222,7 +217,7 @@ const DashboardPage: FC = () => {
         for (let j = 0; j < data.trains.length; j++) {
           let trainCheck = data.trains[j].Checks[i]
           trainCheck.trainId = data.trains[j].trainId
-          
+
           trData.push(trainCheck)
         }
         tBodyData.push(trData)
@@ -231,7 +226,7 @@ const DashboardPage: FC = () => {
       // data.checks.forEach((item:any)=>{
 
       // })
-      
+
       setThData(thData)
       setActualThData(thData)
       setTrains(data.trains)
@@ -255,28 +250,24 @@ const DashboardPage: FC = () => {
     if (response && response.data) {
       const {data} = response
       setDrivers(data.Drivers)
-      // 
+      //
     }
   }
   const reloadApi = (type: string, data: any) => {
     if (type == 'driver') {
       handleDriverUpdate(data)
     } else if (type == 'trainStatus') {
-      
       handleStatusUpdate(data)
     } else if (type == 'checkValue') {
-      
       updateCheckValueData(data)
     } else if (type == 'notes') {
-      
       handleNotesUpdate(data)
     }
-    
+
     // setLoading(true)
     // getMyTrainsDailyReport()
   }
   const updateCheckValueData = (data: any) => {
-    
     let updatedTrains: any = tBodyData.map((item: any) => {
       // ;
       return item.map((_item: any) => {
@@ -316,17 +307,16 @@ const DashboardPage: FC = () => {
       }
     })
     setTrains(updatedData)
-    
+
     setBodyData(updatedTrains)
   }
   const handleSearch = (value: any) => {
     let searchedTrains: any = actualThData.filter((item: any) => {
       if (item.trainName.indexOf(value) > -1) {
-        
         return item
       }
     })
-    
+
     let obj = {
       driverId: 0,
       driverName: null,
@@ -344,7 +334,7 @@ const DashboardPage: FC = () => {
     })
 
     let _tBodyData: any = []
-    
+
     let s = 0
     for (let i = 0; i < checks.length; i++) {
       let check: any = checks[i]
@@ -361,15 +351,14 @@ const DashboardPage: FC = () => {
         if (trainIds.includes(trainId)) {
           let trainCheck = trains[j].Checks[i]
           trainCheck.trainId = trains[j].trainId
-          // 
+          //
           trData.push(trainCheck)
         }
       }
       s++
       _tBodyData.push(trData)
     }
-    
-    
+
     setSearch(value)
     setThData(searchedTrains)
     setBodyData(_tBodyData)
@@ -395,7 +384,7 @@ const DashboardPage: FC = () => {
                         type='date'
                         className='form-control-sm mb-5'
                         value={selectedDate}
-                        onChange={(e) => {
+                        onBlur={(e) => {
                           setSelectedDate(e.target.value)
                         }}
                       />

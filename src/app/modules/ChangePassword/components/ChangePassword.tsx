@@ -1,74 +1,71 @@
-import React, { useState } from 'react'
+import React, {useState} from 'react'
 import * as Yup from 'yup'
 import clsx from 'clsx'
-import { Link } from 'react-router-dom'
-import { useFormik } from 'formik'
+import {Link} from 'react-router-dom'
+import {useFormik} from 'formik'
 import axios from 'axios'
-import { FormattedMessage } from 'react-intl';
-const API_URL = process.env.REACT_APP_API_URL;
-
+import {FormattedMessage} from 'react-intl'
+const API_URL = process.env.REACT_APP_API_URL
 
 const initialValues = {
   password: '',
   NewPassword: '',
-  ConfirmPassword: ''
+  ConfirmPassword: '',
 }
 
 const changePasswordSchema = Yup.object().shape({
-  password: Yup.string()
-    .required(),
+  password: Yup.string().required(),
   NewPassword: Yup.string().required(),
-  ConfirmPassword: Yup.string().required()
+  ConfirmPassword: Yup.string().required(),
 })
 
 export function ChangePassword() {
   const [loading, setLoading] = useState(false)
   const [hasErrors, setHasErrors] = useState<boolean | undefined>(undefined)
-  const logged_user_detail: any = localStorage.getItem('logged_user_detail');
-  console.log('dddd', JSON.parse(logged_user_detail))
-  const getUser = JSON.parse(logged_user_detail);
+  const logged_user_detail: any = localStorage.getItem('logged_user_detail')
+  const getUser = JSON.parse(logged_user_detail)
   const formik = useFormik({
     initialValues,
     validationSchema: changePasswordSchema,
-    onSubmit: async (values, { setStatus, setSubmitting }) => {
+    onSubmit: async (values, {setStatus, setSubmitting}) => {
       try {
-        setLoading(true);
-        setStatus('');
-        const response = await axios.post(API_URL + '/api/Inner/ChangePassword', { oldPassword: values.password, newPassword: values.NewPassword, confirmPassword: values.ConfirmPassword },
+        setLoading(true)
+        setStatus('')
+        const response = await axios.post(
+          API_URL + '/api/Inner/ChangePassword',
+          {
+            oldPassword: values.password,
+            newPassword: values.NewPassword,
+            confirmPassword: values.ConfirmPassword,
+          },
           {
             headers: {
               'Content-Type': 'application/json',
-              Authorization: `bearer ${getUser.access_token}`
-            }
+              Authorization: `bearer ${getUser.access_token}`,
+            },
           }
-        );
+        )
         if (response) {
-
-          setHasErrors(false);
-          setLoading(false);
-          const { data } = response;
-          console.log('dataaa', data)
+          setHasErrors(false)
+          setLoading(false)
+          const {data} = response
           if (data.result) {
             setStatus('הסיסמאות עודכנו')
           } else {
             setStatus(data.message)
           }
         }
-      }
-      catch (err) {
+      } catch (err) {
         setHasErrors(true)
         setLoading(false)
         setSubmitting(false)
-        setStatus('אירעה שגיאה כלשהי ');
+        setStatus('אירעה שגיאה כלשהי ')
       }
-
     },
   })
 
   return (
     <>
-
-
       <form
         className='form w-100 fv-plugins-bootstrap5 fv-plugins-framework'
         noValidate
@@ -77,7 +74,7 @@ export function ChangePassword() {
       >
         <div className='text-center mb-10'>
           <h1 className='text-dark mb-3'>
-            <FormattedMessage id="AUTH.GENERAL.CHANGE_PASSWORD" />
+            <FormattedMessage id='AUTH.GENERAL.CHANGE_PASSWORD' />
           </h1>
           <div className='text-gray-400 fw-bold fs-4'>
             {/* Enter your email to reset your password. */}
@@ -100,7 +97,7 @@ export function ChangePassword() {
 
         <div className='fv-row mb-10'>
           <label className='form-label fw-bolder text-gray-900 fs-6'>
-            <FormattedMessage id="AUTH.GENERAL.PASSWORD" />
+            <FormattedMessage id='AUTH.GENERAL.PASSWORD' />
           </label>
           <input
             type='password'
@@ -109,7 +106,7 @@ export function ChangePassword() {
             {...formik.getFieldProps('password')}
             className={clsx(
               'form-control form-control-lg',
-              { 'is-invalid': formik.touched.password && formik.errors.password },
+              {'is-invalid': formik.touched.password && formik.errors.password},
               {
                 'is-valid': formik.touched.password && !formik.errors.password,
               }
@@ -123,8 +120,8 @@ export function ChangePassword() {
             </div>
           )}
 
-          <label className='form-label fw-bolder text-gray-900 fs-6' style={{ marginTop: '5px' }}>
-            <FormattedMessage id="AUTH.GENERAL.NEW_PASSWORD" />
+          <label className='form-label fw-bolder text-gray-900 fs-6' style={{marginTop: '5px'}}>
+            <FormattedMessage id='AUTH.GENERAL.NEW_PASSWORD' />
           </label>
           <input
             type='text'
@@ -133,7 +130,7 @@ export function ChangePassword() {
             {...formik.getFieldProps('NewPassword')}
             className={clsx(
               'form-control form-control-lg',
-              { 'is-invalid': formik.touched.NewPassword && formik.errors.NewPassword },
+              {'is-invalid': formik.touched.NewPassword && formik.errors.NewPassword},
               {
                 'is-valid': formik.touched.NewPassword && !formik.errors.NewPassword,
               }
@@ -147,9 +144,8 @@ export function ChangePassword() {
             </div>
           )}
 
-
-          <label className='form-label fw-bolder text-gray-900 fs-6' style={{ marginTop: '5px' }}>
-            <FormattedMessage id="AUTH.GENERAL.CONFIRM_PASSWORD" />
+          <label className='form-label fw-bolder text-gray-900 fs-6' style={{marginTop: '5px'}}>
+            <FormattedMessage id='AUTH.GENERAL.CONFIRM_PASSWORD' />
           </label>
           <input
             type='text'
@@ -158,7 +154,7 @@ export function ChangePassword() {
             {...formik.getFieldProps('ConfirmPassword')}
             className={clsx(
               'form-control form-control-lg',
-              { 'is-invalid': formik.touched.ConfirmPassword && formik.errors.ConfirmPassword },
+              {'is-invalid': formik.touched.ConfirmPassword && formik.errors.ConfirmPassword},
               {
                 'is-valid': formik.touched.ConfirmPassword && !formik.errors.ConfirmPassword,
               }
@@ -180,9 +176,11 @@ export function ChangePassword() {
           >
             {loading ? (
               <span className='indicator-label'>please wait....</span>
-            ) : <span className='indicator-label'>
-              <FormattedMessage id="AUTH.GENERAL.SUBMIT" />
-            </span>}
+            ) : (
+              <span className='indicator-label'>
+                <FormattedMessage id='AUTH.GENERAL.SUBMIT' />
+              </span>
+            )}
           </button>
           <Link to='/auth/login'>
             <button
@@ -191,7 +189,7 @@ export function ChangePassword() {
               className='btn btn-lg btn-light-primary fw-bolder'
               disabled={formik.isSubmitting || !formik.isValid}
             >
-              <FormattedMessage id="AUTH.GENERAL.CANCEL" />
+              <FormattedMessage id='AUTH.GENERAL.CANCEL' />
             </button>
           </Link>{' '}
         </div>

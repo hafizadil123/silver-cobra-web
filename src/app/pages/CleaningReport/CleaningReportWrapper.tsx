@@ -39,7 +39,6 @@ const CleaningReportpage: FC = () => {
     getLoggedInUserdata()
   }, [])
   useEffect(() => {
-    
     let date
     let dateFormatted
     setLoading(true)
@@ -55,10 +54,8 @@ const CleaningReportpage: FC = () => {
   }, [selectedDate])
 
   const getLoggedInUserdata = async () => {
-    
     const response = await axios.post(getLoggedInUserEndPoint, {}, headerJson)
 
-    
     if (response && response.data) {
       const {data} = response
     }
@@ -74,7 +71,7 @@ const CleaningReportpage: FC = () => {
 
     if (response && response.data) {
       const {data} = response
-      
+
       let thData: any = []
       if (data.trains.length > 0 && data.checks.length > 0) {
         thData.push({
@@ -111,7 +108,7 @@ const CleaningReportpage: FC = () => {
         for (let j = 0; j < data.trains.length; j++) {
           let trainCheck = data.trains[j].Checks[i]
           trainCheck.trainId = data.trains[j].trainId
-          
+
           trData.push(trainCheck)
         }
         tBodyData.push(trData)
@@ -120,7 +117,7 @@ const CleaningReportpage: FC = () => {
       // data.checks.forEach((item:any)=>{
 
       // })
-      
+
       setThData(thData)
       setActualThData(thData)
       setBodyData(tBodyData)
@@ -164,18 +161,15 @@ const CleaningReportpage: FC = () => {
     })
     setActualThData(actualThDataUpdate)
 
-    
     setTrains(updatedData)
     setThData(updatedThData)
   }
   const updateData = (data: any, type: any) => {
     if (type == 'notes') {
-      
-      
       handleNotesUpdate(data)
       return
     }
-    
+
     let updatedTrains: any = tBodyData.map((item: any) => {
       // ;
       return item.map((_item: any) => {
@@ -238,9 +232,8 @@ const CleaningReportpage: FC = () => {
       return item.trainId
     })
 
-    
     let _tBodyData: any = []
-    
+
     let s = 0
     for (let i = 0; i < checks.length; i++) {
       let check: any = checks[i]
@@ -257,15 +250,14 @@ const CleaningReportpage: FC = () => {
         if (trainIds.includes(trainId)) {
           let trainCheck = trains[j].Checks[i]
           trainCheck.trainId = trains[j].trainId
-          
+
           trData.push(trainCheck)
         }
       }
       s++
       _tBodyData.push(trData)
     }
-    
-    
+
     setSearch(value)
     setThData(searchedTrains)
     setBodyData(_tBodyData)
@@ -283,7 +275,7 @@ const CleaningReportpage: FC = () => {
                     type='date'
                     className='form-control-sm mb-5'
                     value={selectedDate}
-                    onChange={(e) => {
+                    onBlur={(e) => {
                       setSelectedDate(e.target.value)
                     }}
                   />

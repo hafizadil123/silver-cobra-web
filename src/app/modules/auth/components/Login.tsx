@@ -61,13 +61,10 @@ export function Login(props: any) {
         if (response) {
           setLoading(false)
           const {data} = response
-          console.log({data})
           // return
           localStorage.setItem('logged_user_detail', JSON.stringify(data))
           let role = await getLoggedInUser()
-          console.log({role: role})
           let userRole = localStorage.getItem('userType')
-          console.log(localStorage.getItem('userType'))
           if (userRole === 'Admin') {
             window.location.href = '/conductor-dashboard'
           } else if (userRole === 'Driver') {

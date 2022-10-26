@@ -25,10 +25,8 @@ const CleanerDashboardPage: FC = () => {
   }, [])
 
   const getLoggedInUserdata = async () => {
-    
     const response = await axios.post(getLoggedInUserEndPoint, {}, headerJson)
 
-    
     if (response && response.data) {
       const {data} = response
     }
@@ -38,7 +36,7 @@ const CleanerDashboardPage: FC = () => {
 
     if (response && response.data) {
       const {data} = response
-      
+
       setTrains(data.rows)
       setActualTrains(data.rows)
     }
@@ -57,7 +55,7 @@ const CleanerDashboardPage: FC = () => {
   return (
     <>
       <div style={{height: 'auto'}} className='main-container-dashboard'>
-        <h1>My Trains</h1>
+        <h1>רשימת רכבות לבחירה</h1>
         <div className='container-fluid row'>
           <div className='col-lg-12'>
             <div className='row'>

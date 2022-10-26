@@ -20,20 +20,21 @@ const TrainsTable: React.FC<Props> = ({className, trains}) => {
             {/* begin::Table head */}
             <thead>
               <tr className='fw-bolder text-muted'>
-                <TableHeadView className='min-w-150px' text={`Train Name`} />
+                <TableHeadView className='min-w-150px' text={`שם רכבת`} />
               </tr>
             </thead>
             {/* end::Table head */}
             {/* begin::Table body */}
             <tbody>
-              {trains && trains.map((item: any) => {
-                const {name, id} = item
-                return (
-                  <tr>
-                    <TableDataView key={id} flexValue={1} text={name} id={id} />
-                  </tr>
-                )
-              })}
+              {trains &&
+                trains.map((item: any) => {
+                  const {name, id} = item
+                  return (
+                    <tr>
+                      <TableDataView key={id} flexValue={1} text={name} id={id} />
+                    </tr>
+                  )
+                })}
 
               {/* <tr >
                               {thData.map((item:any, index:any) => {
@@ -58,13 +59,13 @@ const TrainsTable: React.FC<Props> = ({className, trains}) => {
 export {TrainsTable}
 const TableDataView = (props: any) => {
   const {text, id, className} = props
-
+  const urlText = text.replaceAll(' ', 'trainNameQuery')
   const renderFields = () => {
     return (
       <td className={`${className} `} style={{minWidth: '150px'}}>
         <span>
           {' '}
-          <Link to={`/trains-inspection/${id}`}>{text}</Link>{' '}
+          <Link to={`/trains-inspection/${urlText}/${id}`}>שם רכבת {text} </Link>{' '}
         </span>
       </td>
     )
@@ -84,7 +85,6 @@ const TableFootView = (props: any) => {
       notes: value,
       date: dateFormatted,
     }
-    
   }
   const [notes, setNotes] = useState('')
   useEffect(() => {

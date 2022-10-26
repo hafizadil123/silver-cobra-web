@@ -24,17 +24,15 @@ const ReportTable: React.FC<Props> = ({
   selectedDate,
 }) => {
   const {addToast} = useToasts()
-  const [y, setY] = useState(0);
+  const [y, setY] = useState(0)
   const [stickyCss, setStickyCss] = useState('')
   const handleToastMessage = (message: any) => {
     addToast(message, {appearance: 'success', autoDismiss: true})
   }
   const handleNavigation = (e: any) => {
-    const window = e.currentTarget;
+    const window = e.currentTarget
     if (window.scrollY >= 176) {
-      ;
       setStickyCss('white')
-  
     } else if (y < window.scrollY) {
       setStickyCss('')
     }
@@ -57,7 +55,7 @@ const ReportTable: React.FC<Props> = ({
             <div className='tscroll' style={{overflow: `${stickyCss && 'visible'}`}}>
               <table className='table fixed-table colum-divider' style={{position: 'relative'}}>
                 {/* begin::Table head */}
-                <thead style={{background: stickyCss, top: `${stickyCss && '65px'}`}}>
+                <thead>
                   <tr className='fw-bolder text-muted' style={{position: 'sticky', top: '65px'}}>
                     {thData.map((item: any, index) => {
                       const {driverId, driverName, notes, status, trainId, trainName} = item
@@ -131,7 +129,7 @@ const ReportTable: React.FC<Props> = ({
             {/* end::Table */}
           </div>
         ) : (
-          <p>No Data Available</p>
+          <p>לא נמצאו נתונים</p>
         )}
         {/* end::Table container */}
       </div>
@@ -184,10 +182,10 @@ const TableDataView = (props: any) => {
       carid: carId,
       date: dateFormatted,
     }
-    
+
     const response = await axios.post(SaveTrainDailyCheckValue, dataToSend, headerJson)
-    handleToastMessage(`Check Status Updated Successfully`)
-    // 
+    handleToastMessage(`שדה בדיקה עודכן בהצלחה`)
+    //
 
     reloadApi('checkValue', dataToSend)
   }
@@ -273,14 +271,14 @@ const TableFootView = (props: any) => {
       notes: value,
       date: dateFormatted,
     }
-    
+
     const response = await axios.post(SaveTrainDailyNotes, dataToSend, headerJson)
-    
+
     reloadApi('notes', dataToSend)
-    handleToastMessage(`Notes Updated Successfully`)
+    handleToastMessage(`שדה הערות עודכן בהצלחה`)
   }
   useEffect(() => {
-    // 
+    //
     setNotes(text)
   }, [text])
   const renderFields = () => {
@@ -335,12 +333,10 @@ const TableHeadView = (props: any) => {
   const [selectedDriver, setSelectedDriver] = useState('')
   useEffect(() => {
     if (driverId == null || driverId === undefined || driverId == '') {
-      
       setSelectedDriver('')
     } else {
       setSelectedDriver(driverId)
     }
-    
   }, [driverId])
   const handleChangeTrainStatus = async (statusToChange: number) => {
     let date
@@ -354,18 +350,17 @@ const TableHeadView = (props: any) => {
       date = new Date(selectedDate)
       dateFormatted = moment(date).format('DD-MM-yyyy')
     }
-    
+
     const DataToSend = {
       status: statusToChange,
       trainId,
       date: dateFormatted,
     }
-    
+
     const response = await axios.post(SaveTrainDailyStatus, DataToSend, headerJson)
     // reloadApi()
     reloadApi('trainStatus', DataToSend)
-    handleToastMessage(`Train Status Updated Successfully`)
-    
+    handleToastMessage(`סטטוס רכבת עודכן בהצלחה`)
   }
   const handleDriverChangeUpdate = async (value: any) => {
     setSelectedDriver(value)
@@ -386,15 +381,12 @@ const TableHeadView = (props: any) => {
       driverId: Number(value),
     }
     const response = await axios.post(SaveTrainDailyDriverEndPoint, dataToSend, headerJson)
-    
-    handleToastMessage(`Driver Updated Successfully`)
+
+    handleToastMessage(`נהג עודכן בהצלחה`)
     reloadApi('driver', dataToSend)
   }
   return (
-    <th
-      style={{minWidth: '100px !important'}}
-      className={`${className}  ${index === 0 ? 'table_header' : 'table_inner_rows'}`}
-    >
+    <th style={{minWidth: '100px !important'}} className={`${className}`}>
       {index === 0 ? (
         <span>{text}</span>
       ) : (
@@ -451,7 +443,7 @@ const TableHeadView = (props: any) => {
               }}
               value={selectedDriver}
             >
-              <option value=''>Select Driver</option>
+              <option value=''></option>
               {drivers?.map((driver: any) => {
                 return <option value={driver.id}>{driver.name}</option>
               })}
