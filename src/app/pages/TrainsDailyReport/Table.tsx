@@ -50,13 +50,13 @@ const ReportTable: React.FC<Props> = ({
       <div className='card-body py-3'>
         {/* begin::Table container */}
         {trData.length > 0 && thData.length > 0 ? (
-          <div className='table-responsive' style={{overflow: 'visible'}}>
+          <div>
             {/* begin::Table */}
-            <div className='tscroll' style={{overflow: `${stickyCss && 'visible'}`}}>
-              <table className='table fixed-table colum-divider' style={{position: 'relative'}}>
+            <div className='tscroll'>
+              <table className='table fixed-table colum-divider'>
                 {/* begin::Table head */}
                 <thead>
-                  <tr className='fw-bolder text-muted' style={{position: 'sticky', top: '65px'}}>
+                  <tr className='fw-bolder text-muted'>
                     {thData.map((item: any, index) => {
                       const {driverId, driverName, notes, status, trainId, trainName} = item
                       return (

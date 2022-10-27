@@ -142,7 +142,7 @@ const SingleTrainInspectionDashboardPage: FC = () => {
                       style={{marginLeft: '20px'}}
                       className='btn btn-danger btn-sm'
                     >
-                      הסר סימון{' '}
+                      בחר הכל לא תקין{' '}
                       <i
                         className='fa fa-times'
                         style={{color: '#fff', fontWeight: 'bold', cursor: 'pointer'}}
@@ -155,7 +155,7 @@ const SingleTrainInspectionDashboardPage: FC = () => {
                       }}
                       className='btn btn-success btn-sm'
                     >
-                      בחר הכל{' '}
+                      בחר הכל תקין{' '}
                       <i
                         className='fa fa-check'
                         style={{color: '#fff', fontWeight: 'bold', cursor: 'pointer'}}

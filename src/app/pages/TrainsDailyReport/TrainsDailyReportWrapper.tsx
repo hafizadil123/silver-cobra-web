@@ -52,7 +52,7 @@ const DashboardPage: FC = () => {
   useEffect(() => {
     let date = new Date()
     let dateFormatted = moment(date).format('yyyy-MM-DD')
-    setSelectedDate(date)
+    setSelectedDate(dateFormatted)
     getLoggedInUserdata()
     getAllDrivers()
     getMyTrainsDailyReport(dateFormatted)
@@ -385,13 +385,21 @@ const DashboardPage: FC = () => {
                         type='date'
                         className='form-control-sm mb-5'
                         value={selectedDate}
-                        onChange={(e) => setSelectedDate(e.target.value)}
-                        onBlur={(e) => {
+                        onChange={(e) => {
+                          setSelectedDate(e.target.value)
+                        }}
+                      />
+                      <button
+                        className='btn btn-primary'
+                        style={{marginRight: '30px'}}
+                        onClick={(e) => {
                           let date = new Date(selectedDate)
                           let dateFormatted = moment(date).format('yyyy-MM-DD')
                           getMyTrainsDailyReport(dateFormatted)
                         }}
-                      />
+                      >
+                        רענן
+                      </button>
                     </div>
                   </div>
                   <div className='col-md-8 col-lg-8'>
