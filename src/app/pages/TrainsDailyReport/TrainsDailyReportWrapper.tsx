@@ -176,6 +176,7 @@ const DashboardPage: FC = () => {
     setThData(updatedThData)
   }
   const getMyTrainsDailyReport = async (date: any) => {
+    setLoading(true)
     const response = await axios.post(getMyTrainsDailyReportEndPoint, {date: date}, headerJson)
 
     if (response && response.data) {
