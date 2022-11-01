@@ -31,3 +31,6 @@
   border-right: dashed #888 1px !important;
 }
 
+.bg-red {
+  background-color: #ff0000 !important;
+}

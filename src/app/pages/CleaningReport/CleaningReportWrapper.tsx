@@ -94,6 +94,7 @@ const CleaningReportpage: FC = () => {
           status: item.status,
           trainId: item.trainId,
           trainName: item.trainName,
+          severity: item?.severity || 0,
         })
       })
       for (let i = 0; i < data.checks.length; i++) {
@@ -109,7 +110,7 @@ const CleaningReportpage: FC = () => {
         for (let j = 0; j < data.trains.length; j++) {
           let trainCheck = data.trains[j].Checks[i]
           trainCheck.trainId = data.trains[j].trainId
-
+          trainCheck.severity = trainCheck.severity || 0
           trData.push(trainCheck)
         }
         tBodyData.push(trData)
@@ -118,7 +119,7 @@ const CleaningReportpage: FC = () => {
       // data.checks.forEach((item:any)=>{
 
       // })
-
+      console.log({tBodyData})
       setThData(thData)
       setActualThData(thData)
       setBodyData(tBodyData)

@@ -58,10 +58,12 @@ const ReportTable: React.FC<Props> = ({
                 <thead>
                   <tr className='fw-bolder text-muted'>
                     {thData.map((item: any, index) => {
-                      const {driverId, driverName, notes, status, trainId, trainName} = item
+                      const {driverId, driverName, notes, status, trainId, trainName, severity} =
+                        item
                       return (
                         <TableHeadView
                           driverId={driverId}
+                          severity={severity}
                           driverName={driverName}
                           status={status}
                           trainId={trainId}
@@ -84,11 +86,13 @@ const ReportTable: React.FC<Props> = ({
                     return (
                       <tr>
                         {item.map((_item: any, index: any) => {
-                          const {carId, carName, checkId, checkValue, trainId, status} = _item
+                          const {carId, carName, checkId, checkValue, trainId, status, severity} =
+                            _item
                           return (
                             <TableDataView
                               index={index}
                               carId={carId}
+                              severity={severity}
                               status={status}
                               carName={carName}
                               handleToastMessage={handleToastMessage}
@@ -153,6 +157,7 @@ const TableDataView = (props: any) => {
     reloadApi,
     handleToastMessage,
     selectedDate,
+    severity,
   } = props
   const SaveTrainDailyCheckValue = `${baseUrl}/api/Common/SaveTrainDailyCheckValue`
   const logged_user_detail: any = localStorage.getItem('logged_user_detail')
@@ -192,7 +197,9 @@ const TableDataView = (props: any) => {
   const renderFields = () => {
     return (
       <td
-        className={`${className}  ${index === 0 ? 'table_header' : 'table_inner_rows'} `}
+        className={`${className}  ${index === 0 ? 'table_header' : 'table_inner_rows'}  ${
+          severity === 0 ? 'bg-red' : ''
+        }`}
         style={{minWidth: '100px'}}
       >
         {index === 0 ? (
@@ -329,6 +336,7 @@ const TableHeadView = (props: any) => {
     reloadApi,
     handleToastMessage,
     selectedDate,
+    severity,
   } = props
   const [selectedDriver, setSelectedDriver] = useState('')
   useEffect(() => {
@@ -386,7 +394,10 @@ const TableHeadView = (props: any) => {
     reloadApi('driver', dataToSend)
   }
   return (
-    <th style={{minWidth: '100px !important'}} className={`${className}`}>
+    <th
+      style={{minWidth: '100px !important'}}
+      className={`${className} ${severity === 0 ? 'bg-red' : ''}`}
+    >
       {index === 0 ? (
         <span>{text}</span>
       ) : (
