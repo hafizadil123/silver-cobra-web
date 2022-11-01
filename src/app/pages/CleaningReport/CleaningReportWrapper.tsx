@@ -34,7 +34,7 @@ const CleaningReportpage: FC = () => {
   useEffect(() => {
     let date = new Date()
     let dateFormatted = moment(date).format('yyyy-MM-DD')
-    setSelectedDate(date)
+    setSelectedDate(dateFormatted)
     GetTrainsDailyCleaningReport(dateFormatted)
     getLoggedInUserdata()
   }, [])
@@ -62,6 +62,7 @@ const CleaningReportpage: FC = () => {
   }
 
   const GetTrainsDailyCleaningReport = async (date: any) => {
+    setLoading(true)
     const response = await axios.post(
       getMyTrainsDailyCleaningReportEndPoint,
       {date: date},
@@ -93,6 +94,7 @@ const CleaningReportpage: FC = () => {
           status: item.status,
           trainId: item.trainId,
           trainName: item.trainName,
+          severity: item?.severity || 0,
         })
       })
       for (let i = 0; i < data.checks.length; i++) {
@@ -108,7 +110,7 @@ const CleaningReportpage: FC = () => {
         for (let j = 0; j < data.trains.length; j++) {
           let trainCheck = data.trains[j].Checks[i]
           trainCheck.trainId = data.trains[j].trainId
-
+          trainCheck.severity = trainCheck.severity || 0
           trData.push(trainCheck)
         }
         tBodyData.push(trData)
@@ -117,7 +119,7 @@ const CleaningReportpage: FC = () => {
       // data.checks.forEach((item:any)=>{
 
       // })
-
+      console.log({tBodyData})
       setThData(thData)
       setActualThData(thData)
       setBodyData(tBodyData)
@@ -266,52 +268,61 @@ const CleaningReportpage: FC = () => {
     <>
       <div style={{height: 'auto'}} className='main-container-dashboard'>
         <h1>דיווח בדיקות ניקיון יומיות</h1>
-        <div className='row'>
-          <div className='col-lg-12'>
-            <div className='row'>
+        {loading ? (
+          <div className='d-flex justify-content-center mb-5'>
+            <div className='spinner-border text-primary'>
+              <span className='sr-only'>Please wait...</span>
+            </div>
+          </div>
+        ) : (
+          <div className='row'>
+            <div className='col-lg-12'>
               <div className='row'>
-                <div className='col-md-5'>
+                <div className='row'>
+                  <div className='col-md-5'>
+                    <input
+                      type='date'
+                      className='form-control-sm mb-5'
+                      onChange={(e) => {
+                        setSelectedDate(e.target.value)
+                      }}
+                      value={selectedDate}
+                    />
+                    <button
+                      className='btn btn-primary'
+                      style={{marginRight: '30px'}}
+                      onClick={(e) => {
+                        let date = new Date(selectedDate)
+                        let dateFormatted = moment(date).format('yyyy-MM-DD')
+                        GetTrainsDailyCleaningReport(dateFormatted)
+                      }}
+                    >
+                      רענן
+                    </button>
+                  </div>
+                </div>
+                <div className='col-md-8 col-lg-8'>
                   <input
-                    type='date'
-                    className='form-control-sm mb-5'
-                    onChange={(e) => setSelectedDate(e.target.value)}
-                    onBlur={(e) => {
-                      let date = new Date(selectedDate)
-                      let dateFormatted = moment(date).format('yyyy-MM-DD')
-                      GetTrainsDailyCleaningReport(dateFormatted)
+                    type='text'
+                    className='form-control'
+                    value={search}
+                    onChange={(e) => {
+                      handleSearch(e.target.value)
                     }}
-                    value={selectedDate}
+                    placeholder='חפש לפי שם רכבת'
                   />
                 </div>
-              </div>
-              <div className='col-md-8 col-lg-8'>
-                <input
-                  type='text'
-                  className='form-control'
-                  value={search}
-                  onChange={(e) => {
-                    handleSearch(e.target.value)
-                  }}
-                  placeholder='חפש לפי שם רכבת'
-                />
-              </div>
-              <div className='col-md-4 col-lg-4'>
-                <button
-                  type='button'
-                  onClick={(e) => handleSearch('')}
-                  className='btn btn-danger mx-3'
-                >
-                  נקה חיפוש
-                </button>
-              </div>
-            </div>
-            {loading ? (
-              <div className='d-flex justify-content-center mb-5'>
-                <div className='spinner-border text-primary'>
-                  <span className='sr-only'>Please wait...</span>
+                <div className='col-md-4 col-lg-4'>
+                  <button
+                    type='button'
+                    onClick={(e) => handleSearch('')}
+                    className='btn btn-danger mx-3'
+                  >
+                    נקה חיפוש
+                  </button>
                 </div>
               </div>
-            ) : (
+
               <CleaningReportTable
                 className='mb-5 mb-xl-8'
                 drivers={drivers}
@@ -320,9 +331,9 @@ const CleaningReportpage: FC = () => {
                 selectedDate={selectedDate}
                 updateData={updateData}
               />
-            )}
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </>
   )

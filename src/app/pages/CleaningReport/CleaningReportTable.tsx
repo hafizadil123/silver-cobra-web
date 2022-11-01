@@ -58,12 +58,17 @@ const CleaningReportTable: React.FC<Props> = ({
                 <thead>
                   <tr className='fw-bolder text-muted'>
                     {thData.map((item: any, index) => {
-                      const {driverId, driverName, notes, status, trainId, trainName} = item
+                      const {driverId, driverName, notes, status, trainId, trainName, severity} =
+                        item
+                      {
+                        console.log({severity: severity})
+                      }
                       return (
                         <TableHeadView
                           driverId={driverId}
                           driverName={driverName}
                           status={status}
+                          severity={severity}
                           trainId={trainId}
                           drivers={drivers}
                           index={index}
@@ -82,12 +87,14 @@ const CleaningReportTable: React.FC<Props> = ({
                     return (
                       <tr>
                         {item.map((_item: any, index: any) => {
-                          const {carId, carName, checkId, checkValue, trainId, status} = _item
+                          const {carId, carName, checkId, checkValue, trainId, status, severity} =
+                            _item
                           // const {carId, carName, checkId, checkValue} = _item
                           return (
                             <TableDataView
                               handleToastMessage={handleToastMessage}
                               index={index}
+                              severity={severity}
                               flexValue={1}
                               carId={carId}
                               checkId={checkId}
@@ -148,6 +155,7 @@ const TableDataView = (props: any) => {
     handleToastMessage,
     updateData,
     selectedDate,
+    severity,
   } = props
   const baseUrl = process.env.REACT_APP_API_URL
   const SaveTrainCleaningCheckValue = `${baseUrl}/api/Common/SaveTrainDailyCleaningCheckValue`
@@ -189,7 +197,9 @@ const TableDataView = (props: any) => {
   const renderFields = () => {
     return (
       <td
-        className={`${className}  ${index === 0 ? 'table_header' : 'table_inner_rows'}`}
+        className={`${className}  ${index === 0 ? 'table_header' : 'table_inner_rows'} ${
+          severity === 0 ? 'bg-red' : ''
+        }`}
         style={{minWidth: '100px'}}
       >
         {index === 0 ? (
@@ -302,7 +312,7 @@ const TableFootView = (props: any) => {
 }
 
 const TableHeadView = (props: any) => {
-  const {text, className, index, status, trainId, selectedDate} = props
+  const {text, className, index, status, trainId, selectedDate, severity} = props
 
   // const handleChangeTrainStatus = (statusToChange: number) => {
   //   let date = new Date()
@@ -318,7 +328,10 @@ const TableHeadView = (props: any) => {
 
   return (
     <>
-      <th style={{minWidth: '100px !important'}} className={`${className} `}>
+      <th
+        style={{minWidth: '100px !important'}}
+        className={`${className} ${severity === 0 ? 'bg-red' : ''} `}
+      >
         <span>{text}</span>
       </th>
     </>

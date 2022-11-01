@@ -14,10 +14,10 @@ import Modal from 'react-bootstrap/Modal'
 
 const DashboardPage: FC = () => {
   const [showModal, setShowModal] = useState(false)
-  
+
   const [users, setUsers] = useState<any>([])
   const [userRoles, setUserRoles] = useState<any>([])
-  const [y, setY] = useState(0);
+  const [y, setY] = useState(0)
   const [stickyCss, setStickyCss] = useState('')
   const [search, setSearch] = useState('')
   const [actualUsers, setActualUsers] = useState<any>([])
@@ -31,7 +31,7 @@ const DashboardPage: FC = () => {
     userName: '',
   })
   const handleUpdateUser = () => {
-    // 
+    //
     saveUserDetails(activeUser, 'Created')
   }
   const loggedInUserDetails = JSON.parse(logged_user_detail)
@@ -52,10 +52,10 @@ const DashboardPage: FC = () => {
     },
   }
   useEffect(() => {
-    setY(window.scrollY);
+    setY(window.scrollY)
 
-    window.addEventListener("scroll", (e) => handleNavigation(e));
-  }, [stickyCss]);
+    window.addEventListener('scroll', (e) => handleNavigation(e))
+  }, [stickyCss])
 
   useEffect(() => {
     setLoading(true)
@@ -64,10 +64,8 @@ const DashboardPage: FC = () => {
     getData()
   }, [])
   const getData = async () => {
-    
     const response = await axios.post(getDataEndPoint, {}, headerJson)
 
-    
     if (response && response.data) {
       const {data} = response
       setUserRoles(data.userRoles)
@@ -78,10 +76,8 @@ const DashboardPage: FC = () => {
     }
   }
   const getLoggedInUserdata = async () => {
-    
     const response = await axios.post(getLoggedInUserEndPoint, {}, headerJson)
 
-    
     if (response && response.data) {
       const {data} = response
     }
@@ -101,20 +97,16 @@ const DashboardPage: FC = () => {
     }
   }
   const handleNavigation = (e: any) => {
-    const window = e.currentTarget;
+    const window = e.currentTarget
     if (y > window.scrollY && window.scrollY === 238) {
-      ;
       setStickyCss('white')
-  
     } else if (y < window.scrollY) {
       setStickyCss('')
     }
-    setY(window.scrollY);
-  };
+    setY(window.scrollY)
+  }
 
- 
   const saveUserDetails = async (details: any, type = 'Updated') => {
-    
     const response = await axios.post(saveUserDetailsEndPoint, details, headerJson)
     if (response.data.result === false) {
       response.data.validationErrors.forEach((error: any) => {
@@ -194,7 +186,7 @@ const DashboardPage: FC = () => {
                   userRoles={userRoles}
                   saveUserDetails={saveUserDetails}
                   users={users}
-                  css= {stickyCss}
+                  css={stickyCss}
                 />
               </>
             )}

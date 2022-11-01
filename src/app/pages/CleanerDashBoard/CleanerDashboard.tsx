@@ -6,6 +6,8 @@ import {PageTitle} from '../../../_metronic/layout/core'
 import {TrainsTable} from './TrainsTable'
 const CleanerDashboardPage: FC = () => {
   const [trains, setTrains] = useState<any>([])
+  const [loading, setLoading] = useState(true)
+
   const [actualTrains, setActualTrains] = useState<any>([])
   const logged_user_detail: any = localStorage.getItem('logged_user_detail')
   const loggedInUserDetails = JSON.parse(logged_user_detail)
@@ -39,6 +41,7 @@ const CleanerDashboardPage: FC = () => {
 
       setTrains(data.rows)
       setActualTrains(data.rows)
+      setLoading(false)
     }
   }
 
@@ -80,14 +83,15 @@ const CleanerDashboardPage: FC = () => {
                 </button>
               </div>
             </div>
-            {trains && trains.length === 0 && (
+            {loading ? (
               <div className='d-flex justify-content-center mb-5'>
                 <div className='spinner-border text-primary'>
                   <span className='sr-only'>Please wait...</span>
                 </div>
               </div>
+            ) : (
+              <TrainsTable className='mb-5 mb-xl-8' trains={trains} />
             )}
-            <TrainsTable className='mb-5 mb-xl-8' trains={trains} />
           </div>
         </div>
       </div>

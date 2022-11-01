@@ -52,7 +52,7 @@ const DashboardPage: FC = () => {
   useEffect(() => {
     let date = new Date()
     let dateFormatted = moment(date).format('yyyy-MM-DD')
-    setSelectedDate(date)
+    setSelectedDate(dateFormatted)
     getLoggedInUserdata()
     getAllDrivers()
     getMyTrainsDailyReport(dateFormatted)
@@ -203,6 +203,7 @@ const DashboardPage: FC = () => {
           status: item.status,
           trainId: item.trainId,
           trainName: item.trainName,
+          severity: item?.severity || 0,
         })
       })
       for (let i = 0; i < data.checks.length; i++) {
@@ -218,6 +219,7 @@ const DashboardPage: FC = () => {
         for (let j = 0; j < data.trains.length; j++) {
           let trainCheck = data.trains[j].Checks[i]
           trainCheck.trainId = data.trains[j].trainId
+          trainCheck.severity = trainCheck.severity || 0
 
           trData.push(trainCheck)
         }
@@ -385,13 +387,21 @@ const DashboardPage: FC = () => {
                         type='date'
                         className='form-control-sm mb-5'
                         value={selectedDate}
-                        onChange={(e) => setSelectedDate(e.target.value)}
-                        onBlur={(e) => {
+                        onChange={(e) => {
+                          setSelectedDate(e.target.value)
+                        }}
+                      />
+                      <button
+                        className='btn btn-primary'
+                        style={{marginRight: '30px'}}
+                        onClick={(e) => {
                           let date = new Date(selectedDate)
                           let dateFormatted = moment(date).format('yyyy-MM-DD')
                           getMyTrainsDailyReport(dateFormatted)
                         }}
-                      />
+                      >
+                        רענן
+                      </button>
                     </div>
                   </div>
                   <div className='col-md-8 col-lg-8'>
