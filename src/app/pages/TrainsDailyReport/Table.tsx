@@ -198,7 +198,7 @@ const TableDataView = (props: any) => {
     return (
       <td
         className={`${className}  ${index === 0 ? 'table_header' : 'table_inner_rows'}  ${
-          severity === 0 ? 'bg-red' : ''
+          severity === 1 ? 'bg-red' : ''
         }`}
         style={{minWidth: '100px'}}
       >
@@ -396,7 +396,7 @@ const TableHeadView = (props: any) => {
   return (
     <th
       style={{minWidth: '100px !important'}}
-      className={`${className} ${severity === 0 ? 'bg-red' : ''}`}
+      className={`${className} ${severity === 1 ? 'bg-red' : ''}`}
     >
       {index === 0 ? (
         <span>{text}</span>
