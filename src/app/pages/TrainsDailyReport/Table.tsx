@@ -172,13 +172,13 @@ const TableDataView = (props: any) => {
     let date
     let dateFormatted
     // let date = new Date()
-    // let dateFormatted = moment(date).format('DD-MM-yyyy')
+    // let dateFormatted = moment(date).format('yyyy-MM-DD')
     if (selectedDate == '') {
       date = new Date()
-      dateFormatted = moment(date).format('DD-MM-yyyy')
+      dateFormatted = moment(date).format('yyyy-MM-DD')
     } else {
       date = new Date(selectedDate)
-      dateFormatted = moment(date).format('DD-MM-yyyy')
+      dateFormatted = moment(date).format('yyyy-MM-DD')
     }
     const dataToSend = {
       trainId,
@@ -265,13 +265,13 @@ const TableFootView = (props: any) => {
     let date
     let dateFormatted
     // let date = new Date()
-    // let dateFormatted = moment(date).format('DD-MM-yyyy')
+    // let dateFormatted = moment(date).format('yyyy-MM-DD')
     if (selectedDate == '') {
       date = new Date()
-      dateFormatted = moment(date).format('DD-MM-yyyy')
+      dateFormatted = moment(date).format('yyyy-MM-DD')
     } else {
       date = new Date(selectedDate)
-      dateFormatted = moment(date).format('DD-MM-yyyy')
+      dateFormatted = moment(date).format('yyyy-MM-DD')
     }
     const dataToSend = {
       trainId,
@@ -350,13 +350,13 @@ const TableHeadView = (props: any) => {
     let date
     let dateFormatted
     // let date = new Date()
-    // let dateFormatted = moment(date).format('DD-MM-yyyy')
+    // let dateFormatted = moment(date).format('yyyy-MM-DD')
     if (selectedDate == '') {
       date = new Date()
-      dateFormatted = moment(date).format('DD-MM-yyyy')
+      dateFormatted = moment(date).format('yyyy-MM-DD')
     } else {
       date = new Date(selectedDate)
-      dateFormatted = moment(date).format('DD-MM-yyyy')
+      dateFormatted = moment(date).format('yyyy-MM-DD')
     }
 
     const DataToSend = {
@@ -375,13 +375,13 @@ const TableHeadView = (props: any) => {
     let date
     let dateFormatted
     // let date = new Date()
-    // let dateFormatted = moment(date).format('DD-MM-yyyy')
+    // let dateFormatted = moment(date).format('yyyy-MM-DD')
     if (selectedDate == '') {
       date = new Date()
-      dateFormatted = moment(date).format('DD-MM-yyyy')
+      dateFormatted = moment(date).format('yyyy-MM-DD')
     } else {
       date = new Date(selectedDate)
-      dateFormatted = moment(date).format('DD-MM-yyyy')
+      dateFormatted = moment(date).format('yyyy-MM-DD')
     }
     const dataToSend = {
       trainId,
