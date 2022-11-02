@@ -79,7 +79,7 @@ const TableFootView = (props: any) => {
   const handleUpdateNote = (value: any) => {
     setNotes(value)
     let date = new Date()
-    let dateFormatted = moment(date).format('DD-MM-yyyy')
+    let dateFormatted = moment(date).format('yyyy-MM-DD')
     const dataToSend = {
       trainId,
       notes: value,

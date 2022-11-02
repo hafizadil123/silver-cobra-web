@@ -129,7 +129,7 @@ const ConductorDashboard: FC = () => {
     e.preventDefault()
     let trains = todayList
     let date = new Date()
-    let dateFormatted = moment(date).format('DD-MM-yyyy')
+    let dateFormatted = moment(date).format('yyyy-MM-DD')
 
     let dataToSend = {
       trains,
