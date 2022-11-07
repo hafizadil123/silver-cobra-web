@@ -1,0 +1,5 @@
+.table > thead {
+    position: relative !important;
+    top: 0;
+    z-index:auto;
+}

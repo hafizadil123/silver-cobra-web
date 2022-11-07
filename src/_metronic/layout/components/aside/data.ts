@@ -31,6 +31,11 @@ const routes: any = [
     route: '/cleaner-dashboard',
     role: ['Cleaner'],
   },
+  {
+    title: 'ניהול רשימת בדיקות יומיות',
+    route: '/manage-daily-attendance-check-types',
+    role: ['Admin'],
+  },
 ]
 export const Routes = (role: any) => {
   return routes.filter((r: any) => r.role.includes(role))
