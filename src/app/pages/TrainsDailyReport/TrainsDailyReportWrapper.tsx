@@ -12,7 +12,7 @@ import {ReportTable} from './Table'
 const DashboardPage: FC = () => {
   const [checks, setChecks] = useState<any>([])
   const [selectedDate, setSelectedDate] = useState<any>('')
-
+  const [selectedSeverity, setSelectedSeverity] = useState<any>('')
   const [thData, setThData] = useState<any>([])
   const [tBodyData, setBodyData] = useState<any>([])
   const [search, setSearch] = useState('')
@@ -238,6 +238,62 @@ const DashboardPage: FC = () => {
       setLoading(false)
     }
   }
+  useEffect(() => {
+    filterAccordingToSeverity(selectedSeverity)
+  }, [selectedSeverity])
+  const filterAccordingToSeverity = (severity: any) => {
+    let searchedTrains: any = actualThData.filter((item: any) => {
+      if (item.severity == severity) {
+        return item
+      }
+    })
+    console.log({searchedTrains})
+
+    let obj = {
+      driverId: 0,
+      driverName: null,
+      notes: null,
+      status: 1,
+      trainId: 0,
+      trainName: '',
+    }
+    // if (severity !== '') {
+    //   searchedTrains.unshift(obj)
+    // }
+    searchedTrains.unshift(obj)
+    let trainIds = searchedTrains.map((item: any) => {
+      return item.trainId
+    })
+
+    let _tBodyData: any = []
+
+    let s = 0
+    for (let i = 0; i < checks.length; i++) {
+      let check: any = checks[i]
+      let trData = []
+      trData.push({
+        carId: check.id,
+        carName: check.name,
+        checkId: check.id,
+        checkValue: null,
+        trainId: 0,
+      })
+      for (let j = 0; j < trains.length; j++) {
+        let trainId = trains[j].trainId
+        if (trainIds.includes(trainId)) {
+          let trainCheck = trains[j].Checks[i]
+          trainCheck.trainId = trains[j].trainId
+          //
+          trData.push(trainCheck)
+        }
+      }
+      s++
+      _tBodyData.push(trData)
+    }
+
+    setThData(searchedTrains)
+    setBodyData(_tBodyData)
+  }
 
   const getMyTrainsForInspection = async () => {
     const response = await axios.post(getMyTrainsForInspectionEndPoint, {}, headerJson)
@@ -370,6 +426,7 @@ const DashboardPage: FC = () => {
     <>
       <div style={{height: 'auto'}} className='main-container-dashboard'>
         <h1>דיווח בדיקות מכאניות יומיות</h1>
+
         {loading ? (
           <div className='d-flex justify-content-center mb-5'>
             <div className='spinner-border text-primary'>
@@ -381,6 +438,20 @@ const DashboardPage: FC = () => {
             <div className='row'>
               <div className='col-lg-12'>
                 <div className='row'>
+                  <div className='row'>
+                    <div className='col-md-5'>
+                      <select
+                        className='form-control-sm'
+                        value={selectedSeverity}
+                        onChange={(e) => setSelectedSeverity(e.target.value)}
+                      >
+                        <option value=''></option>
+                        <option value='1'>עם שגיאות</option>
+                        <option value='0'>ללא שגיאות</option>
+                      </select>
+                    </div>
+                  </div>
+
                   <div className='row'>
                     <div className='col-md-5'>
                       <input
