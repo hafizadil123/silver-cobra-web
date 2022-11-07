@@ -9,8 +9,9 @@ import {TrainActiviationTable} from './TrainActivationTable'
 import moment from 'moment'
 import {confirmAlert} from 'react-confirm-alert' // Import
 import 'react-confirm-alert/src/react-confirm-alert.css' // Import css
-
+import {useNavigate} from 'react-router-dom'
 const ConductorDashboard: FC = () => {
+  const navigate = useNavigate()
   const location = useLocation()
   const {addToast} = useToasts()
   const [previousDayList, setPreviousDayList] = useState<any>([])
@@ -27,6 +28,7 @@ const ConductorDashboard: FC = () => {
   const getDriversEndPoint = `${baseUrl}/api/Common/GetDrivers`
   const getTrainActivationEndPoint = `${baseUrl}/api/Common/GetTrainsForActivation`
   const saveTrainActivationEndPoint = `${baseUrl}/api/Common/SaveTrainsActivation`
+  const SaveTrainDailyDriverEndPoint = `${baseUrl}/api/Common/SaveTrainDailyDriver`
 
   const headerJson = {
     headers: {
@@ -140,6 +142,21 @@ const ConductorDashboard: FC = () => {
 
     addToast('Your Train Activation Has Been Updated', {appearance: 'success', autoDismiss: true})
   }
+  const handleUpdateDriverAndRedirect = async (data: any) => {
+    console.log({data})
+
+    const date = new Date()
+    const dateFormatted = moment(date).format('yyyy-MM-DD')
+
+    const dataToSend = {
+      trainId: data.trainId,
+      date: dateFormatted,
+      driverId: Number(data.driverId),
+    }
+    const response = await axios.post(SaveTrainDailyDriverEndPoint, dataToSend, headerJson)
+    console.log({response})
+    navigate(`/trains-inspection/${data.trainId}`)
+  }
   return (
     <>
       <div style={{height: 'auto'}} className='main-container-dashboard container-fluid'>
@@ -152,40 +169,9 @@ const ConductorDashboard: FC = () => {
           </div>
         ) : (
           <>
-            <h3>הגדרת רכבות פעילות יומית</h3>
             <div className='row'>
-              <div className='col-md-4 col-lg-4'>
-                <p>
-                  {' '}
-                  <b>רשימת רכבות לתאריך :{getPreviosDate()} </b>
-                </p>
-                <TrainActiviationTable
-                  className='mb-5 mb-xl-8'
-                  hasEdit={false}
-                  drivers={drivers}
-                  activeTab={'previous'}
-                  updateStatus={updateStatus}
-                  updateDriver={updateDriver}
-                  trains={previousDayList}
-                />
-              </div>
-              <div className='col-md-3 col-lg-3'>
-                <button
-                  className='btn btn-primary handle-copy'
-                  onClick={(e) => {
-                    e.preventDefault()
-                    // setTodayList(previousDayList)
-                    handlePrompt()
-                  }}
-                >
-                  העתק הגדרות מיום קודם
-                </button>
-              </div>
-
-              <div className='col-md-5 col-lg-5'>
-                <p>
-                  <b>רשימת רכבות לתאריך :{getToday()} </b>
-                </p>
+              <div className='offset-md-3 offset-lg-3 col-md-6 col-lg-6'>
+                <h3>הגדרת רכבות פעילות יומית</h3>
 
                 <TrainActiviationTable
                   className='mb-5 mb-xl-8'
@@ -194,6 +180,7 @@ const ConductorDashboard: FC = () => {
                   activeTab={'today'}
                   updateStatus={updateStatus}
                   updateDriver={updateDriver}
+                  handleUpdateDriverAndRedirect={handleUpdateDriverAndRedirect}
                   trains={todayList}
                 />
               </div>

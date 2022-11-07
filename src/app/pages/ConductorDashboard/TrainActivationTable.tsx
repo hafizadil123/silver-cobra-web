@@ -10,6 +10,7 @@ type Props = {
   activeTab: string
   updateDriver: (data: any) => any
   updateStatus: (data: any) => any
+  handleUpdateDriverAndRedirect: (data: any) => any
   //   handleStatusUpdate: (data: any) => any
 }
 
@@ -21,6 +22,7 @@ const TrainActiviationTable: React.FC<Props> = ({
   updateDriver,
   activeTab,
   updateStatus,
+  handleUpdateDriverAndRedirect,
 }) => {
   return (
     <div className={`card ${className}`}>
@@ -80,6 +82,13 @@ const TrainActiviationTable: React.FC<Props> = ({
                         id={id}
                       />
                     ) : null}
+
+                    <TableDataViewForButton
+                      driverId={driverId}
+                      driver={driver}
+                      id={id}
+                      handleUpdateDriverAndRedirect={handleUpdateDriverAndRedirect}
+                    />
                   </tr>
                 )
               })}
@@ -92,6 +101,27 @@ const TrainActiviationTable: React.FC<Props> = ({
 }
 
 export {TrainActiviationTable}
+const TableDataViewForButton = (props: any) => {
+  const {driverId, driver, id, handleUpdateDriverAndRedirect} = props
+  return (
+    <td>
+      <button
+        className='btn btn-primary'
+        disabled={driverId === null ? true : false}
+        onClick={(e) => {
+          if (driverId !== null) {
+            handleUpdateDriverAndRedirect({
+              trainId: id,
+              driverId: driverId,
+            })
+          }
+        }}
+      >
+        עדכן בדיקות בשם נהג
+      </button>
+    </td>
+  )
+}
 const TableDataView = (props: any) => {
   const {
     text,
@@ -229,6 +259,7 @@ const TableDataView = (props: any) => {
           ) : (
             text
           )}
+          {/* <button>עדכן בדיקות בשם נהג</button> */}
         </span>
 
         {/* Modal Start */}
