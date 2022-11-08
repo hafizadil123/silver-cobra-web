@@ -332,8 +332,10 @@ const CleaningReportpage: FC = () => {
             <div className='col-lg-12'>
               <div className='row'>
                 <div className='row'>
-                  <div className='col-md-5'>
+                  <div className='col-md-5' style={{display: 'flex'}}>
+                    <h4>סטטוס רכבת </h4>
                     <select
+                      style={{marginRight: '30px'}}
                       className='form-control-sm'
                       value={selectedSeverity}
                       onChange={(e) => setSelectedSeverity(e.target.value)}

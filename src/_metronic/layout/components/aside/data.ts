@@ -41,6 +41,11 @@ const routes: any = [
     route: '/manage-daily-cleaning-attendance-check-types',
     role: ['Admin'],
   },
+  {
+    title: 'Summary',
+    route: '/trains-summary',
+    role: ['OccUser', 'Admin'],
+  },
 ]
 export const Routes = (role: any) => {
   return routes.filter((r: any) => r.role.includes(role))

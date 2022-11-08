@@ -3,14 +3,11 @@ import React, {FC, useState, useEffect} from 'react'
 import {useIntl} from 'react-intl'
 import axios from 'axios'
 import moment from 'moment'
+import DataTable, {createTheme} from 'react-data-table-component'
 import {PageTitle} from '../../../_metronic/layout/core'
 import './dashboard-page.css'
-import {useLocation} from 'react-router-dom'
-
 import {ReportTable} from './Table'
-const DashboardPage: FC = () => {
-  const location = useLocation()
-
+const TrainsSummaryPage: FC = () => {
   const [checks, setChecks] = useState<any>([])
   const [selectedDate, setSelectedDate] = useState<any>('')
   const [selectedSeverity, setSelectedSeverity] = useState<any>('')
@@ -28,36 +25,20 @@ const DashboardPage: FC = () => {
   const baseUrl = process.env.REACT_APP_API_URL
   const getLoggedInUserEndPoint = `${baseUrl}/api/Common/GetLoggedInUser`
   const getDriversEndPoint = `${baseUrl}/api/Common/GetDrivers`
-  const getMyTrainsForInspectionEndPoint = `${baseUrl}/api/Common/GetTrainsForInspection`
-  const getMyTrainsDailyReportEndPoint = `${baseUrl}/api/Common/GetTrainsDailyReport`
+  const getMyTrainsSummaryReportEndPoint = `${baseUrl}/api/Common/GetTrainsDailySummaryReport`
   const headerJson = {
     headers: {
       Authorization: `bearer ${loggedInUserDetails.access_token}`,
     },
   }
-  // useEffect(() => {
-  //   let date
-  //   let dateFormatted
-  //   setLoading(true)
-  //   if (selectedDate == '') {
-  //     date = new Date()
-  //     dateFormatted = moment(date).format('yyyy-MM-DD')
-  //     getMyTrainsDailyReport(dateFormatted)
-  //     return
-  //   }
-  //   date = new Date(selectedDate)
-  //   dateFormatted = moment(date).format('yyyy-MM-DD')
-  //   getMyTrainsDailyReport(dateFormatted)
-  // }, [selectedDate])
+
   useEffect(() => {
     let date = new Date()
     let dateFormatted = moment(date).format('yyyy-MM-DD')
     setSelectedDate(dateFormatted)
     getLoggedInUserdata()
     getAllDrivers()
-    getMyTrainsDailyReport(dateFormatted)
-    // getMyTrainsForInspection();
-    // GetTrainsDailyCleaningReport();
+    getMyTrainsSummaryReport(dateFormatted)
   }, [])
 
   const getLoggedInUserdata = async () => {
@@ -175,15 +156,15 @@ const DashboardPage: FC = () => {
     setTrains(updatedData)
     setThData(updatedThData)
   }
-  const getMyTrainsDailyReport = async (date: any) => {
+  const getMyTrainsSummaryReport = async (date: any) => {
     setLoading(true)
-    const response = await axios.post(getMyTrainsDailyReportEndPoint, {date: date}, headerJson)
+    const response = await axios.post(getMyTrainsSummaryReportEndPoint, {date: date}, headerJson)
 
     if (response && response.data) {
       const {data} = response
 
       let thData: any = []
-      if (data.trains.length > 0 && data.checks.length > 0) {
+      if (data.trains.length > 0) {
         thData.push({
           driverId: 0,
           driverName: null,
@@ -206,104 +187,17 @@ const DashboardPage: FC = () => {
           severity: item?.severity || 0,
         })
       })
-      for (let i = 0; i < data.checks.length; i++) {
-        let check = data.checks[i]
-        let trData = []
-        trData.push({
-          carId: check.id,
-          carName: check.name,
-          checkId: check.id,
-          checkValue: null,
-          trainId: 0,
-        })
-        for (let j = 0; j < data.trains.length; j++) {
-          let trainCheck = data.trains[j].Checks[i]
-          trainCheck.trainId = data.trains[j].trainId
-          trainCheck.severity = trainCheck.severity || 0
+      console.log({thDDDDDD: thData})
 
-          trData.push(trainCheck)
-        }
-        tBodyData.push(trData)
-      }
       setThData(thData)
       setActualThData(thData)
       setTrains(data.trains)
       setBodyData(tBodyData)
       setChecks(data.checks)
       setLoading(false)
-      let pathName = location.pathname
-      let splitedPath = pathName.split('/')
-      console.log({splitedPath, pathName})
-      let activeTrainId = splitedPath[splitedPath.length - 1]
-      if (activeTrainId !== '') {
-        console.log('it is with name actually ')
-        const urlText = activeTrainId.replaceAll('trainNameQuery', ' ')
-        console.log({urlText})
-        setSearch(urlText)
-      } else {
-        console.log('daily report simple')
-      }
     }
   }
-  useEffect(() => {
-    filterAccordingToSeverity(selectedSeverity)
-  }, [selectedSeverity])
-  useEffect(() => {
-    handleSearch(search)
-  }, [search])
-  const filterAccordingToSeverity = (severity: any) => {
-    let searchedTrains: any = actualThData.filter((item: any) => {
-      if (item.severity == severity) {
-        return item
-      }
-    })
-    console.log({searchedTrains})
 
-    let obj = {
-      driverId: 0,
-      driverName: null,
-      notes: null,
-      status: 1,
-      trainId: 0,
-      trainName: '',
-    }
-    // if (severity !== '') {
-    //   searchedTrains.unshift(obj)
-    // }
-    searchedTrains.unshift(obj)
-    let trainIds = searchedTrains.map((item: any) => {
-      return item.trainId
-    })
-
-    let _tBodyData: any = []
-
-    let s = 0
-    for (let i = 0; i < checks.length; i++) {
-      let check: any = checks[i]
-      let trData = []
-      trData.push({
-        carId: check.id,
-        carName: check.name,
-        checkId: check.id,
-        checkValue: null,
-        trainId: 0,
-      })
-      for (let j = 0; j < trains.length; j++) {
-        let trainId = trains[j].trainId
-        if (trainIds.includes(trainId)) {
-          let trainCheck = trains[j].Checks[i]
-          trainCheck.trainId = trains[j].trainId
-          //
-          trData.push(trainCheck)
-        }
-      }
-      s++
-      _tBodyData.push(trData)
-    }
-
-    setThData(searchedTrains)
-    setBodyData(_tBodyData)
-  }
   const getAllDrivers = async () => {
     const response = await axios.post(getDriversEndPoint, {}, headerJson)
 
@@ -325,7 +219,7 @@ const DashboardPage: FC = () => {
     }
 
     // setLoading(true)
-    // getMyTrainsDailyReport()
+    // getMyTrainsSummaryReport()
   }
   const updateCheckValueData = (data: any) => {
     let updatedTrains: any = tBodyData.map((item: any) => {
@@ -388,40 +282,8 @@ const DashboardPage: FC = () => {
     if (value !== '') {
       searchedTrains.unshift(obj)
     }
-    // searchedTrains.unshift(obj)
-    let trainIds = searchedTrains.map((item: any) => {
-      return item.trainId
-    })
-
-    let _tBodyData: any = []
-
-    let s = 0
-    for (let i = 0; i < checks.length; i++) {
-      let check: any = checks[i]
-      let trData = []
-      trData.push({
-        carId: check.id,
-        carName: check.name,
-        checkId: check.id,
-        checkValue: null,
-        trainId: 0,
-      })
-      for (let j = 0; j < trains.length; j++) {
-        let trainId = trains[j].trainId
-        if (trainIds.includes(trainId)) {
-          let trainCheck = trains[j].Checks[i]
-          trainCheck.trainId = trains[j].trainId
-          //
-          trData.push(trainCheck)
-        }
-      }
-      s++
-      _tBodyData.push(trData)
-    }
-
-    // setSearch(value)
+    setSearch(value)
     setThData(searchedTrains)
-    setBodyData(_tBodyData)
   }
   return (
     <>
@@ -440,22 +302,6 @@ const DashboardPage: FC = () => {
               <div className='col-lg-12'>
                 <div className='row'>
                   <div className='row'>
-                    <div className='col-md-5' style={{display: 'flex'}}>
-                      <h4>סטטוס רכבת </h4>
-                      <select
-                        style={{marginRight: '30px'}}
-                        className='form-control-sm'
-                        value={selectedSeverity}
-                        onChange={(e) => setSelectedSeverity(e.target.value)}
-                      >
-                        <option value=''></option>
-                        <option value='1'>עם שגיאות</option>
-                        <option value='0'>ללא שגיאות</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  <div className='row'>
                     <div className='col-md-5'>
                       <input
                         type='date'
@@ -471,7 +317,7 @@ const DashboardPage: FC = () => {
                         onClick={(e) => {
                           let date = new Date(selectedDate)
                           let dateFormatted = moment(date).format('yyyy-MM-DD')
-                          getMyTrainsDailyReport(dateFormatted)
+                          getMyTrainsSummaryReport(dateFormatted)
                         }}
                       >
                         רענן
@@ -483,8 +329,7 @@ const DashboardPage: FC = () => {
                       type='text'
                       value={search}
                       onChange={(e) => {
-                        // handleSearch(e.target.value)
-                        setSearch(e.target.value)
+                        handleSearch(e.target.value)
                       }}
                       className='form-control'
                       placeholder='חפש לפי שם רכבת'
@@ -517,14 +362,14 @@ const DashboardPage: FC = () => {
   )
 }
 
-const TrainsDailyReportWrapper: FC = () => {
+const TrainsSummaryReportWrapper: FC = () => {
   const intl = useIntl()
   return (
     <>
       <PageTitle breadcrumbs={[]}>{intl.formatMessage({id: 'MENU.DASHBOARD'})}</PageTitle>
-      <DashboardPage />
+      <TrainsSummaryPage />
     </>
   )
 }
 
-export {TrainsDailyReportWrapper}
+export {TrainsSummaryReportWrapper}
