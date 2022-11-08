@@ -28,6 +28,7 @@ const ConductorDashboard: FC = () => {
   const getDriversEndPoint = `${baseUrl}/api/Common/GetDrivers`
   const getTrainActivationEndPoint = `${baseUrl}/api/Common/GetTrainsForActivation`
   const saveTrainActivationEndPoint = `${baseUrl}/api/Common/SaveTrainsActivation`
+  const saveTrainDailyStatusEndPoint = `${baseUrl}/api/Common/SaveTrainDailyStatus`
   const SaveTrainDailyDriverEndPoint = `${baseUrl}/api/Common/SaveTrainDailyDriver`
 
   const headerJson = {
@@ -113,7 +114,8 @@ const ConductorDashboard: FC = () => {
 
     setTodayList(updatedTodaList)
   }
-  const updateStatus = (data: any) => {
+  const updateStatus = async (data: any) => {
+    console.log({data})
     let updatedTodaList = todayList.map((item: any) => {
       if (item.id == data.id) {
         return {
@@ -126,6 +128,19 @@ const ConductorDashboard: FC = () => {
     })
 
     setTodayList(updatedTodaList)
+    const date = new Date()
+    const dateFormatted = moment(date).format('yyyy-MM-DD')
+    const updateTrainData = {
+      trainId: data.id,
+      date: dateFormatted,
+      status: data.status,
+    }
+    const UpdateTrainStatusResponse = await axios.post(
+      saveTrainDailyStatusEndPoint,
+      updateTrainData,
+      headerJson
+    )
+    console.log({UpdateTrainStatusResponse})
   }
   const handleSubmitTrainActivation = async (e: any) => {
     e.preventDefault()
@@ -144,7 +159,7 @@ const ConductorDashboard: FC = () => {
   }
   const handleUpdateDriverAndRedirect = async (data: any) => {
     console.log({data})
-
+    const {name} = data
     const date = new Date()
     const dateFormatted = moment(date).format('yyyy-MM-DD')
 
@@ -153,9 +168,12 @@ const ConductorDashboard: FC = () => {
       date: dateFormatted,
       driverId: Number(data.driverId),
     }
+
     const response = await axios.post(SaveTrainDailyDriverEndPoint, dataToSend, headerJson)
+
+    const urlText = name.replaceAll(' ', 'trainNameQuery')
     console.log({response})
-    navigate(`/trains-inspection/${data.trainId}`)
+    navigate(`/trains-inspection/${urlText}/${data.trainId}`)
   }
   return (
     <>
