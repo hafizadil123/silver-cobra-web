@@ -87,6 +87,7 @@ const TrainActiviationTable: React.FC<Props> = ({
                       driverId={driverId}
                       driver={driver}
                       id={id}
+                      name={name}
                       handleUpdateDriverAndRedirect={handleUpdateDriverAndRedirect}
                     />
                   </tr>
@@ -102,7 +103,7 @@ const TrainActiviationTable: React.FC<Props> = ({
 
 export {TrainActiviationTable}
 const TableDataViewForButton = (props: any) => {
-  const {driverId, driver, id, handleUpdateDriverAndRedirect} = props
+  const {driverId, driver, id, handleUpdateDriverAndRedirect, name} = props
   return (
     <td>
       <button
@@ -113,6 +114,7 @@ const TableDataViewForButton = (props: any) => {
             handleUpdateDriverAndRedirect({
               trainId: id,
               driverId: driverId,
+              name,
             })
           }
         }}
