@@ -14,7 +14,7 @@ type Props = {
   handleDelete: any
 }
 
-const DailAttendaceTable: React.FC<Props> = ({
+const DailCleaningAttendaceTable: React.FC<Props> = ({
   users,
   className,
   getSelectedUser,
@@ -57,8 +57,6 @@ const DailAttendaceTable: React.FC<Props> = ({
             <thead style={{background: stickyCss, top: `${stickyCss && '65px'}`}}>
               <tr className='fw-bolder text-muted'>
                 <TableHeadView className='min-w-150px' text={'שם'} />
-                <TableHeadView className='min-w-150px' text={'עבור חיבורים'} />
-                <TableHeadView className='min-w-150px' text={'עבור קרון'} />
                 <TableHeadView className='min-w-150px' text={'חומרה'} />
                 <TableHeadView className='min-w-150px' text={'סדר'} />
               </tr>
@@ -77,34 +75,6 @@ const DailAttendaceTable: React.FC<Props> = ({
                         flexValue={1}
                         text={item.name}
                         userRoles={userRoles}
-                        getSelectedUser={getSelectedUser}
-                        saveUserDetails={saveUserDetails}
-                        userId={item.userId}
-                        isEdit={false}
-                        isDelete={false}
-                        id={item.id}
-                        handleDelete={handleDelete}
-                      />
-                      <TableDataView
-                        className='min-w-150px'
-                        index={index}
-                        flexValue={1}
-                        userRoles={userRoles}
-                        text={item.isForCar ? `✅` : `❌`}
-                        getSelectedUser={getSelectedUser}
-                        userId={item.userId}
-                        saveUserDetails={saveUserDetails}
-                        isEdit={false}
-                        isDelete={false}
-                        id={item.id}
-                        handleDelete={handleDelete}
-                      />
-                      <TableDataView
-                        className='min-w-150px'
-                        index={index}
-                        flexValue={1}
-                        userRoles={userRoles}
-                        text={item.isForTrain ? `✅` : `❌`}
                         getSelectedUser={getSelectedUser}
                         saveUserDetails={saveUserDetails}
                         userId={item.userId}
@@ -184,7 +154,7 @@ const DailAttendaceTable: React.FC<Props> = ({
   )
 }
 
-export {DailAttendaceTable}
+export {DailCleaningAttendaceTable}
 const TableDataView = (props: any) => {
   const {
     isEdit,
@@ -200,8 +170,6 @@ const TableDataView = (props: any) => {
   } = props
   const [activeUser, setActiveUesr] = useState({
     name: '',
-    isForCar: false,
-    isForTrain: false,
     order: '',
     severity: '',
   })
@@ -215,8 +183,6 @@ const TableDataView = (props: any) => {
     if (!isDelete) {
       setActiveUesr({
         name: user.name,
-        isForCar: user.isForCar,
-        isForTrain: user.isForTrain,
         order: user.order,
         severity: user.severity,
       })
@@ -265,36 +231,6 @@ const TableDataView = (props: any) => {
                       }}
                       className='form-control'
                     />
-                  </div>
-                  <div className='chebox-style'>
-                  <div className='form-check'>
-                    <label>עבור קרון</label>
-                    <input
-                      type='checkbox'
-                      onChange={(e) => {
-                        setActiveUesr({
-                          ...activeUser,
-                          isForCar: e.target.checked
-                        })
-                      }}
-                      checked={activeUser.isForCar}
-                      className='form-check-input'
-                    />
-                  </div>
-                  <div className='form-check'>
-                    <label>עבור חיבורים</label>
-                    <input
-                      type='checkbox'
-                      checked={activeUser.isForTrain}
-                      onChange={(e) => {
-                        setActiveUesr({
-                          ...activeUser,
-                          isForTrain: e.target.checked
-                        })
-                      }}
-                      className='form-check-input'
-                    />
-                  </div>
                   </div>
                   <div className='form-group'>
                     <label>סדר</label>

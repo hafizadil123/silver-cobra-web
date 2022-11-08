@@ -8,11 +8,11 @@ import {PageTitle} from '../../../_metronic/layout/core'
 import {ChecksComponent} from '../../pages/dashboard/Checks'
 import '../../pages/dashboard/dashboard-page.css'
 import {ShowDataTable} from '../../pages/dashboard/ShowDataTable'
-import {DailAttendaceTable} from './Table'
+import {DailCleaningAttendaceTable} from './Table'
 import {useToasts} from 'react-toast-notifications'
 import Modal from 'react-bootstrap/Modal'
 
-const ManageDailyAttendanceCheckTypesPage: FC = () => {
+const ManageDailyCleaningCheckTypes: FC = () => {
   const [showModal, setShowModal] = useState(false)
 
   const [users, setUsers] = useState<any>([])
@@ -25,8 +25,6 @@ const ManageDailyAttendanceCheckTypesPage: FC = () => {
   const logged_user_detail: any = localStorage.getItem('logged_user_detail')
   const [activeUser, setActiveUesr] = useState({
     name: '',
-    isForCar: false,
-    isForTrain: false,
     order: '',
     severity: '',
   })
@@ -42,10 +40,10 @@ const ManageDailyAttendanceCheckTypesPage: FC = () => {
   const getLoggedInUserEndPoint = `${baseUrl}/api/Common/GetLoggedInUser`
   const getDataEndPoint = `${baseUrl}/api/Common/GetData`
   const getUsersEndPoint = `${baseUrl}/api/Common/GetUsers`
-  const saveUserDetailsEndPoint = `${baseUrl}/api/Common/SaveDailyAttendanceCheckTypeDetails`
+  const saveUserDetailsEndPoint = `${baseUrl}/api/Common/SaveDailyCleaningCheckTypeDetails`
 
-  const getMyTrainsDailyReportEndPoint = `${baseUrl}/api/Common/GetDailyAttendanceCheckTypes`
-  const deleteDailyAttendanceCheckTypeDetails = `${baseUrl}/api/Common/DeleteDailyAttendanceCheckTypeDetails`
+  const getMyTrainsDailyReportEndPoint = `${baseUrl}/api/Common/GetDailyCleaningCheckTypes`
+  const deleteDailyAttendanceCheckTypeDetails = `${baseUrl}/api/Common/DeleteDailyCleaningCheckTypeDetails`
   const headerJson = {
     headers: {
       Authorization: `bearer ${loggedInUserDetails.access_token}`,
@@ -68,7 +66,6 @@ const ManageDailyAttendanceCheckTypesPage: FC = () => {
 
     if (response && response.data) {
       const {data} = response
-      console.log('adddddd', data)
       setUserRoles(data.userRoles)
       setActiveUesr({
         ...activeUser   
@@ -114,7 +111,7 @@ const ManageDailyAttendanceCheckTypesPage: FC = () => {
       })
     } else {
       setLoading(true)
-      addToast(`Code ${type} successfully`, {appearance: 'success', autoDismiss: true})
+      addToast(`record ${type} successfully`, {appearance: 'success', autoDismiss: true})
       getUsers()
     }
   }
@@ -147,7 +144,7 @@ const ManageDailyAttendanceCheckTypesPage: FC = () => {
   return (
     <>
       <div style={{height: 'auto'}} className='main-container-dashboard'>
-        <h1>ניהול רשימת בדיקות יומיות</h1>
+        <h1>ניהול רשימת בדיקות ניקיון יומיות</h1>
         <div className='row'>
           <div className='col-lg-12'>
             <div className='row'>
@@ -190,7 +187,7 @@ const ManageDailyAttendanceCheckTypesPage: FC = () => {
                     </button>
                   </div>
                 </div>
-                <DailAttendaceTable
+                <DailCleaningAttendaceTable
                   className='mb-5 mb-xl-8'
                   getSelectedUser={getSelectedUser}
                   userRoles={userRoles}
@@ -232,37 +229,7 @@ const ManageDailyAttendanceCheckTypesPage: FC = () => {
                       className='form-control'
                     />
                   </div>
-                  <div className='chebox-style'>
-                  <div className='form-check'>
-                    <label>עבור קרון</label>
-                    <input
-                      type='checkbox'
-                      onChange={(e) => {
-                        setActiveUesr({
-                          ...activeUser,
-                          isForCar: e.target.checked
-                        })
-                      }}
-                      checked={activeUser.isForCar}
-                      className='form-check-input'
-                    />
-                  </div>
-                  <div className='form-check'>
-                    <label>עבור חיבורים</label>
-                    <input
-                      type='checkbox'
-                      checked={activeUser.isForTrain}
-                      onChange={(e) => {
-                        console.log('creaaa', e.target)
-                        setActiveUesr({
-                          ...activeUser,
-                          isForTrain: e.target.checked
-                        })
-                      }}
-                      className='form-check-input'
-                    />
-                  </div>
-                  </div>
+                
                   <div className='form-group'>
                     <label>סדר</label>
                     <input
@@ -320,14 +287,14 @@ const ManageDailyAttendanceCheckTypesPage: FC = () => {
   )
 }
 
-const ManageDailyAttendanceCheckTypesPageWrapper: FC = () => {
+const ManageDailyCleaningCheckTypesPageWrapper: FC = () => {
   const intl = useIntl()
   return (
     <>
       <PageTitle breadcrumbs={[]}>{intl.formatMessage({id: 'MENU.DASHBOARD'})}</PageTitle>
-      <ManageDailyAttendanceCheckTypesPage />
+      <ManageDailyCleaningCheckTypes />
     </>
   )
 }
 
-export {ManageDailyAttendanceCheckTypesPageWrapper}
+export {ManageDailyCleaningCheckTypesPageWrapper}
