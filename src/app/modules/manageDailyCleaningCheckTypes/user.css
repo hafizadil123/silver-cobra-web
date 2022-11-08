@@ -1,0 +1,13 @@
+.table > thead {
+    position: sticky !important;
+    top: 0;
+    z-index: 1 !important;
+}
+
+.chebox-style  {
+    display: flex;
+    /* justify-content: center;
+    align-items: center; */
+    margin: 16px;
+    
+}
