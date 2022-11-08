@@ -10,7 +10,7 @@ type Props = {
   userRoles: any[]
   getSelectedUser: (id: any) => any
   saveUserDetails: (detalis: any) => any
-  css: string,
+  css: string
   handleDelete: any
 }
 
@@ -28,7 +28,7 @@ const DailAttendaceTable: React.FC<Props> = ({
   const handleNavigation = (e: any) => {
     const window = e.currentTarget
     if (window.scrollY >= 238) {
-      setStickyCss('')
+      setStickyCss('white')
     } else if (y < window.scrollY) {
       setStickyCss('')
     }
@@ -44,7 +44,7 @@ const DailAttendaceTable: React.FC<Props> = ({
     stickyCss,
     y,
     px: window.screenY,
-    users
+    users,
   })
   return (
     <div className={`card ${className}`}>
@@ -58,7 +58,7 @@ const DailAttendaceTable: React.FC<Props> = ({
               <tr className='fw-bolder text-muted'>
                 <TableHeadView className='min-w-150px' text={'שם'} />
                 <TableHeadView className='min-w-150px' text={'עבור חיבורים'} />
-                <TableHeadView className='min-w-150px' text={'עבור קרון'}/>
+                <TableHeadView className='min-w-150px' text={'עבור קרון'} />
                 <TableHeadView className='min-w-150px' text={'חומרה'} />
                 <TableHeadView className='min-w-150px' text={'סדר'} />
               </tr>
@@ -66,110 +66,112 @@ const DailAttendaceTable: React.FC<Props> = ({
             {/* end::Table head */}
             {/* begin::Table body */}
             <tbody>
-              {users && users.length > 0 && users.map((item: any, index: any) => {
-                return (
-                  <tr>
-                    <TableDataView
-                      className='min-w-150px'
-                      index={index}
-                      flexValue={1}
-                      text={item.name}
-                      userRoles={userRoles}
-                      getSelectedUser={getSelectedUser}
-                      saveUserDetails={saveUserDetails}
-                      userId={item.userId}
-                      isEdit={false}
-                      isDelete={false}
-                      id={item.id}
-                      handleDelete={handleDelete}
-                    />
-                    <TableDataView
-                      className='min-w-150px'
-                      index={index}
-                      flexValue={1}
-                      userRoles={userRoles}
-                      text={item.isForCar ? 'True' : 'False'}
-                      getSelectedUser={getSelectedUser}
-                      userId={item.userId}
-                      saveUserDetails={saveUserDetails}
-                      isEdit={false}
-                      isDelete={false}
-                      id={item.id}
-                      handleDelete={handleDelete}
-                    />
-                    <TableDataView
-                      className='min-w-150px'
-                      index={index}
-                      flexValue={1}
-                      userRoles={userRoles}
-                      text={item.isForTrain ? 'True' : 'False'}
-                      getSelectedUser={getSelectedUser}
-                      saveUserDetails={saveUserDetails}
-                      userId={item.userId}
-                      isEdit={false}
-                      isDelete={false}
-                      id={item.id}
-                      handleDelete={handleDelete}
-                    />
-                    <TableDataView
-                      className='min-w-150px'
-                      index={index}
-                      flexValue={1}
-                      text={item.order}
-                      userRoles={userRoles}
-                      userId={item.userId}
-                      getSelectedUser={getSelectedUser}
-                      saveUserDetails={saveUserDetails}
-                      isEdit={false}
-                      isDelete={false}
-                      id={item.id}
-                      handleDelete={handleDelete}
-                    />
-                    <TableDataView
-                      className='min-w-150px'
-                      index={index}
-                      flexValue={1}
-                      text={item.severity}
-                      userId={item.userId}
-                      getSelectedUser={getSelectedUser}
-                      userRoles={userRoles}
-                      saveUserDetails={saveUserDetails}
-                      isEdit={false}
-                      isDelete={false}
-                      id={item.id}
-                      handleDelete={handleDelete}
-                    />
-                    <TableDataView
-                      className='min-w-150px'
-                      index={index}
-                      flexValue={1}
-                      text={`edit`}
-                      getSelectedUser={getSelectedUser}
-                      saveUserDetails={saveUserDetails}
-                      userRoles={userRoles}
-                      userId={item.userId}
-                      isEdit={true}
-                      isDelete={false}
-                      id={item.id}
-                      handleDelete={handleDelete}
-                    />
-                    <TableDataView
-                      className='min-w-150px'
-                      index={index}
-                      flexValue={1}
-                      text={`trash`}
-                      getSelectedUser={getSelectedUser}
-                      saveUserDetails={saveUserDetails}
-                      userRoles={userRoles}
-                      userId={item.userId}
-                      isEdit={true}
-                      isDelete={true}
-                      id={item.id}
-                      handleDelete={handleDelete}
-                    />
-                  </tr>
-                )
-              })}
+              {users &&
+                users.length > 0 &&
+                users.map((item: any, index: any) => {
+                  return (
+                    <tr>
+                      <TableDataView
+                        className='min-w-150px'
+                        index={index}
+                        flexValue={1}
+                        text={item.name}
+                        userRoles={userRoles}
+                        getSelectedUser={getSelectedUser}
+                        saveUserDetails={saveUserDetails}
+                        userId={item.userId}
+                        isEdit={false}
+                        isDelete={false}
+                        id={item.id}
+                        handleDelete={handleDelete}
+                      />
+                      <TableDataView
+                        className='min-w-150px'
+                        index={index}
+                        flexValue={1}
+                        userRoles={userRoles}
+                        text={item.isForCar ? `✅` : `❌`}
+                        getSelectedUser={getSelectedUser}
+                        userId={item.userId}
+                        saveUserDetails={saveUserDetails}
+                        isEdit={false}
+                        isDelete={false}
+                        id={item.id}
+                        handleDelete={handleDelete}
+                      />
+                      <TableDataView
+                        className='min-w-150px'
+                        index={index}
+                        flexValue={1}
+                        userRoles={userRoles}
+                        text={item.isForTrain ? `✅` : `❌`}
+                        getSelectedUser={getSelectedUser}
+                        saveUserDetails={saveUserDetails}
+                        userId={item.userId}
+                        isEdit={false}
+                        isDelete={false}
+                        id={item.id}
+                        handleDelete={handleDelete}
+                      />
+                      <TableDataView
+                        className='min-w-150px'
+                        index={index}
+                        flexValue={1}
+                        text={item.order}
+                        userRoles={userRoles}
+                        userId={item.userId}
+                        getSelectedUser={getSelectedUser}
+                        saveUserDetails={saveUserDetails}
+                        isEdit={false}
+                        isDelete={false}
+                        id={item.id}
+                        handleDelete={handleDelete}
+                      />
+                      <TableDataView
+                        className='min-w-150px'
+                        index={index}
+                        flexValue={1}
+                        text={item.severity}
+                        userId={item.userId}
+                        getSelectedUser={getSelectedUser}
+                        userRoles={userRoles}
+                        saveUserDetails={saveUserDetails}
+                        isEdit={false}
+                        isDelete={false}
+                        id={item.id}
+                        handleDelete={handleDelete}
+                      />
+                      <TableDataView
+                        className='min-w-150px'
+                        index={index}
+                        flexValue={1}
+                        text={`edit`}
+                        getSelectedUser={getSelectedUser}
+                        saveUserDetails={saveUserDetails}
+                        userRoles={userRoles}
+                        userId={item.userId}
+                        isEdit={true}
+                        isDelete={false}
+                        id={item.id}
+                        handleDelete={handleDelete}
+                      />
+                      <TableDataView
+                        className='min-w-150px'
+                        index={index}
+                        flexValue={1}
+                        text={`trash`}
+                        getSelectedUser={getSelectedUser}
+                        saveUserDetails={saveUserDetails}
+                        userRoles={userRoles}
+                        userId={item.userId}
+                        isEdit={true}
+                        isDelete={true}
+                        id={item.id}
+                        handleDelete={handleDelete}
+                      />
+                    </tr>
+                  )
+                })}
             </tbody>
             {/* end::Table body */}
           </table>
@@ -184,11 +186,22 @@ const DailAttendaceTable: React.FC<Props> = ({
 
 export {DailAttendaceTable}
 const TableDataView = (props: any) => {
-  const {isEdit, text, className, getSelectedUser, userId, saveUserDetails, userRoles, isDelete, id, handleDelete} = props
+  const {
+    isEdit,
+    text,
+    className,
+    getSelectedUser,
+    userId,
+    saveUserDetails,
+    userRoles,
+    isDelete,
+    id,
+    handleDelete,
+  } = props
   const [activeUser, setActiveUesr] = useState({
     name: '',
-    isForCar: '',
-    isForTrain: '',
+    isForCar: false,
+    isForTrain: false,
     order: '',
     severity: '',
   })
@@ -198,18 +211,18 @@ const TableDataView = (props: any) => {
   }
 
   const handleChangeActions = (isDelete: boolean, userId: any, id: any) => {
-    let user = getSelectedUser(userId)
-    if(!isDelete) {
-        setActiveUesr({
-          name: user.name,
-          isForCar: user.isForCar,
-          isForTrain: user.isForTrain,
-          order: user.order,
-          severity: user.severity,
-        })
-        setShowModal(true)
+    let user = getSelectedUser(id)
+    if (!isDelete) {
+      setActiveUesr({
+        name: user.name,
+        isForCar: user.isForCar,
+        isForTrain: user.isForTrain,
+        order: user.order,
+        severity: user.severity,
+      })
+      setShowModal(true)
     } else {
-        handleDelete(id)
+      handleDelete(id)
     }
   }
   const renderFields = () => {
@@ -222,8 +235,8 @@ const TableDataView = (props: any) => {
             {/* Modal Start */}
             <i
               style={{float: 'right', cursor: 'pointer'}}
-              onClick={(e) => handleChangeActions(isDelete, userId, id) }
-              className={isDelete ? `fa fa-trash`: 'fa fa-edit'}
+              onClick={(e) => handleChangeActions(isDelete, userId, id)}
+              className={isDelete ? `fa fa-trash` : 'fa fa-edit'}
             ></i>
             <Modal
               show={showModal}
@@ -253,40 +266,40 @@ const TableDataView = (props: any) => {
                       className='form-control'
                     />
                   </div>
-                  <div className='form-group'>
-                    <label>דוא"ל</label>
+                  <div className='chebox-style'>
+                  <div className='form-check'>
+                    <label>עבור קרון</label>
                     <input
-                      type='text'
+                      type='checkbox'
                       onChange={(e) => {
                         setActiveUesr({
                           ...activeUser,
-                          isForCar: e.target.value,
+                          isForCar: e.target.checked
                         })
                       }}
-                      value={activeUser.isForCar}
-                      className='form-control'
+                      checked={activeUser.isForCar}
+                      className='form-check-input'
                     />
                   </div>
-                  <div className='form-group'>
-                    <select
-                      value={activeUser.isForTrain}
+                  <div className='form-check'>
+                    <label>עבור חיבורים</label>
+                    <input
+                      type='checkbox'
+                      checked={activeUser.isForTrain}
                       onChange={(e) => {
                         setActiveUesr({
                           ...activeUser,
-                          isForTrain: e.target.value,
+                          isForTrain: e.target.checked
                         })
                       }}
-                      className='form-control'
-                    >
-                      {userRoles.map((role: any) => {
-                        return <option value={role.id}>{role.name}</option>
-                      })}
-                    </select>
+                      className='form-check-input'
+                    />
+                  </div>
                   </div>
                   <div className='form-group'>
-                    <label>מספר נייד</label>
+                    <label>סדר</label>
                     <input
-                      type='text'
+                      type='number'
                       value={activeUser.order}
                       onChange={(e) => {
                         setActiveUesr({
@@ -298,9 +311,9 @@ const TableDataView = (props: any) => {
                     />
                   </div>
                   <div className='form-group'>
-                    <label>שם משתמש</label>
+                    <label>חומרה</label>
                     <input
-                      type='text'
+                      type='number'
                       value={activeUser.severity}
                       onChange={(e) => {
                         setActiveUesr({

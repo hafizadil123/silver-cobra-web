@@ -25,10 +25,10 @@ const ManageDailyAttendanceCheckTypesPage: FC = () => {
   const logged_user_detail: any = localStorage.getItem('logged_user_detail')
   const [activeUser, setActiveUesr] = useState({
     name: '',
-    email: '',
-    UserRoleName: '',
-    mobile: '',
-    userName: '',
+    isForCar: false,
+    isForTrain: false,
+    order: '',
+    severity: '',
   })
   const handleUpdateUser = () => {
     //
@@ -42,7 +42,7 @@ const ManageDailyAttendanceCheckTypesPage: FC = () => {
   const getLoggedInUserEndPoint = `${baseUrl}/api/Common/GetLoggedInUser`
   const getDataEndPoint = `${baseUrl}/api/Common/GetData`
   const getUsersEndPoint = `${baseUrl}/api/Common/GetUsers`
-  const saveUserDetailsEndPoint = `${baseUrl}/api/Common/SaveUserDetails`
+  const saveUserDetailsEndPoint = `${baseUrl}/api/Common/SaveDailyAttendanceCheckTypeDetails`
 
   const getMyTrainsDailyReportEndPoint = `${baseUrl}/api/Common/GetDailyAttendanceCheckTypes`
   const deleteDailyAttendanceCheckTypeDetails = `${baseUrl}/api/Common/DeleteDailyAttendanceCheckTypeDetails`
@@ -71,8 +71,7 @@ const ManageDailyAttendanceCheckTypesPage: FC = () => {
       console.log('adddddd', data)
       setUserRoles(data.userRoles)
       setActiveUesr({
-        ...activeUser,
-        UserRoleName: data.userRoles[0].id,
+        ...activeUser   
       })
     }
   }
@@ -84,7 +83,7 @@ const ManageDailyAttendanceCheckTypesPage: FC = () => {
     }
   }
   const getSelectedUser = (id: any) => {
-    let user = users.find((u: any) => u.userId == id)
+    let user = users.find((u: any) => u.id == id)
     return user
   }
   const getUsers = async () => {
@@ -115,7 +114,7 @@ const ManageDailyAttendanceCheckTypesPage: FC = () => {
       })
     } else {
       setLoading(true)
-      addToast(`User ${type} successfully`, {appearance: 'success', autoDismiss: true})
+      addToast(`Code ${type} successfully`, {appearance: 'success', autoDismiss: true})
       getUsers()
     }
   }
@@ -218,93 +217,82 @@ const ManageDailyAttendanceCheckTypesPage: FC = () => {
       >
         <Modal.Header closeButton></Modal.Header>
         <Modal.Body>
-          <form>
-            <div className='form-group'>
-              <label>שם</label>
-              <input
-                type='text'
-                value={activeUser.name}
-                onChange={(e) => {
-                  setActiveUesr({
-                    ...activeUser,
-                    name: e.target.value,
-                  })
-                }}
-                className='form-control'
-              />
-            </div>
-            <div className='form-group'>
-              <label>עבור חיבורים</label>
-              <input
-                type='text'
-                onChange={(e) => {
-                  setActiveUesr({
-                    ...activeUser,
-                    email: e.target.value,
-                  })
-                }}
-                value={activeUser.email}
-                className='form-control'
-              />
-            </div>
-            <div className='form-group'>
-              <label>עבור קרון</label>
-              <select
-                value={activeUser.UserRoleName}
-                onChange={(e) => {
-                  setActiveUesr({
-                    ...activeUser,
-                    UserRoleName: e.target.value,
-                  })
-                }}
-                className='form-control'
-              >
-                {userRoles.map((role: any) => {
-                  return <option value={role.id}>{role.name}</option>
-                })}
-              </select>
-              {/* <input
-                type='text'
-                value={activeUser.UserRoleName}
-                onChange={(e) => {
-                  setActiveUesr({
-                    ...activeUser,
-                    UserRoleName: e.target.value,
-                  })
-                }}
-                className='form-control'
-              /> */}
-            </div>
-            <div className='form-group'>
-              <label>חומרה</label>
-              <input
-                type='text'
-                value={activeUser.mobile}
-                onChange={(e) => {
-                  setActiveUesr({
-                    ...activeUser,
-                    mobile: e.target.value,
-                  })
-                }}
-                className='form-control'
-              />
-            </div>
-            <div className='form-group'>
-              <label>סדר</label>
-              <input
-                type='text'
-                value={activeUser.userName}
-                onChange={(e) => {
-                  setActiveUesr({
-                    ...activeUser,
-                    userName: e.target.value,
-                  })
-                }}
-                className='form-control'
-              />
-            </div>
-          </form>
-        </Modal.Body>
+                <form>
+                  <div className='form-group'>
+                    <label>שם</label>
+                    <input
+                      type='text'
+                      value={activeUser.name}
+                      onChange={(e) => {
+                        setActiveUesr({
+                          ...activeUser,
+                          name: e.target.value,
+                        })
+                      }}
+                      className='form-control'
+                    />
+                  </div>
+                  <div className='chebox-style'>
+                  <div className='form-check'>
+                    <label>עבור קרון</label>
+                    <input
+                      type='checkbox'
+                      onChange={(e) => {
+                        setActiveUesr({
+                          ...activeUser,
+                          isForCar: e.target.checked
+                        })
+                      }}
+                      checked={activeUser.isForCar}
+                      className='form-check-input'
+                    />
+                  </div>
+                  <div className='form-check'>
+                    <label>עבור חיבורים</label>
+                    <input
+                      type='checkbox'
+                      checked={activeUser.isForTrain}
+                      onChange={(e) => {
+                        console.log('creaaa', e.target)
+                        setActiveUesr({
+                          ...activeUser,
+                          isForTrain: e.target.checked
+                        })
+                      }}
+                      className='form-check-input'
+                    />
+                  </div>
+                  </div>
+                  <div className='form-group'>
+                    <label>סדר</label>
+                    <input
+                      type='number'
+                      value={activeUser.order}
+                      onChange={(e) => {
+                        setActiveUesr({
+                          ...activeUser,
+                          order: e.target.value,
+                        })
+                      }}
+                      className='form-control'
+                    />
+                  </div>
+                  <div className='form-group'>
+                    <label>חומרה</label>
+                    <input
+                      type='number'
+                      value={activeUser.severity}
+                      onChange={(e) => {
+                        setActiveUesr({
+                          ...activeUser,
+                          severity: e.target.value,
+                        })
+                      }}
+                      className='form-control'
+                    />
+                  </div>
+                </form>
+              </Modal.Body>
         <Modal.Footer>
           <div
             className=''
