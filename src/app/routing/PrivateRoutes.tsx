@@ -4,6 +4,7 @@ import {MasterLayout} from '../../_metronic/layout/MasterLayout'
 import TopBarProgress from 'react-topbar-progress-indicator'
 import {DashboardWrapper} from '../pages/dashboard/DashboardWrapper'
 import {TrainsDailyReportWrapper} from '../pages/TrainsDailyReport/TrainsDailyReportWrapper'
+import {TrainsSummaryReportWrapper} from '../pages/TrainsSummary/SummaryWrapper'
 import {CleaningReportWrapper} from '../pages/CleaningReport/CleaningReportWrapper'
 import {CleanerDashboardWrapper} from '../pages/CleanerDashBoard/CleanerDashboard'
 import {DriverDashboardWrapper} from '../pages/DriverDashBoard/DriverDashboardWrapper'
@@ -15,8 +16,8 @@ import {ChangePassword1} from '../modules/ChangePassword'
 import {UserDetailsPage} from '../modules/user-details'
 import {AdminInterface} from '../modules/admin-interface'
 import {HebrewBirthDate} from '../modules/hebrew-birth-date'
-import { ManageDailyAttendanceCheckTypesPageWrapper } from '../modules/manageDailyAttendanceCheckTypes'
-import { ManageDailyCleaningCheckTypesPageWrapper } from '../modules/manageDailyCleaningCheckTypes'
+import {ManageDailyAttendanceCheckTypesPageWrapper} from '../modules/manageDailyAttendanceCheckTypes'
+import {ManageDailyCleaningCheckTypesPageWrapper} from '../modules/manageDailyCleaningCheckTypes'
 
 const PrivateRoutes = () => {
   const BuilderPageWrapper = lazy(() => import('../pages/layout-builder/BuilderPageWrapper'))
@@ -42,6 +43,7 @@ const PrivateRoutes = () => {
         <Route path='/user-details' element={<UserDetailsPage />} />
         <Route path='/user-management' element={<DashboardWrapper />} />
         <Route path='/trains-daily-report/*' element={<TrainsDailyReportWrapper />} />
+        <Route path='/trains-summary/*' element={<TrainsSummaryReportWrapper />} />
         <Route path='/trains-cleaning-report/*' element={<CleaningReportWrapper />} />
         <Route path='driver-dashboard/*' element={<DriverDashboardWrapper />} />
         <Route path='conductor-dashboard/*' element={<ConductorDashboardWrapper />} />
@@ -50,8 +52,14 @@ const PrivateRoutes = () => {
         <Route path='/main-attendance' element={<DailyAttendancePage />} />
         <Route path='/documents' element={<DocumentsPage />} />
         <Route path='/upload-document' element={<UploadDocumentSection />} />
-        <Route path='/manage-daily-attendance-check-types' element={<ManageDailyAttendanceCheckTypesPageWrapper />} />
-        <Route path='/manage-daily-cleaning-attendance-check-types' element={<ManageDailyCleaningCheckTypesPageWrapper />} />
+        <Route
+          path='/manage-daily-attendance-check-types'
+          element={<ManageDailyAttendanceCheckTypesPageWrapper />}
+        />
+        <Route
+          path='/manage-daily-cleaning-attendance-check-types'
+          element={<ManageDailyCleaningCheckTypesPageWrapper />}
+        />
 
         {/* <Route path='/admin-interface' element={<HebrewBirthDate />} /> */}
 
