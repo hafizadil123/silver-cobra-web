@@ -28,7 +28,7 @@ const TrainsTable: React.FC<Props> = ({className, trains, handleUpdateDriverAndR
             <tbody>
               {trains &&
                 trains.map((item: any) => {
-                  const {name, id, car1Id, car2Id, handleStatus} = item
+                  const {name, id, car1Id, car2Id, handleStatus, car1Name, car2Name} = item
                   return (
                     <tr>
                       <TableDataView key={id} flexValue={1} text={name} id={id} tab={'train'} />
@@ -36,6 +36,8 @@ const TrainsTable: React.FC<Props> = ({className, trains, handleUpdateDriverAndR
                         id={id}
                         car1Id={car1Id}
                         car2Id={car2Id}
+                        car1Name={car1Name}
+                        car2Name={car2Name}
                         name={name}
                         handleUpdateDriverAndRedirect={handleUpdateDriverAndRedirect}
                       />
@@ -72,7 +74,7 @@ const TrainsTable: React.FC<Props> = ({className, trains, handleUpdateDriverAndR
 
 export {TrainsTable}
 const TableDataViewForButton = (props: any) => {
-  const {id, handleUpdateDriverAndRedirect, name, car1Id, car2Id} = props
+  const {id, handleUpdateDriverAndRedirect, name, car1Id, car2Id, car2Name, car1Name} = props
   const createCarButtons = () => {
     return (
       <>
@@ -88,7 +90,7 @@ const TableDataViewForButton = (props: any) => {
             })
           }}
         >
-          {car1Id}
+          {car1Name}
         </button>
         <button
           className='btn btn-sm btn-secondary'
@@ -101,7 +103,7 @@ const TableDataViewForButton = (props: any) => {
             })
           }}
         >
-          {car2Id}
+          {car2Name}
         </button>
       </>
     )
