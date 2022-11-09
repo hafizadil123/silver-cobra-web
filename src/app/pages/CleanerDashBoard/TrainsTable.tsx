@@ -28,10 +28,13 @@ const TrainsTable: React.FC<Props> = ({className, trains}) => {
             <tbody>
               {trains &&
                 trains.map((item: any) => {
-                  const {name, id} = item
+                  const {name, id, handleStatus} = item
                   return (
                     <tr>
                       <TableDataView key={id} flexValue={1} text={name} id={id} />
+                      <td>
+                        <span>{handleStatus}</span>
+                      </td>
                     </tr>
                   )
                 })}
