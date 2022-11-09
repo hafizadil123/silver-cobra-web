@@ -34,7 +34,18 @@ const TrainActiviationTable: React.FC<Props> = ({
           <table className='table table-row-bordered table-row-gray-100 align-middle gs-0 gy-3'>
             <tbody>
               {trains.map((item: any) => {
-                const {name, id, driver, driverId, Status, handleStatus} = item
+                const {
+                  name,
+                  id,
+                  driver,
+                  driverId,
+                  Status,
+                  handleStatus,
+                  car1Id,
+                  car2Id,
+                  car2Name,
+                  car1Name,
+                } = item
 
                 return (
                   <tr>
@@ -96,6 +107,10 @@ const TrainActiviationTable: React.FC<Props> = ({
                       id={id}
                       status={Status}
                       name={name}
+                      car1Id={car1Id}
+                      car2Id={car2Id}
+                      car2Name={car2Name}
+                      car1Name={car1Name}
                       handleUpdateDriverAndRedirect={handleUpdateDriverAndRedirect}
                       updateDriver={updateDriver}
                     />
@@ -115,32 +130,51 @@ const TrainActiviationTable: React.FC<Props> = ({
 
 export {TrainActiviationTable}
 const TableDataViewForButton = (props: any) => {
-  const {driverId, driver, id, handleUpdateDriverAndRedirect, status, name} = props
+  const {
+    driverId,
+    id,
+    handleUpdateDriverAndRedirect,
+    status,
+    name,
+    car1Id,
+    car2Id,
+    car2Name,
+    car1Name,
+  } = props
   const createCarButtons = () => {
-    let cars = name.split('-')
-    return cars.map((_car: any) => {
-      let car: any = Number(_car)
-      console.log(car)
-      if (car < 10) {
-        car = '0' + car
-      }
-      return (
+    return (
+      <>
+        {' '}
         <button
           disabled={driverId === null || status == 2 || status == null ? true : false}
           className='btn btn-sm btn-secondary'
           style={{marginLeft: '30px'}}
           onClick={(e) => {
             handleUpdateDriverAndRedirect({
-              carId: car,
+              carId: car1Id,
               name: name,
               trainId: id,
             })
           }}
         >
-          {car}
+          {car1Name}
         </button>
-      )
-    })
+        <button
+          disabled={driverId === null || status == 2 || status == null ? true : false}
+          className='btn btn-sm btn-secondary'
+          style={{marginLeft: '30px'}}
+          onClick={(e) => {
+            handleUpdateDriverAndRedirect({
+              carId: car2Id,
+              name: name,
+              trainId: id,
+            })
+          }}
+        >
+          {car2Name}
+        </button>
+      </>
+    )
   }
   return (
     <td>
