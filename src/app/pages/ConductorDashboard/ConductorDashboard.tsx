@@ -70,26 +70,26 @@ const ConductorDashboard: FC = () => {
       setLoading(false)
     }
   }
-  const handlePrompt = () => {
-    confirmAlert({
-      title: ' העתק הגדרות מיום קודם',
-      message:
-        'כל ההגדרות היום ידרסו עלפי ההגדרות של יום קודם, האם בטוח להעתיק פעילות מיום קודם ? ',
-      buttons: [
-        {
-          label: 'כן',
-          onClick: () => {
-            console.log('yes')
-            setTodayList(previousDayList)
-          },
-        },
-        {
-          label: 'לא',
-          onClick: () => {},
-        },
-      ],
-    })
-  }
+  // const handlePrompt = () => {
+  //   confirmAlert({
+  //     title: ' העתק הגדרות מיום קודם',
+  //     message:
+  //       'כל ההגדרות היום ידרסו עלפי ההגדרות של יום קודם, האם בטוח להעתיק פעילות מיום קודם ? ',
+  //     buttons: [
+  //       {
+  //         label: 'כן',
+  //         onClick: () => {
+  //           console.log('yes')
+  //           setTodayList(previousDayList)
+  //         },
+  //       },
+  //       {
+  //         label: 'לא',
+  //         onClick: () => {},
+  //       },
+  //     ],
+  //   })
+  // }
   const getDrivers = async () => {
     const response = await axios.post(getDriversEndPoint, {}, headerJson)
 
@@ -99,7 +99,7 @@ const ConductorDashboard: FC = () => {
       setDrivers(data.Drivers)
     }
   }
-  const updateDriver = (data: any) => {
+  const updateDriver = async (data: any) => {
     let updatedTodaList = todayList.map((item: any) => {
       if (item.id == data.trainId) {
         return {
@@ -113,6 +113,7 @@ const ConductorDashboard: FC = () => {
     })
 
     setTodayList(updatedTodaList)
+    await updateDriverAPI(data)
   }
   const updateStatus = async (data: any) => {
     console.log({data})
@@ -157,23 +158,21 @@ const ConductorDashboard: FC = () => {
 
     addToast('Your Train Activation Has Been Updated', {appearance: 'success', autoDismiss: true})
   }
-  const handleUpdateDriverAndRedirect = async (data: any) => {
-    console.log({data})
-    const {name} = data
+  const updateDriverAPI = async (data: any) => {
     const date = new Date()
     const dateFormatted = moment(date).format('yyyy-MM-DD')
-
-    const dataToSend = {
+    const dataToSend: any = {
       trainId: data.trainId,
       date: dateFormatted,
-      driverId: Number(data.driverId),
+      driverId: Number(data.id),
     }
-
     const response = await axios.post(SaveTrainDailyDriverEndPoint, dataToSend, headerJson)
-
-    const urlText = name.replaceAll(' ', 'trainNameQuery')
     console.log({response})
-    navigate(`/trains-inspection/${urlText}/${data.trainId}`)
+  }
+  const handleUpdateDriverAndRedirect = async (data: any) => {
+    const {name, carId} = data
+    const urlText = name.replaceAll(' ', 'trainNameQuery')
+    navigate(`/trains-inspection/${urlText}/${data.trainId}/${carId}`)
   }
   return (
     <>
@@ -188,7 +187,7 @@ const ConductorDashboard: FC = () => {
         ) : (
           <>
             <div className='row'>
-              <div className='offset-md-3 offset-lg-3 col-md-6 col-lg-6'>
+              <div className='col-md-12 col-lg-12'>
                 <h3>הגדרת רכבות פעילות יומית</h3>
 
                 <TrainActiviationTable
@@ -203,7 +202,7 @@ const ConductorDashboard: FC = () => {
                 />
               </div>
             </div>
-            <div className='row'>
+            {/* <div className='row'>
               <div className='col-12 text-center mb-5'>
                 <button
                   type='button'
@@ -213,7 +212,7 @@ const ConductorDashboard: FC = () => {
                   שמור{' '}
                 </button>
               </div>
-            </div>
+            </div> */}
           </>
         )}
       </div>
