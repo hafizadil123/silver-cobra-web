@@ -8,6 +8,7 @@ type Props = {
   assemblies: any[]
   assemblyName: string
   handleStatusUpdate: (data: any) => any
+  isLocked: any
 }
 
 const TrainAssemblyTable: React.FC<Props> = ({
@@ -16,6 +17,7 @@ const TrainAssemblyTable: React.FC<Props> = ({
   assemblyId,
   handleStatusUpdate,
   assemblyName,
+  isLocked,
 }) => {
   return (
     <div className={`card ${className}`}>
@@ -41,12 +43,14 @@ const TrainAssemblyTable: React.FC<Props> = ({
                       tab='data'
                       key={id}
                       flexValue={1}
+                      isLocked={isLocked}
                       text={name}
                       id={id}
                     />
                     <TableDataView
                       handleStatusUpdate={handleStatusUpdate}
                       value={value}
+                      isLocked={isLocked}
                       assemblyId={assemblyId}
                       tab='controls'
                       key={id}
@@ -67,7 +71,7 @@ const TrainAssemblyTable: React.FC<Props> = ({
 
 export {TrainAssemblyTable}
 const TableDataView = (props: any) => {
-  const {text, id, className, tab, value, assemblyId, handleStatusUpdate} = props
+  const {text, id, className, tab, value, assemblyId, handleStatusUpdate, isLocked} = props
   const handleChangeTrainStatus = (selectedValue: any) => {
     let data = {
       selectedValue,
@@ -91,6 +95,7 @@ const TableDataView = (props: any) => {
               }}
               style={{marginLeft: '16px'}}
               className='btn btn-secondary btn-sm'
+              disabled={isLocked === true ? true : false}
             >
               <i
                 className='fa fa-times'
@@ -98,6 +103,7 @@ const TableDataView = (props: any) => {
               ></i>
             </button>
             <button
+              disabled={isLocked === true ? true : false}
               onClick={() => {
                 handleChangeTrainStatus(true)
               }}
@@ -113,6 +119,7 @@ const TableDataView = (props: any) => {
         ) : (
           <div style={{display: 'flex', justifyContent: 'flex-end'}}>
             <button
+              disabled={isLocked === true ? true : false}
               onClick={() => {
                 handleChangeTrainStatus(false)
               }}
@@ -125,6 +132,7 @@ const TableDataView = (props: any) => {
               ></i>
             </button>
             <button
+              disabled={isLocked === true ? true : false}
               onClick={() => {
                 handleChangeTrainStatus(true)
               }}
