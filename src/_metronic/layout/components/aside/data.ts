@@ -42,7 +42,7 @@ const routes: any = [
     role: ['Admin'],
   },
   {
-    title: 'Summary',
+    title: ' סיכום דיווח יומי',
     route: '/trains-summary',
     role: ['OccUser', 'Admin'],
   },
