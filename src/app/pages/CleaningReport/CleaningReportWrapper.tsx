@@ -219,6 +219,11 @@ const CleaningReportpage: FC = () => {
     filterAccordingToSeverity(selectedSeverity)
   }, [selectedSeverity])
   const filterAccordingToSeverity = (severity: any) => {
+    if (selectedSeverity == '') {
+      setThData(actualThData)
+      setBodyData(actualTBodyData)
+      return
+    }
     let searchedTrains: any = actualThData.filter((item: any) => {
       if (item.severity == severity) {
         return item
@@ -333,7 +338,7 @@ const CleaningReportpage: FC = () => {
               <div className='row'>
                 <div className='row'>
                   <div className='col-md-5' style={{display: 'flex'}}>
-                    <h4>סטטוס רכבת </h4>
+                    {/* <h4>סטטוס רכבת </h4>
                     <select
                       style={{marginRight: '30px'}}
                       className='form-control-sm'
@@ -343,7 +348,7 @@ const CleaningReportpage: FC = () => {
                       <option value=''></option>
                       <option value='1'>עם שגיאות</option>
                       <option value='0'>ללא שגיאות</option>
-                    </select>
+                    </select> */}
                   </div>
                 </div>
                 <div className='row'>
@@ -369,16 +374,29 @@ const CleaningReportpage: FC = () => {
                     </button>
                   </div>
                 </div>
-                <div className='col-md-8 col-lg-8'>
+                <div className='col-md-8 col-lg-8' style={{display: 'flex'}}>
                   <input
                     type='text'
                     className='form-control'
+                    style={{maxWidth: '200px'}}
                     value={search}
                     onChange={(e) => {
                       handleSearch(e.target.value)
                     }}
                     placeholder='חפש לפי שם רכבת'
                   />
+                  <h4 style={{lineHeight: '36px', marginRight: '50px'}}>סטטוס</h4>
+
+                  <select
+                    style={{marginRight: '30px'}}
+                    className='form-control-sm'
+                    value={selectedSeverity}
+                    onChange={(e) => setSelectedSeverity(e.target.value)}
+                  >
+                    <option value=''></option>
+                    <option value='1'>עם שגיאות</option>
+                    <option value='0'>ללא שגיאות</option>
+                  </select>
                 </div>
                 <div className='col-md-4 col-lg-4'>
                   <button

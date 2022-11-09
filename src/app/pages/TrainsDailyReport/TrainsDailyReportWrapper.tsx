@@ -10,10 +10,10 @@ import {useLocation} from 'react-router-dom'
 import {ReportTable} from './Table'
 const DashboardPage: FC = () => {
   const location = useLocation()
-
   const [checks, setChecks] = useState<any>([])
   const [selectedDate, setSelectedDate] = useState<any>('')
   const [selectedSeverity, setSelectedSeverity] = useState<any>('')
+  const [actualTbodyData, setActualTBodyData] = useState<any>([])
   const [thData, setThData] = useState<any>([])
   const [tBodyData, setBodyData] = useState<any>([])
   const [search, setSearch] = useState('')
@@ -229,6 +229,7 @@ const DashboardPage: FC = () => {
       setActualThData(thData)
       setTrains(data.trains)
       setBodyData(tBodyData)
+      setActualTBodyData(tBodyData)
       setChecks(data.checks)
       setLoading(false)
       let pathName = location.pathname
@@ -252,6 +253,11 @@ const DashboardPage: FC = () => {
     handleSearch(search)
   }, [search])
   const filterAccordingToSeverity = (severity: any) => {
+    if (selectedSeverity == '') {
+      setThData(actualThData)
+      setBodyData(actualTbodyData)
+      return
+    }
     let searchedTrains: any = actualThData.filter((item: any) => {
       if (item.severity == severity) {
         return item
@@ -440,7 +446,7 @@ const DashboardPage: FC = () => {
               <div className='col-lg-12'>
                 <div className='row'>
                   <div className='row'>
-                    <div className='col-md-5' style={{display: 'flex'}}>
+                    {/* <div className='col-md-5' style={{display: 'flex'}}>
                       <h4>סטטוס רכבת </h4>
                       <select
                         style={{marginRight: '30px'}}
@@ -452,7 +458,7 @@ const DashboardPage: FC = () => {
                         <option value='1'>עם שגיאות</option>
                         <option value='0'>ללא שגיאות</option>
                       </select>
-                    </div>
+                    </div> */}
                   </div>
 
                   <div className='row'>
@@ -465,6 +471,7 @@ const DashboardPage: FC = () => {
                           setSelectedDate(e.target.value)
                         }}
                       />
+
                       <button
                         className='btn btn-primary'
                         style={{marginRight: '30px'}}
@@ -478,10 +485,11 @@ const DashboardPage: FC = () => {
                       </button>
                     </div>
                   </div>
-                  <div className='col-md-8 col-lg-8'>
+                  <div className='col-md-8 col-lg-8' style={{display: 'flex'}}>
                     <input
                       type='text'
                       value={search}
+                      style={{maxWidth: '200px'}}
                       onChange={(e) => {
                         // handleSearch(e.target.value)
                         setSearch(e.target.value)
@@ -489,11 +497,26 @@ const DashboardPage: FC = () => {
                       className='form-control'
                       placeholder='חפש לפי שם רכבת'
                     />
+                    <h4 style={{lineHeight: '36px', marginRight: '50px'}}>סטטוס</h4>
+
+                    <select
+                      style={{marginRight: '30px'}}
+                      className='form-control-sm'
+                      value={selectedSeverity}
+                      onChange={(e) => setSelectedSeverity(e.target.value)}
+                    >
+                      <option value=''></option>
+                      <option value='1'>עם שגיאות</option>
+                      <option value='0'>ללא שגיאות</option>
+                    </select>
                   </div>
                   <div className='col-md-4 col-lg-4'>
                     <button
                       type='button'
-                      onClick={(e) => handleSearch('')}
+                      onClick={(e) => {
+                        handleSearch('')
+                        setSelectedSeverity('')
+                      }}
                       className='btn btn-danger mx-3'
                     >
                       נקה חיפוש
