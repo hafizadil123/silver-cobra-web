@@ -34,7 +34,7 @@ const TrainActiviationTable: React.FC<Props> = ({
           <table className='table table-row-bordered table-row-gray-100 align-middle gs-0 gy-3'>
             <tbody>
               {trains.map((item: any) => {
-                const {name, id, driver, driverId, Status} = item
+                const {name, id, driver, driverId, Status, handleStatus} = item
 
                 return (
                   <tr>
@@ -99,6 +99,9 @@ const TrainActiviationTable: React.FC<Props> = ({
                       handleUpdateDriverAndRedirect={handleUpdateDriverAndRedirect}
                       updateDriver={updateDriver}
                     />
+                    <td>
+                      <span>{handleStatus}</span>
+                    </td>
                   </tr>
                 )
               })}

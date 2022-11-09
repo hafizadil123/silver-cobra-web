@@ -5,11 +5,11 @@ import {Link} from 'react-router-dom'
 import moment from 'moment'
 type Props = {
   className: string
-
+  handleUpdateDriverAndRedirect: (data: any) => any
   trains: any[]
 }
 
-const TrainsTable: React.FC<Props> = ({className, trains}) => {
+const TrainsTable: React.FC<Props> = ({className, trains, handleUpdateDriverAndRedirect}) => {
   return (
     <div className={`card ${className}`}>
       <div className='card-body py-3'>
@@ -28,10 +28,24 @@ const TrainsTable: React.FC<Props> = ({className, trains}) => {
             <tbody>
               {trains &&
                 trains.map((item: any) => {
-                  const {name, id} = item
+                  const {name, id, car1Id, car2Id, handleStatus} = item
                   return (
                     <tr>
-                      <TableDataView key={id} flexValue={1} text={name} id={id} />
+                      <TableDataView key={id} flexValue={1} text={name} id={id} tab={'train'} />
+                      <TableDataViewForButton
+                        id={id}
+                        car1Id={car1Id}
+                        car2Id={car2Id}
+                        name={name}
+                        handleUpdateDriverAndRedirect={handleUpdateDriverAndRedirect}
+                      />
+                      <TableDataView
+                        key={id}
+                        flexValue={1}
+                        text={handleStatus}
+                        id={id}
+                        tab={'handleStatus'}
+                      />
                     </tr>
                   )
                 })}
@@ -57,18 +71,85 @@ const TrainsTable: React.FC<Props> = ({className, trains}) => {
 }
 
 export {TrainsTable}
-const TableDataView = (props: any) => {
-  const {text, id, className} = props
-  const urlText = text.replaceAll(' ', 'trainNameQuery')
-  const renderFields = () => {
+const TableDataViewForButton = (props: any) => {
+  const {id, handleUpdateDriverAndRedirect, name, car1Id, car2Id} = props
+  const createCarButtons = () => {
     return (
-      <td className={`${className} `} style={{minWidth: '150px'}}>
-        <span>
-          {' '}
-          <Link to={`/trains-inspection/${urlText}/${id}`}>שם רכבת {text} </Link>{' '}
-        </span>
-      </td>
+      <>
+        {' '}
+        <button
+          className='btn btn-sm btn-secondary'
+          style={{marginLeft: '30px'}}
+          onClick={(e) => {
+            handleUpdateDriverAndRedirect({
+              carId: car1Id,
+              name: name,
+              trainId: id,
+            })
+          }}
+        >
+          {car1Id}
+        </button>
+        <button
+          className='btn btn-sm btn-secondary'
+          style={{marginLeft: '30px'}}
+          onClick={(e) => {
+            handleUpdateDriverAndRedirect({
+              carId: car2Id,
+              name: name,
+              trainId: id,
+            })
+          }}
+        >
+          {car2Id}
+        </button>
+      </>
     )
+  }
+  return (
+    <td>
+      {/* <button
+        className='btn btn-primary'
+        disabled={driverId === null ? true : false}
+        onClick={(e) => {
+          if (driverId !== null) {
+            handleUpdateDriverAndRedirect({
+              trainId: id,
+              driverId: driverId,
+              name,
+            })
+          }
+        }}
+      >
+        <span>{name}</span>
+      </button> */}
+      {createCarButtons()}
+    </td>
+  )
+}
+const TableDataView = (props: any) => {
+  const {text, className, tab} = props
+  const renderFields = () => {
+    switch (tab) {
+      case 'train':
+        return (
+          <td className={`${className} `} style={{minWidth: '150px'}}>
+            <span>
+              {' '}
+              <span>שם רכבת {text} </span>{' '}
+            </span>
+          </td>
+        )
+      case 'handleStatus':
+        return (
+          <td className={`${className} `} style={{minWidth: '150px'}}>
+            <span>
+              {' '}
+              <span>{text} </span>{' '}
+            </span>
+          </td>
+        )
+    }
   }
 
   return <>{renderFields()}</>
