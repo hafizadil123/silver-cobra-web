@@ -235,7 +235,7 @@ const DashboardPage: FC = () => {
       let splitedPath = pathName.split('/')
       console.log({splitedPath, pathName})
       let activeTrainId = splitedPath[splitedPath.length - 1]
-      if (activeTrainId !== '') {
+      if (activeTrainId !== '' && activeTrainId !== 'trains-daily-report') {
         console.log('it is with name actually ')
         const urlText = activeTrainId.replaceAll('trainNameQuery', ' ')
         console.log({urlText})
