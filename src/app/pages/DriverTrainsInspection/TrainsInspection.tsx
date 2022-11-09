@@ -12,6 +12,7 @@ const SingleTrainInspectionDashboardPage: FC = () => {
   const {addToast} = useToasts()
   const [trains, setTrains] = useState<any>([])
   const [notes, setNotes] = useState('')
+  const [isLocked, setIsLocked] = useState<any>(true)
   const [apiData, setApiData] = useState({})
   const [loading, setLoading] = useState(true)
   const [activeTrain, setActiveTrain] = useState<any>(null)
@@ -45,13 +46,17 @@ const SingleTrainInspectionDashboardPage: FC = () => {
   const getSingleTrainDataForInspection = async () => {
     let pathName = location.pathname
     let splitedPath = pathName.split('/')
-    let activeTrainId = splitedPath[splitedPath.length - 1]
-    let activeTrainName = splitedPath[splitedPath.length - 2]
+    console.log({splitedPath})
+    let activeCarId = splitedPath[splitedPath.length - 1]
+    let activeTrainId = splitedPath[splitedPath.length - 2]
+    let activeTrainName = splitedPath[splitedPath.length - 3]
+    console.log('outtttt--->', {activeCarId, activeTrainId, activeTrainName})
     const urlText = activeTrainName.replaceAll('trainNameQuery', ' ')
 
     setActiveTrain(urlText)
     let dataToSend = {
       trainId: Number(activeTrainId),
+      carid: Number(activeCarId),
     }
     const response = await axios.post(getSingleTrainForInspection, dataToSend, headerJson)
 
@@ -62,6 +67,7 @@ const SingleTrainInspectionDashboardPage: FC = () => {
       setTrains(data.assemblies)
       setApiData(data)
       setLoading(false)
+      setIsLocked(data.isLocked)
     }
   }
 
@@ -176,6 +182,7 @@ const SingleTrainInspectionDashboardPage: FC = () => {
                       handleStatusUpdate={updateStatusHandler}
                       className='mb-5 mb-xl-8'
                       assemblyId={item.id}
+                      isLocked={isLocked}
                       assemblies={item.items}
                     />
                   )
