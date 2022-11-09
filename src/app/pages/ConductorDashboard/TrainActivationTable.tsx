@@ -34,7 +34,18 @@ const TrainActiviationTable: React.FC<Props> = ({
           <table className='table table-row-bordered table-row-gray-100 align-middle gs-0 gy-3'>
             <tbody>
               {trains.map((item: any) => {
-                const {name, id, driver, driverId, Status} = item
+                const {
+                  name,
+                  id,
+                  driver,
+                  driverId,
+                  Status,
+                  handleStatus,
+                  car1Id,
+                  car2Id,
+                  car2Name,
+                  car1Name,
+                } = item
 
                 return (
                   <tr>
@@ -66,7 +77,7 @@ const TrainActiviationTable: React.FC<Props> = ({
                       edit={false}
                       updateDriver={updateDriver}
                     />
-                    {hasEdit === true ? (
+                    {/* {hasEdit === true ? (
                       <TableDataView
                         key={id}
                         flexValue={1}
@@ -81,15 +92,31 @@ const TrainActiviationTable: React.FC<Props> = ({
                         text={'edit'}
                         id={id}
                       />
-                    ) : null}
-
+                    ) : null} */}
+                    <TableDataViewForDrivers
+                      driverId={driverId}
+                      drivers={drivers}
+                      status={Status}
+                      id={id}
+                      name={name}
+                      updateDriver={updateDriver}
+                    />
                     <TableDataViewForButton
                       driverId={driverId}
                       driver={driver}
                       id={id}
+                      status={Status}
                       name={name}
+                      car1Id={car1Id}
+                      car2Id={car2Id}
+                      car2Name={car2Name}
+                      car1Name={car1Name}
                       handleUpdateDriverAndRedirect={handleUpdateDriverAndRedirect}
+                      updateDriver={updateDriver}
                     />
+                    <td>
+                      <span>{handleStatus}</span>
+                    </td>
                   </tr>
                 )
               })}
@@ -103,10 +130,55 @@ const TrainActiviationTable: React.FC<Props> = ({
 
 export {TrainActiviationTable}
 const TableDataViewForButton = (props: any) => {
-  const {driverId, driver, id, handleUpdateDriverAndRedirect, name} = props
+  const {
+    driverId,
+    id,
+    handleUpdateDriverAndRedirect,
+    status,
+    name,
+    car1Id,
+    car2Id,
+    car2Name,
+    car1Name,
+  } = props
+  const createCarButtons = () => {
+    return (
+      <>
+        {' '}
+        <button
+          disabled={driverId === null || status == 2 || status == null ? true : false}
+          className='btn btn-sm btn-secondary'
+          style={{marginLeft: '30px'}}
+          onClick={(e) => {
+            handleUpdateDriverAndRedirect({
+              carId: car1Id,
+              name: name,
+              trainId: id,
+            })
+          }}
+        >
+          {car1Name}
+        </button>
+        <button
+          disabled={driverId === null || status == 2 || status == null ? true : false}
+          className='btn btn-sm btn-secondary'
+          style={{marginLeft: '30px'}}
+          onClick={(e) => {
+            handleUpdateDriverAndRedirect({
+              carId: car2Id,
+              name: name,
+              trainId: id,
+            })
+          }}
+        >
+          {car2Name}
+        </button>
+      </>
+    )
+  }
   return (
     <td>
-      <button
+      {/* <button
         className='btn btn-primary'
         disabled={driverId === null ? true : false}
         onClick={(e) => {
@@ -119,10 +191,61 @@ const TableDataViewForButton = (props: any) => {
           }
         }}
       >
-        עדכן בדיקות בשם נהג
-      </button>
+        <span>{name}</span>
+      </button> */}
+      {createCarButtons()}
     </td>
   )
+}
+const TableDataViewForDrivers = (props: any) => {
+  const [ActiveDriver, setDriver] = useState(1)
+  const {
+    // text,
+    status,
+    drivers,
+    driverId,
+    updateDriver,
+    id,
+  } = props
+  useEffect(() => {
+    setDriver(driverId)
+  }, [driverId])
+  const renderDriversData = () => {
+    return drivers?.map((item: any) => {
+      return (
+        <option key={item.id} value={item.id}>
+          {item.name}
+        </option>
+      )
+    })
+  }
+
+  const handleUpdateDriver = (_activeDriver: any) => {
+    if (_activeDriver) {
+      let data = drivers.find((driver: any) => driver.id == _activeDriver)
+      data.trainId = id
+      updateDriver(data)
+    }
+  }
+  const renderFields = () => {
+    return (
+      <>
+        <select
+          disabled={status === 2 || status === null ? true : false}
+          className='form-control'
+          onChange={(e: any) => {
+            setDriver(e.target.value)
+            handleUpdateDriver(e.target.value)
+          }}
+          value={ActiveDriver}
+        >
+          <option value=''></option>
+          {renderDriversData()}
+        </select>
+      </>
+    )
+  }
+  return <>{renderFields()}</>
 }
 const TableDataView = (props: any) => {
   const {
@@ -249,73 +372,7 @@ const TableDataView = (props: any) => {
           )}
         </span>
       </td>
-    ) : (
-      <td className={`${className} `} style={{maxWidth: '40px'}}>
-        <span>
-          {edit === true ? (
-            <i
-              style={{cursor: 'pointer'}}
-              onClick={(e) => handleEditDriver()}
-              className='fa fa-edit'
-            ></i>
-          ) : (
-            text
-          )}
-          {/* <button>עדכן בדיקות בשם נהג</button> */}
-        </span>
-
-        {/* Modal Start */}
-        <Modal
-          show={showModal}
-          onHide={() => {
-            setShowModal(false)
-            handleUpdateDriver()
-          }}
-          // style={{    minWidth: "700px"}}
-          size='lg'
-          backdrop='static'
-          keyboard={false}
-        >
-          <Modal.Header closeButton></Modal.Header>
-          <Modal.Body>
-            <>
-              <select
-                className='form-control'
-                onChange={(e: any) => setDriver(e.target.value)}
-                value={ActiveDriver}
-              >
-                <option value=''></option>
-                {renderDriversData()}
-              </select>
-            </>
-          </Modal.Body>
-          <Modal.Footer>
-            <div
-              className=''
-              style={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                width: '100%',
-              }}
-            >
-              <button
-                type='button'
-                onClick={() => {
-                  setShowModal(false)
-                  handleUpdateDriver()
-                }}
-                className='btn btn-primary'
-              >
-                Submit
-              </button>
-            </div>
-          </Modal.Footer>
-        </Modal>
-
-        {/* Modal End */}
-      </td>
-    )
+    ) : null
   }
 
   return <>{renderFields()}</>

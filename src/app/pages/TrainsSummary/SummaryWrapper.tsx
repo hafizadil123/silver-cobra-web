@@ -288,8 +288,7 @@ const TrainsSummaryPage: FC = () => {
   return (
     <>
       <div style={{height: 'auto'}} className='main-container-dashboard'>
-        <h1>דיווח בדיקות מכאניות יומיות</h1>
-
+        <h1>סיכום בדיקות מכאניות יומיות</h1>
         {loading ? (
           <div className='d-flex justify-content-center mb-5'>
             <div className='spinner-border text-primary'>

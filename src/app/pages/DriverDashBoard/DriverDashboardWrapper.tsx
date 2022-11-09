@@ -4,7 +4,11 @@ import {useIntl} from 'react-intl'
 import axios from 'axios'
 import {PageTitle} from '../../../_metronic/layout/core'
 import {TrainsTable} from './TrainsTable'
+import {useNavigate} from 'react-router-dom'
+
 const DriverDashboardPage: FC = () => {
+  const navigate = useNavigate()
+
   const [trains, setTrains] = useState<any>([])
   const [actualTrains, setActualTrains] = useState<any>([])
   const logged_user_detail: any = localStorage.getItem('logged_user_detail')
@@ -61,6 +65,11 @@ const DriverDashboardPage: FC = () => {
   } else if (type == 'Conductor') {
     window.location.href = '/conductor-dashboard'
   }
+  const handleUpdateDriverAndRedirect = async (data: any) => {
+    const {name, carId} = data
+    const urlText = name.replaceAll(' ', 'trainNameQuery')
+    navigate(`/trains-inspection/${urlText}/${data.trainId}/${carId}`)
+  }
   return (
     <>
       <div style={{height: 'auto'}} className='main-container-dashboard'>
@@ -96,7 +105,11 @@ const DriverDashboardPage: FC = () => {
                 </div>
               </div>
             )}
-            <TrainsTable className='mb-5 mb-xl-8' trains={trains} />
+            <TrainsTable
+              className='mb-5 mb-xl-8'
+              trains={trains}
+              handleUpdateDriverAndRedirect={handleUpdateDriverAndRedirect}
+            />
           </div>
         </div>
       </div>
