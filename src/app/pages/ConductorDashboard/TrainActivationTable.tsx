@@ -157,7 +157,7 @@ const TableDataViewForButton = (props: any) => {
             })
           }}
         >
-          {car1Name}
+          {car1Name == null ? 'None' : car1Name}
         </button>
         <button
           disabled={driverId === null || status == 2 || status == null ? true : false}
@@ -171,7 +171,7 @@ const TableDataViewForButton = (props: any) => {
             })
           }}
         >
-          {car2Name}
+          {car2Name == null ? 'None' : car2Name}
         </button>
       </>
     )

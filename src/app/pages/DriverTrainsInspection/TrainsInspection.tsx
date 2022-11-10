@@ -56,7 +56,7 @@ const SingleTrainInspectionDashboardPage: FC = () => {
     setActiveTrain(urlText)
     let dataToSend = {
       trainId: Number(activeTrainId),
-      carid: Number(activeCarId),
+      carid: activeCarId !== 'noCar' ? Number(activeCarId) : null,
     }
     const response = await axios.post(getSingleTrainForInspection, dataToSend, headerJson)
 

@@ -167,6 +167,10 @@ const ConductorDashboard: FC = () => {
       driverId: Number(data.id),
     }
     const response = await axios.post(SaveTrainDailyDriverEndPoint, dataToSend, headerJson)
+    if (response?.data?.result === true) {
+      setLoading(true)
+      await getTrainsForActivation()
+    }
     console.log({response})
   }
   const handleUpdateDriverAndRedirect = async (data: any) => {
