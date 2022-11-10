@@ -26,8 +26,8 @@ const ReportTable: React.FC<Props> = ({
   const {addToast} = useToasts()
   const [y, setY] = useState(0)
   const [stickyCss, setStickyCss] = useState('')
-  const handleToastMessage = (message: any) => {
-    addToast(message, {appearance: 'success', autoDismiss: true})
+  const handleToastMessage = (message: any, appearance: any) => {
+    addToast(message, {appearance: appearance, autoDismiss: true})
   }
   const handleNavigation = (e: any) => {
     const window = e.currentTarget
@@ -189,10 +189,13 @@ const TableDataView = (props: any) => {
     }
 
     const response = await axios.post(SaveTrainDailyCheckValue, dataToSend, headerJson)
-    handleToastMessage(`שדה בדיקה עודכן בהצלחה`)
+    if (response.data.result == true) {
+      handleToastMessage(`שדה בדיקה עודכן בהצלחה`, 'success')
+      reloadApi('checkValue', dataToSend)
+    } else {
+      handleToastMessage(response.data.message, 'error')
+    }
     //
-
-    reloadApi('checkValue', dataToSend)
   }
   const renderFields = () => {
     return (
@@ -280,9 +283,13 @@ const TableFootView = (props: any) => {
     }
 
     const response = await axios.post(SaveTrainDailyNotes, dataToSend, headerJson)
-
-    reloadApi('notes', dataToSend)
-    handleToastMessage(`שדה הערות עודכן בהצלחה`)
+    if (response.data.result == true) {
+      reloadApi('notes', dataToSend)
+      handleToastMessage(`שדה הערות עודכן בהצלחה`, 'success')
+      // reloadApi('checkValue', dataToSend)
+    } else {
+      handleToastMessage(response.data.message, 'error')
+    }
   }
   useEffect(() => {
     //
@@ -367,8 +374,12 @@ const TableHeadView = (props: any) => {
 
     const response = await axios.post(SaveTrainDailyStatus, DataToSend, headerJson)
     // reloadApi()
-    reloadApi('trainStatus', DataToSend)
-    handleToastMessage(`סטטוס רכבת עודכן בהצלחה`)
+    if (response.data.result == true) {
+      reloadApi('trainStatus', DataToSend)
+      handleToastMessage(`סטטוס רכבת עודכן בהצלחה`, 'success')
+    } else {
+      handleToastMessage(response.data.message, 'error')
+    }
   }
   const handleDriverChangeUpdate = async (value: any) => {
     setSelectedDriver(value)
@@ -389,9 +400,12 @@ const TableHeadView = (props: any) => {
       driverId: Number(value),
     }
     const response = await axios.post(SaveTrainDailyDriverEndPoint, dataToSend, headerJson)
-
-    handleToastMessage(`נהג עודכן בהצלחה`)
-    reloadApi('driver', dataToSend)
+    if (response.data.result == true) {
+      handleToastMessage(`נהג עודכן בהצלחה`, 'success')
+      reloadApi('driver', dataToSend)
+    } else {
+      handleToastMessage(response.data.message, 'error')
+    }
   }
   return (
     <th

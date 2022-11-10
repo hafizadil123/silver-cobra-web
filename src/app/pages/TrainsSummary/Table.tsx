@@ -28,8 +28,8 @@ const ReportTable: React.FC<Props> = ({
   const {addToast} = useToasts()
   const [y, setY] = useState(0)
   const [stickyCss, setStickyCss] = useState('')
-  const handleToastMessage = (message: any) => {
-    addToast(message, {appearance: 'success', autoDismiss: true})
+  const handleToastMessage = (message: any, appearance: any) => {
+    addToast(message, {appearance: appearance, autoDismiss: true})
   }
   const handleNavigation = (e: any) => {
     const window = e.currentTarget
@@ -53,57 +53,26 @@ const ReportTable: React.FC<Props> = ({
         {thData.length > 0 ? (
           <div>
             {/* begin::Table */}
-            <div className='tscroll'>
-              <table className='table fixed-table colum-divider'>
-                {/* begin::Table head */}
-                <thead>
-                  <tr className='fw-bolder text-muted'>
-                    {thData.map((item: any, index) => {
-                      const {driverId, driverName, notes, status, trainId, trainName, severity} =
-                        item
+            {thData.map((item: any, index) => {
+              const {driverId, driverName, notes, status, trainId, trainName, severity} = item
 
-                      return (
-                        <TableHeadView
-                          driverId={driverId}
-                          severity={severity}
-                          driverName={driverName}
-                          status={status}
-                          trainId={trainId}
-                          drivers={drivers}
-                          handleToastMessage={handleToastMessage}
-                          index={index}
-                          className='min-w-150px'
-                          text={trainName}
-                          reloadApi={reloadApi}
-                          selectedDate={selectedDate}
-                        />
-                      )
-                    })}
-                  </tr>
-                </thead>
-                {/* end::Table head */}
-                {/* begin::Table body */}
-                <tbody>
-                  <tr>
-                    {thData.map((item: any, index: any) => {
-                      const {notes, trainId} = item
-                      return (
-                        <TableFootView
-                          index={index}
-                          handleToastMessage={handleToastMessage}
-                          trainId={trainId}
-                          flexValue={1}
-                          text={notes}
-                          reloadApi={reloadApi}
-                          selectedDate={selectedDate}
-                        />
-                      )
-                    })}
-                  </tr>
-                </tbody>
-                {/* end::Table body */}
-              </table>
-            </div>
+              return (
+                <TableHeadViewInFloatingDiv
+                  driverId={driverId}
+                  severity={severity}
+                  driverName={driverName}
+                  status={status}
+                  trainId={trainId}
+                  drivers={drivers}
+                  handleToastMessage={handleToastMessage}
+                  index={index}
+                  className='min-w-150px'
+                  text={trainName}
+                  reloadApi={reloadApi}
+                  selectedDate={selectedDate}
+                />
+              )
+            })}
             {/* end::Table */}
           </div>
         ) : (
@@ -118,72 +87,7 @@ const ReportTable: React.FC<Props> = ({
 
 export {ReportTable}
 
-const TableFootView = (props: any) => {
-  const {flexValue, text, index, trainId, handleToastMessage, reloadApi, selectedDate} = props
-  const [notes, setNotes] = useState('')
-
-  const logged_user_detail: any = localStorage.getItem('logged_user_detail')
-  const loggedInUserDetails = JSON.parse(logged_user_detail)
-  const headerJson = {
-    headers: {
-      Authorization: `bearer ${loggedInUserDetails.access_token}`,
-    },
-  }
-
-  const SaveTrainDailyNotes = `${baseUrl}/api/Common/SaveTrainDailyNotes`
-  const handleUpdateNote = async (value: any) => {
-    setNotes(value)
-    let date
-    let dateFormatted
-    // let date = new Date()
-    // let dateFormatted = moment(date).format('yyyy-MM-DD')
-    if (selectedDate == '') {
-      date = new Date()
-      dateFormatted = moment(date).format('yyyy-MM-DD')
-    } else {
-      date = new Date(selectedDate)
-      dateFormatted = moment(date).format('yyyy-MM-DD')
-    }
-    const dataToSend = {
-      trainId,
-      notes: value,
-      date: dateFormatted,
-    }
-
-    const response = await axios.post(SaveTrainDailyNotes, dataToSend, headerJson)
-
-    reloadApi('notes', dataToSend)
-    handleToastMessage(`שדה הערות עודכן בהצלחה`)
-  }
-  useEffect(() => {
-    //
-    setNotes(text)
-  }, [text])
-  const renderFields = () => {
-    return (
-      <td style={{minWidth: '100px'}} className={` ${index === 0 ? 'table_header' : ''}`}>
-        {index !== 0 ? (
-          <>
-            <label>הערות</label>
-            <input
-              type='text'
-              onChange={(e) => setNotes(e.target.value)}
-              onBlur={(e) => {
-                handleUpdateNote(e.target.value)
-              }}
-              value={notes}
-              className='form-control-sm'
-            />
-          </>
-        ) : null}
-      </td>
-    )
-  }
-
-  return <>{renderFields()}</>
-}
-
-const TableHeadView = (props: any) => {
+const TableHeadViewInFloatingDiv = (props: any) => {
   const logged_user_detail: any = localStorage.getItem('logged_user_detail')
   const loggedInUserDetails = JSON.parse(logged_user_detail)
   const headerJson = {
@@ -238,8 +142,12 @@ const TableHeadView = (props: any) => {
 
     const response = await axios.post(SaveTrainDailyStatus, DataToSend, headerJson)
     // reloadApi()
-    reloadApi('trainStatus', DataToSend)
-    handleToastMessage(`סטטוס רכבת עודכן בהצלחה`)
+    if (response.data.result == true) {
+      handleToastMessage(`סטטוס רכבת עודכן בהצלחה`, 'success')
+      reloadApi('trainStatus', DataToSend)
+    } else {
+      handleToastMessage(response.data.message, 'error')
+    }
   }
   const handleDriverChangeUpdate = async (value: any) => {
     setSelectedDriver(value)
@@ -260,15 +168,24 @@ const TableHeadView = (props: any) => {
       driverId: Number(value),
     }
     const response = await axios.post(SaveTrainDailyDriverEndPoint, dataToSend, headerJson)
-
-    handleToastMessage(`נהג עודכן בהצלחה`)
-    reloadApi('driver', dataToSend)
+    if (response.data.result == true) {
+      handleToastMessage(`נהג עודכן בהצלחה`, 'success')
+      reloadApi('driver', dataToSend)
+    } else {
+      handleToastMessage(response.data.message, 'error')
+    }
   }
   const urlText = text.replaceAll(' ', 'trainNameQuery')
 
   return (
-    <th
-      style={{minWidth: '100px !important'}}
+    <div
+      style={{
+        minWidth: '100px !important',
+        float: 'left',
+        width: '20%',
+        height: '150px',
+        padding: '0.75rem 0.75rem',
+      }}
       className={`${className} ${severity === 1 ? 'bg-red' : ''}`}
     >
       {index === 0 ? (
@@ -337,6 +254,6 @@ const TableHeadView = (props: any) => {
           </div>
         </>
       )}
-    </th>
+    </div>
   )
 }

@@ -23,8 +23,8 @@ const CleaningReportTable: React.FC<Props> = ({
   selectedDate,
 }) => {
   const {addToast} = useToasts()
-  const handleToastMessage = (message: any) => {
-    addToast(message, {appearance: 'success', autoDismiss: true})
+  const handleToastMessage = (message: any, appearance: any) => {
+    addToast(message, {appearance: appearance, autoDismiss: true})
   }
   const [y, setY] = useState(0)
   const [stickyCss, setStickyCss] = useState('')
@@ -187,9 +187,13 @@ const TableDataView = (props: any) => {
     }
 
     const response = await axios.post(SaveTrainCleaningCheckValue, dataToSend, headerJson)
+    if (response.data.result == true) {
+      updateData(dataToSend, 'checkValue')
+      handleToastMessage(`שדה בדיקה עודכן בהצלחה`, 'success')
+    } else {
+      handleToastMessage(response.data.message, 'error')
+    }
 
-    updateData(dataToSend, 'checkValue')
-    handleToastMessage(`שדה בדיקה עודכן בהצלחה`)
     //
 
     // reloadApi()
@@ -277,9 +281,12 @@ const TableFootView = (props: any) => {
     }
 
     const response = await axios.post(SaveTrainCleaningNotes, dataToSend, headerJson)
-
-    handleToastMessage(`"שדה הערות עודכן בהצלחה`)
-    updateData(dataToSend, 'notes')
+    if (response.data.result == true) {
+      updateData(dataToSend, 'checkValue')
+      handleToastMessage(`שדה בדיקה עודכן בהצלחה`, 'success')
+    } else {
+      handleToastMessage(response.data.message, 'error')
+    }
   }
   const [notes, setNotes] = useState('')
   useEffect(() => {

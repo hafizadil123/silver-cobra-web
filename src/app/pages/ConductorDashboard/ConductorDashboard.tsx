@@ -141,6 +141,14 @@ const ConductorDashboard: FC = () => {
       updateTrainData,
       headerJson
     )
+    if (UpdateTrainStatusResponse.data.result === true) {
+      // setLoading(true)
+      await getTrainsForActivation()
+      addToast('Driver Updated', {appearance: 'success', autoDismiss: true})
+    } else {
+      addToast(UpdateTrainStatusResponse.data.message, {appearance: 'error', autoDismiss: true})
+    }
+
     console.log({UpdateTrainStatusResponse})
   }
   const handleSubmitTrainActivation = async (e: any) => {
@@ -155,8 +163,11 @@ const ConductorDashboard: FC = () => {
     }
     //
     const response = await axios.post(saveTrainActivationEndPoint, dataToSend, headerJson)
-
-    addToast('Your Train Activation Has Been Updated', {appearance: 'success', autoDismiss: true})
+    if (response.data.result === true) {
+      addToast('Your Train Activation Has Been Updated', {appearance: 'success', autoDismiss: true})
+    } else {
+      addToast(response.data.message, {appearance: 'error', autoDismiss: true})
+    }
   }
   const updateDriverAPI = async (data: any) => {
     const date = new Date()
@@ -168,8 +179,13 @@ const ConductorDashboard: FC = () => {
     }
     const response = await axios.post(SaveTrainDailyDriverEndPoint, dataToSend, headerJson)
     if (response?.data?.result === true) {
+    }
+    if (response.data.result === true) {
       setLoading(true)
       await getTrainsForActivation()
+      addToast('Driver Updated', {appearance: 'success', autoDismiss: true})
+    } else {
+      addToast(response.data.message, {appearance: 'error', autoDismiss: true})
     }
     console.log({response})
   }
