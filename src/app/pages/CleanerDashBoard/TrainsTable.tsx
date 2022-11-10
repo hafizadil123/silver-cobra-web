@@ -69,7 +69,7 @@ const TableDataView = (props: any) => {
       <td className={`${className} `} style={{minWidth: '150px'}}>
         <span>
           {' '}
-          <Link to={`/trains-inspection/${urlText}/${id}`}>שם רכבת{text}</Link>{' '}
+          <Link to={`/trains-inspection/${urlText}/${id}/noCar`}>שם רכבת{text}</Link>{' '}
         </span>
       </td>
     )
