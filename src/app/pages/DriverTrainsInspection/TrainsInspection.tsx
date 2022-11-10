@@ -105,7 +105,11 @@ const SingleTrainInspectionDashboardPage: FC = () => {
     const response = await axios.post(saveInspectionEndPoint, dataToSend, headerJson)
 
     setLoading(false)
-    addToast('הביקורת עודכנה בהצלחה', {appearance: 'success', autoDismiss: true})
+    if (response.data.result === true) {
+      addToast('הביקורת עודכנה בהצלחה', {appearance: 'success', autoDismiss: true})
+    } else {
+      addToast(response.data.message, {appearance: 'error', autoDismiss: true})
+    }
   }
   const handleMarkAllChecked = (value: any) => {
     let updatedTrains = trains.map((item: any) => {
@@ -204,7 +208,12 @@ const SingleTrainInspectionDashboardPage: FC = () => {
                     <span>דף בטעינה...</span>
                   </button>
                 ) : (
-                  <button type='button' onClick={handleSubmit} className='btn btn-primary'>
+                  <button
+                    type='button'
+                    disabled={isLocked == true ? true : false}
+                    onClick={handleSubmit}
+                    className='btn btn-primary'
+                  >
                     שמור
                   </button>
                 )}

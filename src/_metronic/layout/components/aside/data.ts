@@ -10,7 +10,11 @@ const routes: any = [
     route: '/trains-daily-report',
     role: ['OccUser', 'Admin'],
   },
-
+  {
+    title: ' סיכום דיווח יומי',
+    route: '/trains-summary',
+    role: ['OccUser', 'Admin'],
+  },
   {
     title: ' דיווח ניקיון יומי',
     route: '/trains-cleaning-report',
@@ -40,11 +44,6 @@ const routes: any = [
     title: 'ניהול רשימת בדיקות ניקיון יומיות',
     route: '/manage-daily-cleaning-attendance-check-types',
     role: ['Admin'],
-  },
-  {
-    title: ' סיכום דיווח יומי',
-    route: '/trains-summary',
-    role: ['OccUser', 'Admin'],
   },
 ]
 export const Routes = (role: any) => {
