@@ -6,12 +6,16 @@ import moment from 'moment'
 import {PageTitle} from '../../../_metronic/layout/core'
 import './dashboard-page.css'
 import {useLocation} from 'react-router-dom'
+import Modal from 'react-bootstrap/Modal'
 
 import {ReportTable} from './Table'
 const DashboardPage: FC = () => {
   const location = useLocation()
+  const [showModal, setShowModal] = useState(false)
   const [checks, setChecks] = useState<any>([])
   const [selectedDate, setSelectedDate] = useState<any>('')
+  const [startDate, setStartDate] = useState<any>('')
+  const [endDate, setEndDate] = useState<any>('')
   const [selectedSeverity, setSelectedSeverity] = useState<any>('')
   const [actualTbodyData, setActualTBodyData] = useState<any>([])
   const [thData, setThData] = useState<any>([])
@@ -30,6 +34,7 @@ const DashboardPage: FC = () => {
   const getDriversEndPoint = `${baseUrl}/api/Common/GetDrivers`
   const getMyTrainsForInspectionEndPoint = `${baseUrl}/api/Common/GetTrainsForInspection`
   const getMyTrainsDailyReportEndPoint = `${baseUrl}/api/Common/GetTrainsDailyReport`
+  const GetTrainsDailyReportExcel = `${baseUrl}/api/Common/GetTrainsDailyCleaningReportExcel`
   const headerJson = {
     headers: {
       Authorization: `bearer ${loggedInUserDetails.access_token}`,
@@ -53,6 +58,8 @@ const DashboardPage: FC = () => {
     let date = new Date()
     let dateFormatted = moment(date).format('yyyy-MM-DD')
     setSelectedDate(dateFormatted)
+    setStartDate(dateFormatted)
+    setEndDate(dateFormatted)
     getLoggedInUserdata()
     getAllDrivers()
     getMyTrainsDailyReport(dateFormatted)
@@ -366,6 +373,25 @@ const DashboardPage: FC = () => {
     setThData(searchedTrains)
     setBodyData(_tBodyData)
   }
+  const downloadExcelFile = async () => {
+    console.log(startDate, endDate, search, selectedSeverity)
+    let _startDate = new Date(startDate)
+    const fromDate = moment(_startDate).format('yyyy-MM-DD')
+    let _endDate = new Date(endDate)
+    const tillDate = moment(_startDate).format('yyyy-MM-DD')
+    const dataToSend = {
+      fromDate,
+      tillDate,
+      trainName: search,
+      errorStatus: selectedSeverity,
+    }
+    try {
+      const response = await axios.post(GetTrainsDailyReportExcel, dataToSend, headerJson)
+      console.log({response})
+    } catch (error) {
+      console.log({error})
+    }
+  }
   return (
     <>
       <div style={{height: 'auto'}} className='main-container-dashboard'>
@@ -406,6 +432,8 @@ const DashboardPage: FC = () => {
                         value={selectedDate}
                         onChange={(e) => {
                           setSelectedDate(e.target.value)
+                          setStartDate(e.target.value)
+                          setEndDate(e.target.value)
                         }}
                       />
 
@@ -462,6 +490,15 @@ const DashboardPage: FC = () => {
                     >
                       נקה חיפוש
                     </button>
+                    <button
+                      type='button'
+                      onClick={(e) => {
+                        setShowModal(true)
+                      }}
+                      className='btn btn-success mx-3'
+                    >
+                      הפק דוח
+                    </button>
                   </div>
                 </div>
                 <ReportTable
@@ -474,6 +511,67 @@ const DashboardPage: FC = () => {
                 />
               </div>
             </div>
+            <Modal
+              show={showModal}
+              style={{direction: 'rtl'}}
+              onHide={() => {
+                setShowModal(false)
+              }}
+              // style={{    minWidth: "700px"}}
+              size='lg'
+              backdrop='static'
+              keyboard={false}
+            >
+              <Modal.Header closeButton></Modal.Header>
+              <Modal.Body>
+                <form>
+                  <div className='form-group'>
+                    <label>Start Date:</label>
+                    <input
+                      type='date'
+                      className='form-control-sm mb-5'
+                      value={startDate}
+                      onChange={(e) => {
+                        setStartDate(e.target.value)
+                      }}
+                    />
+                  </div>
+                  <div className='form-group'>
+                    <label>End Date:</label>
+                    <input
+                      type='date'
+                      className='form-control-sm mb-5'
+                      value={endDate}
+                      onChange={(e) => {
+                        setEndDate(e.target.value)
+                      }}
+                    />
+                  </div>
+                </form>
+              </Modal.Body>
+              <Modal.Footer>
+                <div
+                  className=''
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    width: '100%',
+                  }}
+                >
+                  <button
+                    type='button'
+                    onClick={() => {
+                      // setShowModal(false)
+                      downloadExcelFile()
+                    }}
+                    className='btn btn-primary'
+                  >
+                    הוסף בדיקה יומית{' '}
+                  </button>
+                </div>
+              </Modal.Footer>
+            </Modal>
           </>
         )}
       </div>
