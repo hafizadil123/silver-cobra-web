@@ -144,7 +144,7 @@ const ConductorDashboard: FC = () => {
     if (UpdateTrainStatusResponse.data.result === true) {
       // setLoading(true)
       await getTrainsForActivation()
-      addToast('Driver Updated', {appearance: 'success', autoDismiss: true})
+      addToast('Status Updated', {appearance: 'success', autoDismiss: true})
     } else {
       addToast(UpdateTrainStatusResponse.data.message, {appearance: 'error', autoDismiss: true})
     }
@@ -181,7 +181,7 @@ const ConductorDashboard: FC = () => {
     if (response?.data?.result === true) {
     }
     if (response.data.result === true) {
-      setLoading(true)
+      // setLoading(true)
       await getTrainsForActivation()
       addToast('Driver Updated', {appearance: 'success', autoDismiss: true})
     } else {

@@ -3,11 +3,8 @@ import React, {FC, useState, useEffect} from 'react'
 import {useIntl} from 'react-intl'
 import axios from 'axios'
 import moment from 'moment'
-import DataTable, {createTheme} from 'react-data-table-component'
 import {PageTitle} from '../../../_metronic/layout/core'
-import {ChecksComponent} from '../../pages/dashboard/Checks'
 import '../../pages/dashboard/dashboard-page.css'
-import {ShowDataTable} from '../../pages/dashboard/ShowDataTable'
 import {DailCleaningAttendaceTable} from './Table'
 import {useToasts} from 'react-toast-notifications'
 import Modal from 'react-bootstrap/Modal'
@@ -68,7 +65,7 @@ const ManageDailyCleaningCheckTypes: FC = () => {
       const {data} = response
       setUserRoles(data.userRoles)
       setActiveUesr({
-        ...activeUser   
+        ...activeUser,
       })
     }
   }
@@ -110,37 +107,40 @@ const ManageDailyCleaningCheckTypes: FC = () => {
         addToast(error, {appearance: 'error', autoDismiss: true})
       })
     } else {
+      setShowModal(false)
       setLoading(true)
       addToast(`record ${type} successfully`, {appearance: 'success', autoDismiss: true})
       getUsers()
     }
   }
   const handleSearch = (value: any) => {
-    value = value.toLowerCase();
-    let searchedUsers = actualUsers && actualUsers.filter((item: any) => {
-      if (
-        item.name.toLowerCase().indexOf(value) > -1
-      ) {
-        return item
-      }
-    })
+    value = value.toLowerCase()
+    let searchedUsers =
+      actualUsers &&
+      actualUsers.filter((item: any) => {
+        if (item.name.toLowerCase().indexOf(value) > -1) {
+          return item
+        }
+      })
     setSearch(value)
     setUsers(searchedUsers)
   }
-  const handleDeleteF = async (id: any)  => {
-    if(window.confirm('Are you sure you want to delete?')) {
+  const handleDeleteF = async (id: any) => {
+    if (window.confirm('Are you sure you want to delete?')) {
       const response = await axios.post(deleteDailyAttendanceCheckTypeDetails, {id: id}, headerJson)
 
-    if (response && response.data) {
-      const {data} = response
-      if(data.result) {
-        setLoading(true)
-        getUsers()  
+      if (response && response.data) {
+        const {data} = response
+        if (data.result) {
+          setLoading(true)
+          getUsers()
+        }
       }
     }
-  
   }
-}
+  const getUsersAfterUpdate = () => {
+    getUsers()
+  }
   return (
     <>
       <div style={{height: 'auto'}} className='main-container-dashboard'>
@@ -191,6 +191,7 @@ const ManageDailyCleaningCheckTypes: FC = () => {
                   className='mb-5 mb-xl-8'
                   getSelectedUser={getSelectedUser}
                   userRoles={userRoles}
+                  getUsersAfterUpdate={getUsersAfterUpdate}
                   saveUserDetails={saveUserDetails}
                   users={users}
                   css={stickyCss}
@@ -214,52 +215,52 @@ const ManageDailyCleaningCheckTypes: FC = () => {
       >
         <Modal.Header closeButton></Modal.Header>
         <Modal.Body>
-                <form>
-                  <div className='form-group'>
-                    <label>שם</label>
-                    <input
-                      type='text'
-                      value={activeUser.name}
-                      onChange={(e) => {
-                        setActiveUesr({
-                          ...activeUser,
-                          name: e.target.value,
-                        })
-                      }}
-                      className='form-control'
-                    />
-                  </div>
-                
-                  <div className='form-group'>
-                    <label>סדר</label>
-                    <input
-                      type='number'
-                      value={activeUser.order}
-                      onChange={(e) => {
-                        setActiveUesr({
-                          ...activeUser,
-                          order: e.target.value,
-                        })
-                      }}
-                      className='form-control'
-                    />
-                  </div>
-                  <div className='form-group'>
-                    <label>חומרה</label>
-                    <input
-                      type='number'
-                      value={activeUser.severity}
-                      onChange={(e) => {
-                        setActiveUesr({
-                          ...activeUser,
-                          severity: e.target.value,
-                        })
-                      }}
-                      className='form-control'
-                    />
-                  </div>
-                </form>
-              </Modal.Body>
+          <form>
+            <div className='form-group'>
+              <label>שם</label>
+              <input
+                type='text'
+                value={activeUser.name}
+                onChange={(e) => {
+                  setActiveUesr({
+                    ...activeUser,
+                    name: e.target.value,
+                  })
+                }}
+                className='form-control'
+              />
+            </div>
+
+            <div className='form-group'>
+              <label>סדר</label>
+              <input
+                type='number'
+                value={activeUser.order}
+                onChange={(e) => {
+                  setActiveUesr({
+                    ...activeUser,
+                    order: e.target.value,
+                  })
+                }}
+                className='form-control'
+              />
+            </div>
+            <div className='form-group'>
+              <label>חומרה</label>
+              <input
+                type='number'
+                value={activeUser.severity}
+                onChange={(e) => {
+                  setActiveUesr({
+                    ...activeUser,
+                    severity: e.target.value,
+                  })
+                }}
+                className='form-control'
+              />
+            </div>
+          </form>
+        </Modal.Body>
         <Modal.Footer>
           <div
             className=''
@@ -273,12 +274,12 @@ const ManageDailyCleaningCheckTypes: FC = () => {
             <button
               type='button'
               onClick={() => {
-                setShowModal(false)
+                // setShowModal(false)
                 handleUpdateUser()
               }}
               className='btn btn-primary'
             >
-              הוסף
+              הוסף בדיקה יומית{' '}
             </button>
           </div>
         </Modal.Footer>

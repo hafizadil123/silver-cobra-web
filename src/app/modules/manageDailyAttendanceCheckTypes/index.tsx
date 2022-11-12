@@ -14,6 +14,7 @@ import Modal from 'react-bootstrap/Modal'
 
 const ManageDailyAttendanceCheckTypesPage: FC = () => {
   const [showModal, setShowModal] = useState(false)
+  const [showEditModal, setShowEditModal] = useState(false)
 
   const [users, setUsers] = useState<any>([])
   const [userRoles, setUserRoles] = useState<any>([])
@@ -22,6 +23,7 @@ const ManageDailyAttendanceCheckTypesPage: FC = () => {
   const [search, setSearch] = useState('')
   const [actualUsers, setActualUsers] = useState<any>([])
   const [loading, setLoading] = useState(true)
+  // const [showModal,setShowModal]=useState(false);
   const logged_user_detail: any = localStorage.getItem('logged_user_detail')
   const [activeUser, setActiveUesr] = useState({
     name: '',
@@ -71,7 +73,7 @@ const ManageDailyAttendanceCheckTypesPage: FC = () => {
       console.log('adddddd', data)
       setUserRoles(data.userRoles)
       setActiveUesr({
-        ...activeUser   
+        ...activeUser,
       })
     }
   }
@@ -96,6 +98,9 @@ const ManageDailyAttendanceCheckTypesPage: FC = () => {
       setLoading(false)
     }
   }
+  const getUsersAfterUpdate = () => {
+    getUsers()
+  }
   const handleNavigation = (e: any) => {
     const window = e.currentTarget
     if (y > window.scrollY && window.scrollY === 238) {
@@ -113,37 +118,38 @@ const ManageDailyAttendanceCheckTypesPage: FC = () => {
         addToast(error, {appearance: 'error', autoDismiss: true})
       })
     } else {
+      setShowModal(false)
       setLoading(true)
       addToast(`Code ${type} successfully`, {appearance: 'success', autoDismiss: true})
       getUsers()
     }
   }
   const handleSearch = (value: any) => {
-    value = value.toLowerCase();
-    let searchedUsers = actualUsers && actualUsers.filter((item: any) => {
-      if (
-        item.name.toLowerCase().indexOf(value) > -1
-      ) {
-        return item
-      }
-    })
+    value = value.toLowerCase()
+    let searchedUsers =
+      actualUsers &&
+      actualUsers.filter((item: any) => {
+        if (item.name.toLowerCase().indexOf(value) > -1) {
+          return item
+        }
+      })
     setSearch(value)
     setUsers(searchedUsers)
   }
-  const handleDeleteF = async (id: any)  => {
-    if(window.confirm('Are you sure you want to delete?')) {
+  const handleDeleteF = async (id: any) => {
+    if (window.confirm('Are you sure you want to delete?')) {
       const response = await axios.post(deleteDailyAttendanceCheckTypeDetails, {id: id}, headerJson)
 
-    if (response && response.data) {
-      const {data} = response
-      if(data.result) {
-        setLoading(true)
-        getUsers()  
+      if (response && response.data) {
+        const {data} = response
+        if (data.result) {
+          setLoading(true)
+          getUsers()
+        }
       }
     }
-  
   }
-}
+
   return (
     <>
       <div style={{height: 'auto'}} className='main-container-dashboard'>
@@ -197,6 +203,8 @@ const ManageDailyAttendanceCheckTypesPage: FC = () => {
                   saveUserDetails={saveUserDetails}
                   users={users}
                   css={stickyCss}
+                  getUsersAfterUpdate={getUsersAfterUpdate}
+                  // ActiveEditModel={ActiveEditModel}
                   handleDelete={(id: any) => handleDeleteF(id)}
                 />
               </>
@@ -217,82 +225,82 @@ const ManageDailyAttendanceCheckTypesPage: FC = () => {
       >
         <Modal.Header closeButton></Modal.Header>
         <Modal.Body>
-                <form>
-                  <div className='form-group'>
-                    <label>שם</label>
-                    <input
-                      type='text'
-                      value={activeUser.name}
-                      onChange={(e) => {
-                        setActiveUesr({
-                          ...activeUser,
-                          name: e.target.value,
-                        })
-                      }}
-                      className='form-control'
-                    />
-                  </div>
-                  <div className='chebox-style'>
-                  <div className='form-check'>
-                    <label>עבור קרון</label>
-                    <input
-                      type='checkbox'
-                      onChange={(e) => {
-                        setActiveUesr({
-                          ...activeUser,
-                          isForCar: e.target.checked
-                        })
-                      }}
-                      checked={activeUser.isForCar}
-                      className='form-check-input'
-                    />
-                  </div>
-                  <div className='form-check'>
-                    <label>עבור חיבורים</label>
-                    <input
-                      type='checkbox'
-                      checked={activeUser.isForTrain}
-                      onChange={(e) => {
-                        console.log('creaaa', e.target)
-                        setActiveUesr({
-                          ...activeUser,
-                          isForTrain: e.target.checked
-                        })
-                      }}
-                      className='form-check-input'
-                    />
-                  </div>
-                  </div>
-                  <div className='form-group'>
-                    <label>סדר</label>
-                    <input
-                      type='number'
-                      value={activeUser.order}
-                      onChange={(e) => {
-                        setActiveUesr({
-                          ...activeUser,
-                          order: e.target.value,
-                        })
-                      }}
-                      className='form-control'
-                    />
-                  </div>
-                  <div className='form-group'>
-                    <label>חומרה</label>
-                    <input
-                      type='number'
-                      value={activeUser.severity}
-                      onChange={(e) => {
-                        setActiveUesr({
-                          ...activeUser,
-                          severity: e.target.value,
-                        })
-                      }}
-                      className='form-control'
-                    />
-                  </div>
-                </form>
-              </Modal.Body>
+          <form>
+            <div className='form-group'>
+              <label>שם</label>
+              <input
+                type='text'
+                value={activeUser.name}
+                onChange={(e) => {
+                  setActiveUesr({
+                    ...activeUser,
+                    name: e.target.value,
+                  })
+                }}
+                className='form-control'
+              />
+            </div>
+            <div className='chebox-style'>
+              <div className='form-check'>
+                <label>עבור קרון</label>
+                <input
+                  type='checkbox'
+                  onChange={(e) => {
+                    setActiveUesr({
+                      ...activeUser,
+                      isForCar: e.target.checked,
+                    })
+                  }}
+                  checked={activeUser.isForCar}
+                  className='form-check-input'
+                />
+              </div>
+              <div className='form-check'>
+                <label>עבור חיבורים</label>
+                <input
+                  type='checkbox'
+                  checked={activeUser.isForTrain}
+                  onChange={(e) => {
+                    console.log('creaaa', e.target)
+                    setActiveUesr({
+                      ...activeUser,
+                      isForTrain: e.target.checked,
+                    })
+                  }}
+                  className='form-check-input'
+                />
+              </div>
+            </div>
+            <div className='form-group'>
+              <label>סדר</label>
+              <input
+                type='number'
+                value={activeUser.order}
+                onChange={(e) => {
+                  setActiveUesr({
+                    ...activeUser,
+                    order: e.target.value,
+                  })
+                }}
+                className='form-control'
+              />
+            </div>
+            <div className='form-group'>
+              <label>חומרה</label>
+              <input
+                type='number'
+                value={activeUser.severity}
+                onChange={(e) => {
+                  setActiveUesr({
+                    ...activeUser,
+                    severity: e.target.value,
+                  })
+                }}
+                className='form-control'
+              />
+            </div>
+          </form>
+        </Modal.Body>
         <Modal.Footer>
           <div
             className=''
@@ -306,12 +314,12 @@ const ManageDailyAttendanceCheckTypesPage: FC = () => {
             <button
               type='button'
               onClick={() => {
-                setShowModal(false)
+                // setShowModal(false)
                 handleUpdateUser()
               }}
               className='btn btn-primary'
             >
-              הוסף
+              הוסף בדיקה יומית
             </button>
           </div>
         </Modal.Footer>

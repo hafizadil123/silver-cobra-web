@@ -2,6 +2,9 @@
 import React, {useState, useEffect} from 'react'
 import {KTSVG} from '../../../_metronic/helpers'
 import moment from 'moment'
+import axios from 'axios'
+import {useToasts} from 'react-toast-notifications'
+
 import Modal from 'react-bootstrap/Modal'
 import './user.css'
 type Props = {
@@ -11,6 +14,7 @@ type Props = {
   getSelectedUser: (id: any) => any
   saveUserDetails: (detalis: any) => any
   css: string
+  getUsersAfterUpdate: () => any
   handleDelete: any
 }
 
@@ -22,6 +26,7 @@ const DailCleaningAttendaceTable: React.FC<Props> = ({
   userRoles,
   css,
   handleDelete,
+  getUsersAfterUpdate,
 }) => {
   const [y, setY] = useState(0)
   const [stickyCss, setStickyCss] = useState('')
@@ -40,12 +45,7 @@ const DailCleaningAttendaceTable: React.FC<Props> = ({
 
     window.addEventListener('scroll', (e) => handleNavigation(e))
   }, [])
-  console.log({
-    stickyCss,
-    y,
-    px: window.screenY,
-    users,
-  })
+
   return (
     <div className={`card ${className}`}>
       <div className='card-body py-3'>
@@ -57,8 +57,8 @@ const DailCleaningAttendaceTable: React.FC<Props> = ({
             <thead style={{background: stickyCss, top: `${stickyCss && '65px'}`}}>
               <tr className='fw-bolder text-muted'>
                 <TableHeadView className='min-w-150px' text={'שם'} />
-                <TableHeadView className='min-w-150px' text={'חומרה'} />
                 <TableHeadView className='min-w-150px' text={'סדר'} />
+                <TableHeadView className='min-w-150px' text={'חומרה'} />
               </tr>
             </thead>
             {/* end::Table head */}
@@ -124,8 +124,9 @@ const DailCleaningAttendaceTable: React.FC<Props> = ({
                         isDelete={false}
                         id={item.id}
                         handleDelete={handleDelete}
+                        getUsersAfterUpdate={getUsersAfterUpdate}
                       />
-                      <TableDataView
+                      {/* <TableDataView
                         className='min-w-150px'
                         index={index}
                         flexValue={1}
@@ -138,7 +139,7 @@ const DailCleaningAttendaceTable: React.FC<Props> = ({
                         isDelete={true}
                         id={item.id}
                         handleDelete={handleDelete}
-                      />
+                      /> */}
                     </tr>
                   )
                 })}
@@ -162,20 +163,48 @@ const TableDataView = (props: any) => {
     className,
     getSelectedUser,
     userId,
-    saveUserDetails,
+    // saveUserDetails,
     userRoles,
     isDelete,
     id,
     handleDelete,
+    getUsersAfterUpdate,
   } = props
+  const logged_user_detail: any = localStorage.getItem('logged_user_detail')
+
+  const loggedInUserDetails = JSON.parse(logged_user_detail)
+
+  const {addToast} = useToasts()
+
+  const baseUrl = process.env.REACT_APP_API_URL
+  const saveUserDetailsEndPoint = `${baseUrl}/api/Common/SaveDailyCleaningCheckTypeDetails`
+  const headerJson = {
+    headers: {
+      Authorization: `bearer ${loggedInUserDetails.access_token}`,
+    },
+  }
   const [activeUser, setActiveUesr] = useState({
     name: '',
     order: '',
     severity: '',
+    id: '',
   })
   const [showModal, setShowModal] = useState(false)
   const handleUpdateUser = () => {
     saveUserDetails(activeUser)
+  }
+  const saveUserDetails = async (details: any, type = 'Updated') => {
+    const response = await axios.post(saveUserDetailsEndPoint, details, headerJson)
+    if (response.data.result === false) {
+      response.data.validationErrors.forEach((error: any) => {
+        addToast(error, {appearance: 'error', autoDismiss: true})
+      })
+    } else {
+      setShowModal(false)
+      addToast(`record ${type} successfully`, {appearance: 'success', autoDismiss: true})
+      getUsersAfterUpdate()
+      // getUsers()
+    }
   }
 
   const handleChangeActions = (isDelete: boolean, userId: any, id: any) => {
@@ -185,6 +214,7 @@ const TableDataView = (props: any) => {
         name: user.name,
         order: user.order,
         severity: user.severity,
+        id: user.id,
       })
       setShowModal(true)
     } else {
@@ -200,9 +230,14 @@ const TableDataView = (props: any) => {
           <>
             {/* Modal Start */}
             <i
+              style={{float: 'right', cursor: 'pointer', marginLeft: '20px'}}
+              onClick={(e) => handleChangeActions(false, userId, id)}
+              className={'fa fa-edit'}
+            ></i>
+            <i
               style={{float: 'right', cursor: 'pointer'}}
-              onClick={(e) => handleChangeActions(isDelete, userId, id)}
-              className={isDelete ? `fa fa-trash` : 'fa fa-edit'}
+              onClick={(e) => handleChangeActions(true, userId, id)}
+              className={`fa fa-trash`}
             ></i>
             <Modal
               show={showModal}
@@ -275,7 +310,6 @@ const TableDataView = (props: any) => {
                   <button
                     type='button'
                     onClick={() => {
-                      setShowModal(false)
                       handleUpdateUser()
                     }}
                     className='btn btn-primary'

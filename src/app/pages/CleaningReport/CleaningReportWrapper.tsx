@@ -215,17 +215,65 @@ const CleaningReportpage: FC = () => {
     setTrains(updatedData)
     setBodyData(updatedTrains)
   }
-  useEffect(() => {
-    filterAccordingToSeverity(selectedSeverity)
-  }, [selectedSeverity])
-  const filterAccordingToSeverity = (severity: any) => {
-    if (selectedSeverity == '') {
-      setThData(actualThData)
-      setBodyData(actualTBodyData)
-      return
-    }
+  // useEffect(() => {
+  //   filterAccordingToSeverity(selectedSeverity)
+  // }, [selectedSeverity])
+  // const filterAccordingToSeverity = (severity: any) => {
+  //   if (selectedSeverity == '') {
+  //     setThData(actualThData)
+  //     setBodyData(actualTBodyData)
+  //     return
+  //   }
+  //   let searchedTrains: any = actualThData.filter((item: any) => {
+  //     if (item.severity == severity) {
+  //       return item
+  //     }
+  //   })
+  //   let obj = {
+  //     driverId: 0,
+  //     driverName: null,
+  //     notes: null,
+  //     status: 1,
+  //     trainId: 0,
+  //     trainName: '',
+  //   }
+  //   searchedTrains.unshift(obj)
+  //   let trainIds = searchedTrains.map((item: any) => {
+  //     return item.trainId
+  //   })
+
+  //   let _tBodyData: any = []
+
+  //   let s = 0
+  //   for (let i = 0; i < checks.length; i++) {
+  //     let check: any = checks[i]
+  //     let trData = []
+  //     trData.push({
+  //       carId: check.id,
+  //       carName: check.name,
+  //       checkId: check.id,
+  //       checkValue: null,
+  //       trainId: 0,
+  //     })
+  //     for (let j = 0; j < trains.length; j++) {
+  //       let trainId = trains[j].trainId
+  //       if (trainIds.includes(trainId)) {
+  //         let trainCheck = trains[j].Checks[i]
+  //         trainCheck.trainId = trains[j].trainId
+
+  //         trData.push(trainCheck)
+  //       }
+  //     }
+  //     s++
+  //     _tBodyData.push(trData)
+  //   }
+
+  //   setThData(searchedTrains)
+  //   setBodyData(_tBodyData)
+  // }
+  const handleSearch = (value: any, severity: any) => {
     let searchedTrains: any = actualThData.filter((item: any) => {
-      if (item.severity == severity) {
+      if (item.trainName.indexOf(value) > -1 && item.severity == severity) {
         return item
       }
     })
@@ -237,57 +285,9 @@ const CleaningReportpage: FC = () => {
       trainId: 0,
       trainName: '',
     }
+    // if (value !== '') {
     searchedTrains.unshift(obj)
-    let trainIds = searchedTrains.map((item: any) => {
-      return item.trainId
-    })
-
-    let _tBodyData: any = []
-
-    let s = 0
-    for (let i = 0; i < checks.length; i++) {
-      let check: any = checks[i]
-      let trData = []
-      trData.push({
-        carId: check.id,
-        carName: check.name,
-        checkId: check.id,
-        checkValue: null,
-        trainId: 0,
-      })
-      for (let j = 0; j < trains.length; j++) {
-        let trainId = trains[j].trainId
-        if (trainIds.includes(trainId)) {
-          let trainCheck = trains[j].Checks[i]
-          trainCheck.trainId = trains[j].trainId
-
-          trData.push(trainCheck)
-        }
-      }
-      s++
-      _tBodyData.push(trData)
-    }
-
-    setThData(searchedTrains)
-    setBodyData(_tBodyData)
-  }
-  const handleSearch = (value: any) => {
-    let searchedTrains: any = actualThData.filter((item: any) => {
-      if (item.trainName.indexOf(value) > -1) {
-        return item
-      }
-    })
-    let obj = {
-      driverId: 0,
-      driverName: null,
-      notes: null,
-      status: 1,
-      trainId: 0,
-      trainName: '',
-    }
-    if (value !== '') {
-      searchedTrains.unshift(obj)
-    }
+    // }
     let trainIds = searchedTrains.map((item: any) => {
       return item.trainId
     })
@@ -381,7 +381,7 @@ const CleaningReportpage: FC = () => {
                     style={{maxWidth: '200px'}}
                     value={search}
                     onChange={(e) => {
-                      handleSearch(e.target.value)
+                      handleSearch(e.target.value, selectedSeverity)
                     }}
                     placeholder='חפש לפי שם רכבת'
                   />
@@ -391,7 +391,10 @@ const CleaningReportpage: FC = () => {
                     style={{marginRight: '30px'}}
                     className='form-control-sm'
                     value={selectedSeverity}
-                    onChange={(e) => setSelectedSeverity(e.target.value)}
+                    onChange={(e) => {
+                      setSelectedSeverity(e.target.value)
+                      handleSearch(search, e.target.value)
+                    }}
                   >
                     <option value=''></option>
                     <option value='1'>עם שגיאות</option>
@@ -401,7 +404,11 @@ const CleaningReportpage: FC = () => {
                 <div className='col-md-4 col-lg-4'>
                   <button
                     type='button'
-                    onClick={(e) => handleSearch('')}
+                    onClick={(e) => {
+                      setSelectedSeverity('')
+                      handleSearch('', '')
+                      setSearch('')
+                    }}
                     className='btn btn-danger mx-3'
                   >
                     נקה חיפוש

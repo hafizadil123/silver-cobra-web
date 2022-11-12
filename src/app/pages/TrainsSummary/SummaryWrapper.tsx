@@ -264,9 +264,9 @@ const TrainsSummaryPage: FC = () => {
 
     setBodyData(updatedTrains)
   }
-  const handleSearch = (value: any) => {
+  const handleSearch = (value: any, severity: any) => {
     let searchedTrains: any = actualThData.filter((item: any) => {
-      if (item.trainName.indexOf(value) > -1) {
+      if (item.trainName.indexOf(value) > -1 && item.severity == severity) {
         return item
       }
     })
@@ -279,9 +279,9 @@ const TrainsSummaryPage: FC = () => {
       trainId: 0,
       trainName: '',
     }
-    if (value !== '') {
-      searchedTrains.unshift(obj)
-    }
+    // if (value !== '') {
+    searchedTrains.unshift(obj)
+    // }
     setSearch(value)
     setThData(searchedTrains)
   }
@@ -323,21 +323,41 @@ const TrainsSummaryPage: FC = () => {
                       </button>
                     </div>
                   </div>
-                  <div className='col-md-8 col-lg-8'>
+                  <div className='col-md-8 col-lg-8' style={{display: 'flex'}}>
                     <input
                       type='text'
+                      style={{maxWidth: '200px'}}
                       value={search}
                       onChange={(e) => {
-                        handleSearch(e.target.value)
+                        handleSearch(e.target.value, selectedSeverity)
                       }}
                       className='form-control'
                       placeholder='חפש לפי שם רכבת'
                     />
+                    <h4 style={{lineHeight: '36px', marginRight: '50px'}}>סטטוס</h4>
+
+                    <select
+                      style={{marginRight: '30px'}}
+                      className='form-control-sm'
+                      value={selectedSeverity}
+                      onChange={(e) => {
+                        setSelectedSeverity(e.target.value)
+                        handleSearch(search, e.target.value)
+                      }}
+                    >
+                      <option value=''></option>
+                      <option value='1'>עם שגיאות</option>
+                      <option value='0'>ללא שגיאות</option>
+                    </select>
                   </div>
                   <div className='col-md-4 col-lg-4'>
                     <button
                       type='button'
-                      onClick={(e) => handleSearch('')}
+                      onClick={(e) => {
+                        handleSearch('', '')
+                        setSelectedSeverity('')
+                        setSearch('')
+                      }}
                       className='btn btn-danger mx-3'
                     >
                       נקה חיפוש
