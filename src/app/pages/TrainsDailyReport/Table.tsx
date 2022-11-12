@@ -58,13 +58,22 @@ const ReportTable: React.FC<Props> = ({
                 <thead>
                   <tr className='fw-bolder text-muted'>
                     {thData.map((item: any, index) => {
-                      const {driverId, driverName, notes, status, trainId, trainName, severity} =
-                        item
+                      const {
+                        driverId,
+                        driverName,
+                        notes,
+                        status,
+                        trainId,
+                        trainName,
+                        severity,
+                        signedByDriver,
+                      } = item
                       return (
                         <TableHeadView
                           driverId={driverId}
                           severity={severity}
                           driverName={driverName}
+                          signedByDriver={signedByDriver}
                           status={status}
                           trainId={trainId}
                           drivers={drivers}
@@ -344,6 +353,7 @@ const TableHeadView = (props: any) => {
     handleToastMessage,
     selectedDate,
     severity,
+    signedByDriver,
   } = props
   const [selectedDriver, setSelectedDriver] = useState('')
   useEffect(() => {
@@ -419,39 +429,6 @@ const TableHeadView = (props: any) => {
           <div>
             <span className='header_fix'>{text}</span>
             <br />
-
-            {/* Status */}
-
-            <button
-              onClick={() => {
-                handleChangeTrainStatus(2)
-              }}
-              style={{
-                marginRight: '20px',
-                background: status === 2 ? '#3F4254' : '#E4E6EF',
-                marginLeft: '16px',
-              }}
-              className='btn btn-secondary btn-sm'
-            >
-              <i
-                className='fa fa-times'
-                style={{color: '#c18080', fontWeight: 'bold', cursor: 'pointer'}}
-              ></i>
-            </button>
-            <button
-              onClick={() => {
-                handleChangeTrainStatus(1)
-              }}
-              style={{background: status === 1 ? '#3F4254' : '#E4E6EF'}}
-              className='btn btn-secondary btn-sm'
-            >
-              <i
-                className='fa fa-check'
-                style={{color: '#1dd61d', fontWeight: 'bold', cursor: 'pointer'}}
-                aria-hidden='true'
-              ></i>
-            </button>
-            <br />
             {/* Status */}
             {/* {driverName !== null ? <span>Driver : {driverName}</span> : null}<br /> */}
             <select
@@ -473,6 +450,8 @@ const TableHeadView = (props: any) => {
                 return <option value={driver.id}>{driver.name}</option>
               })}
             </select>
+            <br />
+            <span>Signed By Driver : {signedByDriver}</span>
           </div>
         </>
       )}

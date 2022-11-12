@@ -54,7 +54,16 @@ const ReportTable: React.FC<Props> = ({
           <div>
             {/* begin::Table */}
             {thData.map((item: any, index) => {
-              const {driverId, driverName, notes, status, trainId, trainName, severity} = item
+              const {
+                driverId,
+                driverName,
+                notes,
+                status,
+                trainId,
+                trainName,
+                severity,
+                signedByDriver,
+              } = item
 
               return (
                 <TableHeadViewInFloatingDiv
@@ -63,6 +72,7 @@ const ReportTable: React.FC<Props> = ({
                   driverName={driverName}
                   status={status}
                   trainId={trainId}
+                  signedByDriver={signedByDriver}
                   drivers={drivers}
                   handleToastMessage={handleToastMessage}
                   index={index}
@@ -112,6 +122,7 @@ const TableHeadViewInFloatingDiv = (props: any) => {
     handleToastMessage,
     selectedDate,
     severity,
+    signedByDriver,
   } = props
   const [selectedDriver, setSelectedDriver] = useState('')
   useEffect(() => {
@@ -196,36 +207,6 @@ const TableHeadViewInFloatingDiv = (props: any) => {
           <br />
 
           {/* Status */}
-
-          <button
-            onClick={() => {
-              handleChangeTrainStatus(2)
-            }}
-            style={{
-              marginRight: '20px',
-              background: status === 2 ? '#3F4254' : '#E4E6EF',
-              marginLeft: '16px',
-            }}
-            className='btn btn-secondary btn-sm'
-          >
-            <i
-              className='fa fa-times'
-              style={{color: '#c18080', fontWeight: 'bold', cursor: 'pointer'}}
-            ></i>
-          </button>
-          <button
-            onClick={() => {
-              handleChangeTrainStatus(1)
-            }}
-            style={{background: status === 1 ? '#3F4254' : '#E4E6EF'}}
-            className='btn btn-secondary btn-sm'
-          >
-            <i
-              className='fa fa-check'
-              style={{color: '#1dd61d', fontWeight: 'bold', cursor: 'pointer'}}
-              aria-hidden='true'
-            ></i>
-          </button>
           <br />
           {/* Status */}
           {/* {driverName !== null ? <span>Driver : {driverName}</span> : null}<br /> */}
@@ -248,6 +229,8 @@ const TableHeadViewInFloatingDiv = (props: any) => {
               return <option value={driver.id}>{driver.name}</option>
             })}
           </select>
+          <br />
+          <span>Signed By Driver : {signedByDriver}</span>
         </div>
       </>
     </div>
