@@ -188,72 +188,68 @@ const TableHeadViewInFloatingDiv = (props: any) => {
       }}
       className={`${className} ${severity === 1 ? 'bg-red' : ''}`}
     >
-      {index === 0 ? (
-        <span>{text}</span>
-      ) : (
-        <>
-          <div>
-            <Link to={`/trains-daily-report/${urlText}`} className='header_fix'>
-              {text}
-            </Link>
-            <br />
+      <>
+        <div>
+          <Link to={`/trains-daily-report/${urlText}`} className='header_fix'>
+            {text}
+          </Link>
+          <br />
 
-            {/* Status */}
+          {/* Status */}
 
-            <button
-              onClick={() => {
-                handleChangeTrainStatus(2)
-              }}
-              style={{
-                marginRight: '20px',
-                background: status === 2 ? '#3F4254' : '#E4E6EF',
-                marginLeft: '16px',
-              }}
-              className='btn btn-secondary btn-sm'
-            >
-              <i
-                className='fa fa-times'
-                style={{color: '#c18080', fontWeight: 'bold', cursor: 'pointer'}}
-              ></i>
-            </button>
-            <button
-              onClick={() => {
-                handleChangeTrainStatus(1)
-              }}
-              style={{background: status === 1 ? '#3F4254' : '#E4E6EF'}}
-              className='btn btn-secondary btn-sm'
-            >
-              <i
-                className='fa fa-check'
-                style={{color: '#1dd61d', fontWeight: 'bold', cursor: 'pointer'}}
-                aria-hidden='true'
-              ></i>
-            </button>
-            <br />
-            {/* Status */}
-            {/* {driverName !== null ? <span>Driver : {driverName}</span> : null}<br /> */}
-            <select
-              className='form-control-sm'
-              style={{
-                marginRight: '20px',
-                marginTop: '20px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-              onChange={(e) => {
-                handleDriverChangeUpdate(e.target.value)
-              }}
-              value={selectedDriver}
-            >
-              <option value=''></option>
-              {drivers?.map((driver: any) => {
-                return <option value={driver.id}>{driver.name}</option>
-              })}
-            </select>
-          </div>
-        </>
-      )}
+          <button
+            onClick={() => {
+              handleChangeTrainStatus(2)
+            }}
+            style={{
+              marginRight: '20px',
+              background: status === 2 ? '#3F4254' : '#E4E6EF',
+              marginLeft: '16px',
+            }}
+            className='btn btn-secondary btn-sm'
+          >
+            <i
+              className='fa fa-times'
+              style={{color: '#c18080', fontWeight: 'bold', cursor: 'pointer'}}
+            ></i>
+          </button>
+          <button
+            onClick={() => {
+              handleChangeTrainStatus(1)
+            }}
+            style={{background: status === 1 ? '#3F4254' : '#E4E6EF'}}
+            className='btn btn-secondary btn-sm'
+          >
+            <i
+              className='fa fa-check'
+              style={{color: '#1dd61d', fontWeight: 'bold', cursor: 'pointer'}}
+              aria-hidden='true'
+            ></i>
+          </button>
+          <br />
+          {/* Status */}
+          {/* {driverName !== null ? <span>Driver : {driverName}</span> : null}<br /> */}
+          <select
+            className='form-control-sm'
+            style={{
+              marginRight: '20px',
+              marginTop: '20px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+            onChange={(e) => {
+              handleDriverChangeUpdate(e.target.value)
+            }}
+            value={selectedDriver}
+          >
+            <option value=''></option>
+            {drivers?.map((driver: any) => {
+              return <option value={driver.id}>{driver.name}</option>
+            })}
+          </select>
+        </div>
+      </>
     </div>
   )
 }

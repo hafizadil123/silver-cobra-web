@@ -3,12 +3,17 @@ import React, {useState, useEffect} from 'react'
 import {KTSVG} from '../../../_metronic/helpers'
 import moment from 'moment'
 import Modal from 'react-bootstrap/Modal'
+import {useToasts} from 'react-toast-notifications'
+import axios from 'axios'
+
 import './user.css'
 type Props = {
   className: string
   users: any[]
   userRoles: any[]
   getSelectedUser: (id: any) => any
+  getUsersAfterUpdate: () => any
+  // ActiveEditModel: () => any
   saveUserDetails: (detalis: any) => any
   css: string
   handleDelete: any
@@ -22,6 +27,7 @@ const DailAttendaceTable: React.FC<Props> = ({
   userRoles,
   css,
   handleDelete,
+  getUsersAfterUpdate,
 }) => {
   const [y, setY] = useState(0)
   const [stickyCss, setStickyCss] = useState('')
@@ -40,12 +46,7 @@ const DailAttendaceTable: React.FC<Props> = ({
 
     window.addEventListener('scroll', (e) => handleNavigation(e))
   }, [])
-  console.log({
-    stickyCss,
-    y,
-    px: window.screenY,
-    users,
-  })
+
   return (
     <div className={`card ${className}`}>
       <div className='card-body py-3'>
@@ -57,10 +58,10 @@ const DailAttendaceTable: React.FC<Props> = ({
             <thead style={{background: stickyCss, top: `${stickyCss && '65px'}`}}>
               <tr className='fw-bolder text-muted'>
                 <TableHeadView className='min-w-150px' text={'שם'} />
-                <TableHeadView className='min-w-150px' text={'עבור חיבורים'} />
                 <TableHeadView className='min-w-150px' text={'עבור קרון'} />
-                <TableHeadView className='min-w-150px' text={'חומרה'} />
+                <TableHeadView className='min-w-150px' text={'עבור חיבורים'} />
                 <TableHeadView className='min-w-150px' text={'סדר'} />
+                <TableHeadView className='min-w-150px' text={'חומרה'} />
               </tr>
             </thead>
             {/* end::Table head */}
@@ -141,7 +142,7 @@ const DailAttendaceTable: React.FC<Props> = ({
                         id={item.id}
                         handleDelete={handleDelete}
                       />
-                      <TableDataView
+                      {/* <TableDataView
                         className='min-w-150px'
                         index={index}
                         flexValue={1}
@@ -154,7 +155,7 @@ const DailAttendaceTable: React.FC<Props> = ({
                         isDelete={false}
                         id={item.id}
                         handleDelete={handleDelete}
-                      />
+                      /> */}
                       <TableDataView
                         className='min-w-150px'
                         index={index}
@@ -167,6 +168,8 @@ const DailAttendaceTable: React.FC<Props> = ({
                         isEdit={true}
                         isDelete={true}
                         id={item.id}
+                        getUsersAfterUpdate={getUsersAfterUpdate}
+                        // ActiveEditModel={ActiveEditModel}
                         handleDelete={handleDelete}
                       />
                     </tr>
@@ -192,24 +195,51 @@ const TableDataView = (props: any) => {
     className,
     getSelectedUser,
     userId,
-    saveUserDetails,
+    // saveUserDetails,
     userRoles,
     isDelete,
     id,
     handleDelete,
+    getUsersAfterUpdate,
+    // ActiveEditModel,
   } = props
+  const {addToast} = useToasts()
+
+  const baseUrl = process.env.REACT_APP_API_URL
+  const logged_user_detail: any = localStorage.getItem('logged_user_detail')
+  const saveUserDetailsEndPoint = `${baseUrl}/api/Common/SaveDailyAttendanceCheckTypeDetails`
+  const loggedInUserDetails = JSON.parse(logged_user_detail)
+  const headerJson = {
+    headers: {
+      Authorization: `bearer ${loggedInUserDetails.access_token}`,
+    },
+  }
   const [activeUser, setActiveUesr] = useState({
     name: '',
     isForCar: false,
     isForTrain: false,
     order: '',
     severity: '',
+    id: '',
   })
   const [showModal, setShowModal] = useState(false)
   const handleUpdateUser = () => {
     saveUserDetails(activeUser)
   }
 
+  const saveUserDetails = async (details: any, type = 'Updated') => {
+    const response = await axios.post(saveUserDetailsEndPoint, details, headerJson)
+    if (response.data.result === false) {
+      response.data.validationErrors.forEach((error: any) => {
+        addToast(error, {appearance: 'error', autoDismiss: true})
+      })
+    } else {
+      setShowModal(false)
+      // setLoading(true)
+      addToast(`Code ${type} successfully`, {appearance: 'success', autoDismiss: true})
+      getUsersAfterUpdate()
+    }
+  }
   const handleChangeActions = (isDelete: boolean, userId: any, id: any) => {
     let user = getSelectedUser(id)
     if (!isDelete) {
@@ -219,8 +249,10 @@ const TableDataView = (props: any) => {
         isForTrain: user.isForTrain,
         order: user.order,
         severity: user.severity,
+        id: user.id,
       })
       setShowModal(true)
+      // ActiveEditModel()
     } else {
       handleDelete(id)
     }
@@ -234,10 +266,16 @@ const TableDataView = (props: any) => {
           <>
             {/* Modal Start */}
             <i
-              style={{float: 'right', cursor: 'pointer'}}
-              onClick={(e) => handleChangeActions(isDelete, userId, id)}
-              className={isDelete ? `fa fa-trash` : 'fa fa-edit'}
+              style={{float: 'right', cursor: 'pointer', marginLeft: '20px'}}
+              onClick={(e) => handleChangeActions(false, userId, id)}
+              className={'fa fa-edit'}
             ></i>
+            <i
+              style={{float: 'right', cursor: 'pointer'}}
+              onClick={(e) => handleChangeActions(true, userId, id)}
+              className={'fa fa-trash'}
+            ></i>
+
             <Modal
               show={showModal}
               style={{direction: 'rtl'}}
@@ -267,34 +305,34 @@ const TableDataView = (props: any) => {
                     />
                   </div>
                   <div className='chebox-style'>
-                  <div className='form-check'>
-                    <label>עבור קרון</label>
-                    <input
-                      type='checkbox'
-                      onChange={(e) => {
-                        setActiveUesr({
-                          ...activeUser,
-                          isForCar: e.target.checked
-                        })
-                      }}
-                      checked={activeUser.isForCar}
-                      className='form-check-input'
-                    />
-                  </div>
-                  <div className='form-check'>
-                    <label>עבור חיבורים</label>
-                    <input
-                      type='checkbox'
-                      checked={activeUser.isForTrain}
-                      onChange={(e) => {
-                        setActiveUesr({
-                          ...activeUser,
-                          isForTrain: e.target.checked
-                        })
-                      }}
-                      className='form-check-input'
-                    />
-                  </div>
+                    <div className='form-check'>
+                      <label>עבור קרון</label>
+                      <input
+                        type='checkbox'
+                        onChange={(e) => {
+                          setActiveUesr({
+                            ...activeUser,
+                            isForCar: e.target.checked,
+                          })
+                        }}
+                        checked={activeUser.isForCar}
+                        className='form-check-input'
+                      />
+                    </div>
+                    <div className='form-check'>
+                      <label>עבור חיבורים</label>
+                      <input
+                        type='checkbox'
+                        checked={activeUser.isForTrain}
+                        onChange={(e) => {
+                          setActiveUesr({
+                            ...activeUser,
+                            isForTrain: e.target.checked,
+                          })
+                        }}
+                        className='form-check-input'
+                      />
+                    </div>
                   </div>
                   <div className='form-group'>
                     <label>סדר</label>
@@ -339,7 +377,7 @@ const TableDataView = (props: any) => {
                   <button
                     type='button'
                     onClick={() => {
-                      setShowModal(false)
+                      // setShowModal(false)
                       handleUpdateUser()
                     }}
                     className='btn btn-primary'

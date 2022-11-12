@@ -246,70 +246,7 @@ const DashboardPage: FC = () => {
       }
     }
   }
-  useEffect(() => {
-    filterAccordingToSeverity(selectedSeverity)
-  }, [selectedSeverity])
-  useEffect(() => {
-    handleSearch(search)
-  }, [search])
-  const filterAccordingToSeverity = (severity: any) => {
-    if (selectedSeverity == '') {
-      setThData(actualThData)
-      setBodyData(actualTbodyData)
-      return
-    }
-    let searchedTrains: any = actualThData.filter((item: any) => {
-      if (item.severity == severity) {
-        return item
-      }
-    })
-    console.log({searchedTrains})
 
-    let obj = {
-      driverId: 0,
-      driverName: null,
-      notes: null,
-      status: 1,
-      trainId: 0,
-      trainName: '',
-    }
-    // if (severity !== '') {
-    //   searchedTrains.unshift(obj)
-    // }
-    searchedTrains.unshift(obj)
-    let trainIds = searchedTrains.map((item: any) => {
-      return item.trainId
-    })
-
-    let _tBodyData: any = []
-
-    let s = 0
-    for (let i = 0; i < checks.length; i++) {
-      let check: any = checks[i]
-      let trData = []
-      trData.push({
-        carId: check.id,
-        carName: check.name,
-        checkId: check.id,
-        checkValue: null,
-        trainId: 0,
-      })
-      for (let j = 0; j < trains.length; j++) {
-        let trainId = trains[j].trainId
-        if (trainIds.includes(trainId)) {
-          let trainCheck = trains[j].Checks[i]
-          trainCheck.trainId = trains[j].trainId
-          //
-          trData.push(trainCheck)
-        }
-      }
-      s++
-      _tBodyData.push(trData)
-    }
-
-    setThData(searchedTrains)
-    setBodyData(_tBodyData)
-  }
   const getAllDrivers = async () => {
     const response = await axios.post(getDriversEndPoint, {}, headerJson)
 
@@ -376,9 +313,9 @@ const DashboardPage: FC = () => {
 
     setBodyData(updatedTrains)
   }
-  const handleSearch = (value: any) => {
+  const handleSearch = (value: any, severity: any) => {
     let searchedTrains: any = actualThData.filter((item: any) => {
-      if (item.trainName.indexOf(value) > -1) {
+      if (item.trainName.indexOf(value) > -1 && item.severity == severity) {
         return item
       }
     })
@@ -391,9 +328,9 @@ const DashboardPage: FC = () => {
       trainId: 0,
       trainName: '',
     }
-    if (value !== '') {
-      searchedTrains.unshift(obj)
-    }
+    // if (value !== '') {
+    searchedTrains.unshift(obj)
+    // }
     // searchedTrains.unshift(obj)
     let trainIds = searchedTrains.map((item: any) => {
       return item.trainId
@@ -491,7 +428,7 @@ const DashboardPage: FC = () => {
                       value={search}
                       style={{maxWidth: '200px'}}
                       onChange={(e) => {
-                        // handleSearch(e.target.value)
+                        handleSearch(e.target.value, selectedSeverity)
                         setSearch(e.target.value)
                       }}
                       className='form-control'
@@ -503,7 +440,10 @@ const DashboardPage: FC = () => {
                       style={{marginRight: '30px'}}
                       className='form-control-sm'
                       value={selectedSeverity}
-                      onChange={(e) => setSelectedSeverity(e.target.value)}
+                      onChange={(e) => {
+                        setSelectedSeverity(e.target.value)
+                        handleSearch(search, e.target.value)
+                      }}
                     >
                       <option value=''></option>
                       <option value='1'>עם שגיאות</option>
@@ -514,8 +454,9 @@ const DashboardPage: FC = () => {
                     <button
                       type='button'
                       onClick={(e) => {
-                        handleSearch('')
+                        handleSearch('', '')
                         setSelectedSeverity('')
+                        setSearch('')
                       }}
                       className='btn btn-danger mx-3'
                     >
