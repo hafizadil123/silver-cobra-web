@@ -34,7 +34,7 @@ const DashboardPage: FC = () => {
   const getDriversEndPoint = `${baseUrl}/api/Common/GetDrivers`
   const getMyTrainsForInspectionEndPoint = `${baseUrl}/api/Common/GetTrainsForInspection`
   const getMyTrainsDailyReportEndPoint = `${baseUrl}/api/Common/GetTrainsDailyReport`
-  const GetTrainsDailyReportExcel = `${baseUrl}/api/Common/GetTrainsDailyCleaningReportExcel`
+  const GetTrainsDailyReportExcel = `${baseUrl}/api/Common/GetTrainsDailyReportExcel`
   const headerJson = {
     headers: {
       Authorization: `bearer ${loggedInUserDetails.access_token}`,
@@ -385,9 +385,25 @@ const DashboardPage: FC = () => {
       trainName: search,
       errorStatus: selectedSeverity,
     }
+    const header = {
+      headers: {
+        Authorization: `bearer ${loggedInUserDetails.access_token}`,
+        responseType: 'blob',
+        // contendDisposition: 'attachment',
+        'Content-Disposition': 'attachment; filename=dummy.xlsx',
+      },
+    }
     try {
-      const response = await axios.post(GetTrainsDailyReportExcel, dataToSend, headerJson)
-      console.log({response})
+      const response = await axios.post(GetTrainsDailyReportExcel, dataToSend, header)
+      const blob = new Blob([response.data])
+      console.log({blob})
+      const link = document.createElement('a')
+      const url = window.URL.createObjectURL(blob)
+      link.href = url
+      console.log({url})
+
+      link.download = 'file.xlsx'
+      link.click()
     } catch (error) {
       console.log({error})
     }
