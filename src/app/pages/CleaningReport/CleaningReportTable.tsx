@@ -58,8 +58,16 @@ const CleaningReportTable: React.FC<Props> = ({
                 <thead>
                   <tr className='fw-bolder text-muted'>
                     {thData.map((item: any, index) => {
-                      const {driverId, driverName, notes, status, trainId, trainName, severity} =
-                        item
+                      const {
+                        driverId,
+                        driverName,
+                        notes,
+                        status,
+                        trainId,
+                        trainName,
+                        severity,
+                        signedByDriver,
+                      } = item
                       {
                         console.log({severity: severity})
                       }
@@ -75,6 +83,7 @@ const CleaningReportTable: React.FC<Props> = ({
                           className='min-w-150px'
                           text={trainName}
                           selectedDate={selectedDate}
+                          signedByDriver={signedByDriver}
                         />
                       )
                     })}
@@ -319,7 +328,7 @@ const TableFootView = (props: any) => {
 }
 
 const TableHeadView = (props: any) => {
-  const {text, className, index, status, trainId, selectedDate, severity} = props
+  const {text, className, index, status, trainId, selectedDate, severity, signedByDriver} = props
 
   // const handleChangeTrainStatus = (statusToChange: number) => {
   //   let date = new Date()
@@ -340,6 +349,8 @@ const TableHeadView = (props: any) => {
         className={`${className} ${severity === 1 ? 'bg-red' : ''} `}
       >
         <span>{text}</span>
+        <br />
+        <span>Signed By Driver : {signedByDriver}</span>
       </th>
     </>
     //     <span>{text}</span>

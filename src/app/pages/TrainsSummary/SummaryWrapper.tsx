@@ -165,14 +165,15 @@ const TrainsSummaryPage: FC = () => {
 
       let thData: any = []
       if (data.trains.length > 0) {
-        thData.push({
-          driverId: 0,
-          driverName: null,
-          notes: null,
-          status: 1,
-          trainId: 0,
-          trainName: '',
-        })
+        // thData.push({
+        //   driverId: 0,
+        //   driverName: null,
+        //   notes: null,
+        //   status: 1,
+        //   trainId: 0,
+        //   trainName: '',
+        //   signedByDriver:item.,
+        // })
       }
 
       let tBodyData: any = []
@@ -184,6 +185,7 @@ const TrainsSummaryPage: FC = () => {
           status: item.status,
           trainId: item.trainId,
           trainName: item.trainName,
+          signedByDriver: item.signedByDriver,
           severity: item?.severity || 0,
         })
       })

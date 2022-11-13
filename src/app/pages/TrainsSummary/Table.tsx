@@ -63,6 +63,7 @@ const ReportTable: React.FC<Props> = ({
                 trainName,
                 severity,
                 signedByDriver,
+                // signedByDriver,
               } = item
 
               return (
@@ -193,9 +194,11 @@ const TableHeadViewInFloatingDiv = (props: any) => {
       style={{
         minWidth: '100px !important',
         float: 'left',
-        width: '20%',
+        width: '24%',
         height: '150px',
         padding: '0.75rem 0.75rem',
+        border: '1px dashed black',
+        margin: '2px',
       }}
       className={`${className} ${severity === 1 ? 'bg-red' : ''}`}
     >
