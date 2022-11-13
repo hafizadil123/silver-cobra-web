@@ -392,7 +392,7 @@ const DashboardPage: FC = () => {
         Authorization: `bearer ${loggedInUserDetails.access_token}`,
         responseType: 'blob',
         // contendDisposition: 'attachment',
-        'Content-Disposition': 'attachment; filename=report.xlsx',
+        // 'Content-Disposition': 'attachment; filename=report.xlsx',
       },
     }
     try {
