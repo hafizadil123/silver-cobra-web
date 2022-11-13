@@ -284,6 +284,7 @@ const CleaningReportpage: FC = () => {
         }
       }
     })
+
     let obj = {
       driverId: 0,
       driverName: null,
@@ -292,9 +293,10 @@ const CleaningReportpage: FC = () => {
       trainId: 0,
       trainName: '',
     }
-    // if (value !== '') {
-    searchedTrains.unshift(obj)
-    // }
+    if (severity !== '' || value !== '') {
+      console.log('in here ssss')
+      searchedTrains.unshift(obj)
+    }
     let trainIds = searchedTrains.map((item: any) => {
       return item.trainId
     })
