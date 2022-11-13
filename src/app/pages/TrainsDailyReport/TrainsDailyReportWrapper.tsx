@@ -22,6 +22,8 @@ const DashboardPage: FC = () => {
   const [thData, setThData] = useState<any>([])
   const [tBodyData, setBodyData] = useState<any>([])
   const [search, setSearch] = useState('')
+  const [trainNameSearch, setTrainNameSearch] = useState('')
+  const [errorStatus, setErrorStatus] = useState('')
   const [trains, setTrains] = useState<any>([])
   const [actualThData, setActualThData] = useState<any>([])
 
@@ -394,8 +396,8 @@ const DashboardPage: FC = () => {
     const dataToSend = {
       fromDate,
       tillDate,
-      trainName: search,
-      errorStatus: selectedSeverity,
+      trainName: trainNameSearch,
+      errorStatus: errorStatus,
     }
     const header = {
       headers: {
@@ -480,6 +482,7 @@ const DashboardPage: FC = () => {
                       onChange={(e) => {
                         handleSearch(e.target.value, selectedSeverity)
                         setSearch(e.target.value)
+                        setTrainNameSearch(e.target.value)
                       }}
                       className='form-control'
                       placeholder='חפש לפי שם רכבת'
@@ -493,6 +496,7 @@ const DashboardPage: FC = () => {
                       onChange={(e) => {
                         setSelectedSeverity(e.target.value)
                         handleSearch(search, e.target.value)
+                        setErrorStatus(e.target.value)
                       }}
                     >
                       <option value=''></option>
@@ -507,6 +511,8 @@ const DashboardPage: FC = () => {
                         handleSearch('', '')
                         setSelectedSeverity('')
                         setSearch('')
+                        setTrainNameSearch('')
+                        setErrorStatus('')
                       }}
                       className='btn btn-danger mx-3'
                     >
@@ -548,7 +554,7 @@ const DashboardPage: FC = () => {
               <Modal.Body>
                 <form>
                   <div className='form-group'>
-                    <label>Start Date:</label>
+                    <label>תאריך תחילה:</label>
                     <input
                       type='date'
                       className='form-control-sm mb-5'
@@ -559,7 +565,7 @@ const DashboardPage: FC = () => {
                     />
                   </div>
                   <div className='form-group'>
-                    <label>End Date:</label>
+                    <label>תאריך סיום:</label>
                     <input
                       type='date'
                       className='form-control-sm mb-5'
@@ -568,6 +574,35 @@ const DashboardPage: FC = () => {
                         setEndDate(e.target.value)
                       }}
                     />
+                  </div>
+                  <div className='form-group'>
+                    <label>חפש לפי שם רכבת</label>
+                    <input
+                      type='text'
+                      value={trainNameSearch}
+                      style={{maxWidth: '200px'}}
+                      onChange={(e) => {
+                        setTrainNameSearch(e.target.value)
+                      }}
+                      className='form-control'
+                      placeholder='חפש לפי שם רכבת'
+                    />
+                  </div>
+                  <div className='form-group'>
+                    <label>סטטוס</label>
+
+                    <select
+                      style={{marginRight: '30px'}}
+                      className='form-control-sm'
+                      value={errorStatus}
+                      onChange={(e) => {
+                        setErrorStatus(e.target.value)
+                      }}
+                    >
+                      <option value=''></option>
+                      <option value='1'>עם שגיאות</option>
+                      <option value='0'>ללא שגיאות</option>
+                    </select>
                   </div>
                 </form>
               </Modal.Body>
