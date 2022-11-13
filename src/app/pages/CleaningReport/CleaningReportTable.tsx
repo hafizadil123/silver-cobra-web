@@ -350,7 +350,7 @@ const TableHeadView = (props: any) => {
       >
         <span>{text}</span>
         <br />
-        <span>Signed By Driver : {signedByDriver}</span>
+        <span> {signedByDriver}</span>
       </th>
     </>
     //     <span>{text}</span>

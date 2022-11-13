@@ -233,7 +233,7 @@ const TableHeadViewInFloatingDiv = (props: any) => {
             })}
           </select>
           <br />
-          <span>Signed By Driver : {signedByDriver}</span>
+          <span>{signedByDriver}</span>
         </div>
       </>
     </div>
