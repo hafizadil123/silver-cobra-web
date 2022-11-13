@@ -439,6 +439,7 @@ const TableHeadView = (props: any) => {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
+                width: '85%'
               }}
               onChange={(e) => {
                 handleDriverChangeUpdate(e.target.value)

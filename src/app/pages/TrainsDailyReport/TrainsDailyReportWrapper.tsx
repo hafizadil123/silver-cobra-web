@@ -592,7 +592,7 @@ const DashboardPage: FC = () => {
                     <label>סטטוס</label>
 
                     <select
-                      style={{marginRight: '30px'}}
+                      style={{marginRight: '30px', marginTop: '16px'}}
                       className='form-control-sm'
                       value={errorStatus}
                       onChange={(e) => {
