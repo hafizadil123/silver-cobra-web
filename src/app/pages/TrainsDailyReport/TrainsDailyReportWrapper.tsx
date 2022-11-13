@@ -210,6 +210,7 @@ const DashboardPage: FC = () => {
           status: item.status,
           trainId: item.trainId,
           trainName: item.trainName,
+          signedByDriver: item.signedByDriver,
           severity: item?.severity || 0,
         })
       })
@@ -583,7 +584,7 @@ const DashboardPage: FC = () => {
                     }}
                     className='btn btn-primary'
                   >
-                    הוסף בדיקה יומית{' '}
+                    הפק דוח{' '}
                   </button>
                 </div>
               </Modal.Footer>

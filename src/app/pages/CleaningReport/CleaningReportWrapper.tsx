@@ -96,6 +96,7 @@ const CleaningReportpage: FC = () => {
           status: item.status,
           trainId: item.trainId,
           trainName: item.trainName,
+          signedByDriver: item.signedByDriver,
           severity: item?.severity || 0,
         })
       })
