@@ -3,7 +3,6 @@ import React, {FC, useState, useEffect} from 'react'
 import {useIntl} from 'react-intl'
 import axios from 'axios'
 import moment from 'moment'
-import DataTable, {createTheme} from 'react-data-table-component'
 import {PageTitle} from '../../../_metronic/layout/core'
 import './dashboard-page.css'
 import {ReportTable} from './Table'
@@ -268,8 +267,14 @@ const TrainsSummaryPage: FC = () => {
   }
   const handleSearch = (value: any, severity: any) => {
     let searchedTrains: any = actualThData.filter((item: any) => {
-      if (item.trainName.indexOf(value) > -1 && item.severity == severity) {
-        return item
+      if (severity == '') {
+        if (item.trainName.indexOf(value) > -1) {
+          return item
+        }
+      } else {
+        if (item.trainName.indexOf(value) > -1 && item.severity == severity) {
+          return item
+        }
       }
     })
 

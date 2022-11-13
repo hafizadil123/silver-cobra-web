@@ -451,7 +451,7 @@ const TableHeadView = (props: any) => {
               })}
             </select>
             <br />
-            <span>Signed By Driver : {signedByDriver}</span>
+            <span>{signedByDriver}</span>
           </div>
         </>
       )}

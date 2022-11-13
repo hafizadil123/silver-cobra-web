@@ -323,11 +323,20 @@ const DashboardPage: FC = () => {
     setBodyData(updatedTrains)
   }
   const handleSearch = (value: any, severity: any) => {
+    // if(severity==)
+    console.log({severity, search})
     let searchedTrains: any = actualThData.filter((item: any) => {
-      if (item.trainName.indexOf(value) > -1 && item.severity == severity) {
-        return item
+      if (severity == '') {
+        if (item.trainName.indexOf(value) > -1) {
+          return item
+        }
+      } else {
+        if (item.trainName.indexOf(value) > -1 && item.severity == severity) {
+          return item
+        }
       }
     })
+    // console.log({searchedTrains: searchedTrains})
 
     let obj = {
       driverId: 0,
@@ -337,7 +346,7 @@ const DashboardPage: FC = () => {
       trainId: 0,
       trainName: '',
     }
-    // if (value !== '') {
+    // if (severity !== '') {
     searchedTrains.unshift(obj)
     // }
     // searchedTrains.unshift(obj)
