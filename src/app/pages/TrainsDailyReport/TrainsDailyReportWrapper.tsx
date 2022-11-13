@@ -7,6 +7,7 @@ import {PageTitle} from '../../../_metronic/layout/core'
 import './dashboard-page.css'
 import {useLocation} from 'react-router-dom'
 import Modal from 'react-bootstrap/Modal'
+import fileDownload from 'js-file-download'
 
 import {ReportTable} from './Table'
 const DashboardPage: FC = () => {
@@ -391,20 +392,12 @@ const DashboardPage: FC = () => {
         Authorization: `bearer ${loggedInUserDetails.access_token}`,
         responseType: 'blob',
         // contendDisposition: 'attachment',
-        'Content-Disposition': 'attachment; filename=dummy.xlsx',
+        'Content-Disposition': 'attachment; filename=report.xlsx',
       },
     }
     try {
       const response = await axios.post(GetTrainsDailyReportExcel, dataToSend, header)
-      const blob = new Blob([response.data])
-      console.log({blob})
-      const link = document.createElement('a')
-      const url = window.URL.createObjectURL(blob)
-      link.href = url
-      console.log({url})
-
-      link.download = 'file.xlsx'
-      link.click()
+      fileDownload(response.data, 'report.xlsx')
     } catch (error) {
       console.log({error})
     }
