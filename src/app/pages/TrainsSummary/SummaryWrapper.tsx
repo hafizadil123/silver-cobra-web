@@ -278,17 +278,6 @@ const TrainsSummaryPage: FC = () => {
       }
     })
 
-    let obj = {
-      driverId: 0,
-      driverName: null,
-      notes: null,
-      status: 1,
-      trainId: 0,
-      trainName: '',
-    }
-    // if (value !== '') {
-    searchedTrains.unshift(obj)
-    // }
     setSearch(value)
     setThData(searchedTrains)
   }
