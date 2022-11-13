@@ -393,6 +393,8 @@ const DashboardPage: FC = () => {
         responseType: 'blob',
         // contendDisposition: 'attachment',
         // 'Content-Disposition': 'attachment; filename=report.xlsx',
+        'Content-Disposition': 'attachment; filename=report_01-11-2022-13-11-2022.xlsx',
+        // contentType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
       },
     }
     try {
