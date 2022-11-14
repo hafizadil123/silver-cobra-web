@@ -13,6 +13,7 @@ import {ReportTable} from './Table'
 const DashboardPage: FC = () => {
   const location = useLocation()
   const [showModal, setShowModal] = useState(false)
+  const [loadingExcel, setLoadingExcel] = useState(false)
   const [checks, setChecks] = useState<any>([])
   const [selectedDate, setSelectedDate] = useState<any>('')
   const [startDate, setStartDate] = useState<any>('')
@@ -35,9 +36,9 @@ const DashboardPage: FC = () => {
   const baseUrl = process.env.REACT_APP_API_URL
   const getLoggedInUserEndPoint = `${baseUrl}/api/Common/GetLoggedInUser`
   const getDriversEndPoint = `${baseUrl}/api/Common/GetDrivers`
-  const getMyTrainsForInspectionEndPoint = `${baseUrl}/api/Common/GetTrainsForInspection`
   const getMyTrainsDailyReportEndPoint = `${baseUrl}/api/Common/GetTrainsDailyReport`
-  const GetTrainsDailyReportExcel = `${baseUrl}/api/Common/GetTrainsDailyReportExcel`
+  const GetTrainsDailyReportExcelId = `${baseUrl}/api/Report/GetTrainsDailyReportExcelId`
+
   const headerJson = {
     headers: {
       Authorization: `bearer ${loggedInUserDetails.access_token}`,
@@ -399,20 +400,27 @@ const DashboardPage: FC = () => {
       trainName: trainNameSearch,
       errorStatus: errorStatus,
     }
-    const header = {
-      headers: {
-        Authorization: `bearer ${loggedInUserDetails.access_token}`,
-        responseType: 'blob',
-        // contendDisposition: 'attachment',
-        // 'Content-Disposition': 'attachment; filename=report.xlsx',
-        'Content-Disposition': 'attachment; filename=report_01-11-2022-13-11-2022.xlsx',
-        // contentType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-      },
-    }
+    setLoadingExcel(true)
     try {
-      const response = await axios.post(GetTrainsDailyReportExcel, dataToSend, header)
-      fileDownload(response.data, 'report.xlsx')
+      const response = await axios.post(GetTrainsDailyReportExcelId, dataToSend, headerJson)
+      // fileDownload(response.data, 'report.xlsx')
+      // console.log({response})
+      if (response.data.result === true) {
+        console.log({reportId: response.data.reportId})
+        var link = document.createElement('a')
+        const url = `${baseUrl}/api/Report/GetTrainsDailyReportExcel?reportId=${response.data.reportId}`
+        link.href = url
+        link.download = `${baseUrl}/api/Report/GetTrainsDailyReportExcel?reportId=${response.data.reportId}`
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+        setLoadingExcel(false)
+      } else {
+        setLoadingExcel(false)
+      }
     } catch (error) {
+      setLoadingExcel(false)
+
       console.log({error})
     }
   }
@@ -618,6 +626,7 @@ const DashboardPage: FC = () => {
                 >
                   <button
                     type='button'
+                    disabled={loadingExcel}
                     onClick={() => {
                       // setShowModal(false)
                       downloadExcelFile()
