@@ -206,12 +206,22 @@ const TableDataView = (props: any) => {
     }
     //
   }
+  const getBackgroundColorAccordingToSeverity = (severity: any) => {
+    switch (severity) {
+      case 1:
+        return 'bg-red'
+      case -1:
+        return 'bg-green'
+      case -2:
+        return 'bg-grey'
+    }
+  }
   const renderFields = () => {
     return (
       <td
-        className={`${className}  ${index === 0 ? 'table_header' : 'table_inner_rows'}  ${
-          severity === 1 ? 'bg-red' : ''
-        }`}
+        className={`${className}  ${
+          index === 0 ? 'table_header' : 'table_inner_rows'
+        }  ${getBackgroundColorAccordingToSeverity(severity)}`}
         style={{minWidth: '100px'}}
       >
         {index === 0 ? (
@@ -417,10 +427,20 @@ const TableHeadView = (props: any) => {
       handleToastMessage(response.data.message, 'error')
     }
   }
+  const getBackgroundColorAccordingToSeverity = (severity: any) => {
+    switch (severity) {
+      case 1:
+        return 'bg-red'
+      case -1:
+        return 'bg-green'
+      case -2:
+        return 'bg-grey'
+    }
+  }
   return (
     <th
       style={{minWidth: '100px !important'}}
-      className={`${className} ${severity === 1 ? 'bg-red' : ''}`}
+      className={`${className} ${getBackgroundColorAccordingToSeverity(severity)}`}
     >
       {index === 0 ? (
         <span>{text}</span>
@@ -439,7 +459,7 @@ const TableHeadView = (props: any) => {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                width: '85%'
+                width: '85%',
               }}
               onChange={(e) => {
                 handleDriverChangeUpdate(e.target.value)
