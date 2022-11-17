@@ -1,5 +1,6 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, {FC, useState, useEffect} from 'react'
+import {useIdleTimer} from 'react-idle-timer'
 import {useIntl} from 'react-intl'
 import axios from 'axios'
 import moment from 'moment'
@@ -8,7 +9,7 @@ import './dashboard-page.css'
 import {useLocation} from 'react-router-dom'
 import Modal from 'react-bootstrap/Modal'
 import fileDownload from 'js-file-download'
-
+// import UseIdel from './../../hooks/UseIdle'
 import {ReportTable} from './Table'
 const DashboardPage: FC = () => {
   const location = useLocation()
@@ -79,6 +80,57 @@ const DashboardPage: FC = () => {
     }
   }
 
+  const onIdle = () => {
+    console.log('you are idle')
+    let dateFormatted = moment(selectedDate).format('yyyy-MM-DD')
+    getMyTrainsDailyReport(dateFormatted).then((res) => {
+      console.log('ran')
+      reset()
+    })
+    // Close Modal Prompt
+    // Do some idle action like log out your user
+  }
+
+  const onActive = (event: any) => {
+    // Close Modal Prompt
+    // Do some active action
+  }
+
+  const onAction = (event: any) => {
+    // Do something when a user triggers a watched event
+  }
+  const {isIdle, reset} = useIdleTimer({
+    onIdle,
+    onActive,
+    onAction,
+    timeout: 1000 * 30,
+    promptTimeout: 0,
+    events: [
+      'mousemove',
+      'keydown',
+      'wheel',
+      'DOMMouseScroll',
+      'mousewheel',
+      'mousedown',
+      'touchstart',
+      'touchmove',
+      'MSPointerDown',
+      'MSPointerMove',
+      'visibilitychange',
+    ],
+    immediateEvents: [],
+    debounce: 0,
+    throttle: 0,
+    eventsThrottle: 200,
+    element: document,
+    startOnMount: true,
+    startManually: false,
+    stopOnIdle: false,
+    crossTab: false,
+    name: 'idle-timer',
+    syncTimers: 0,
+    leaderElection: false,
+  })
   const handleDriverUpdate = (data: any) => {
     let updatedThData = thData.map((item: any) => {
       if (item.trainId == data.trainId) {
@@ -257,6 +309,7 @@ const DashboardPage: FC = () => {
         console.log('daily report simple')
       }
     }
+    console.log('done from here')
   }
 
   const getAllDrivers = async () => {
