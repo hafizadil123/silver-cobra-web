@@ -61,7 +61,9 @@ const TrainActiviationTable: React.FC<Props> = ({
 
                 return (
                   <tr>
-                    <td>{name}</td>
+                    <td className='text-muted' style={{fontSize: '16px', fontWeight: 'bold'}}>
+                      {name}
+                    </td>
                     <TableDataView
                       key={id}
                       flexValue={1}

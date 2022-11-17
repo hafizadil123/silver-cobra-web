@@ -188,7 +188,16 @@ const TableHeadViewInFloatingDiv = (props: any) => {
     }
   }
   const urlText = text.replaceAll(' ', 'trainNameQuery')
-
+  const getBackgroundColorAccordingToSeverity = (severity: any) => {
+    switch (severity) {
+      case 1:
+        return 'bg-red'
+      case -1:
+        return 'bg-green'
+      case -2:
+        return 'bg-grey'
+    }
+  }
   return (
     <div
       style={{
@@ -200,11 +209,15 @@ const TableHeadViewInFloatingDiv = (props: any) => {
         border: '1px dashed black',
         margin: '2px',
       }}
-      className={`${className} ${severity === 1 ? 'bg-red' : ''}`}
+      className={`${className} ${getBackgroundColorAccordingToSeverity(severity)}`}
     >
       <>
         <div>
-          <Link to={`/trains-daily-report/${urlText}`} className='header_fix'>
+          <Link
+            style={{fontSize: '16px', fontWeight: 'bold'}}
+            to={`/trains-daily-report/${urlText}`}
+            className='header_fix'
+          >
             {text}
           </Link>
           <br />
@@ -221,7 +234,7 @@ const TableHeadViewInFloatingDiv = (props: any) => {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              width: '85%'
+              width: '85%',
             }}
             onChange={(e) => {
               handleDriverChangeUpdate(e.target.value)

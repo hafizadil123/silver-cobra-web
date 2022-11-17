@@ -68,9 +68,6 @@ const CleaningReportTable: React.FC<Props> = ({
                         severity,
                         signedByDriver,
                       } = item
-                      {
-                        console.log({severity: severity})
-                      }
                       return (
                         <TableHeadView
                           driverId={driverId}
@@ -207,12 +204,22 @@ const TableDataView = (props: any) => {
 
     // reloadApi()
   }
+  const getBackgroundColorAccordingToSeverity = (severity: any) => {
+    switch (severity) {
+      case 1:
+        return 'bg-red'
+      case -1:
+        return 'bg-green'
+      case -2:
+        return 'bg-grey'
+    }
+  }
   const renderFields = () => {
     return (
       <td
-        className={`${className}  ${index === 0 ? 'table_header' : 'table_inner_rows'} ${
-          severity === 1 ? 'bg-red' : ''
-        }`}
+        className={`${className}  ${
+          index === 0 ? 'table_header' : 'table_inner_rows'
+        } ${getBackgroundColorAccordingToSeverity(severity)}`}
         style={{minWidth: '100px'}}
       >
         {index === 0 ? (
@@ -341,12 +348,21 @@ const TableHeadView = (props: any) => {
   //   }
   //
   // }
-
+  const getBackgroundColorAccordingToSeverity = (severity: any) => {
+    switch (severity) {
+      case 1:
+        return 'bg-red'
+      case -1:
+        return 'bg-green'
+      case -2:
+        return 'bg-grey'
+    }
+  }
   return (
     <>
       <th
         style={{minWidth: '100px !important'}}
-        className={`${className} ${severity === 1 ? 'bg-red' : ''} `}
+        className={`${className} ${getBackgroundColorAccordingToSeverity(severity)} `}
       >
         <span>{text}</span>
         <br />
