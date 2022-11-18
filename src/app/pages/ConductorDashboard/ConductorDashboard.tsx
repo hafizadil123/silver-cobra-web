@@ -132,7 +132,7 @@ const ConductorDashboard: FC = () => {
     })
 
     setTodayList(updatedTodaList)
-    const date = new Date()
+    let date = new Date(selectedDate)
     const dateFormatted = moment(date).format('yyyy-MM-DD')
     const updateTrainData = {
       trainId: data.id,
@@ -156,7 +156,7 @@ const ConductorDashboard: FC = () => {
   }
 
   const updateDriverAPI = async (data: any) => {
-    const date = new Date()
+    const date = new Date(selectedDate)
     const dateFormatted = moment(date).format('yyyy-MM-DD')
     const dataToSend: any = {
       trainId: data.trainId,

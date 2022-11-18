@@ -224,6 +224,12 @@ const TableDataViewForDrivers = (props: any) => {
       let data = drivers.find((driver: any) => driver.id == _activeDriver)
       data.trainId = id
       updateDriver(data)
+    } else if (_activeDriver == '') {
+      let data: any = {
+        driverId: '',
+      }
+      data.trainId = id
+      updateDriver(data)
     }
   }
   const renderFields = () => {
