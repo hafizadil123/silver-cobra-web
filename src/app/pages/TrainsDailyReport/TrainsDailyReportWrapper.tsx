@@ -305,6 +305,7 @@ const DashboardPage: FC = () => {
         const urlText = activeTrainId.replaceAll('trainNameQuery', ' ')
         console.log({urlText})
         setSearch(urlText)
+        handleSearchOnStart(urlText, '', thData, data.checks, data.trains)
       } else {
         console.log('daily report simple')
       }
@@ -381,6 +382,73 @@ const DashboardPage: FC = () => {
   const handleSearch = (value: any, severity: any) => {
     // if(severity==)
     console.log({severity, search})
+    let searchedTrains: any = actualThData.filter((item: any) => {
+      if (severity == '') {
+        if (item.trainName.indexOf(value) > -1) {
+          return item
+        }
+      } else {
+        if (item.trainName.indexOf(value) > -1 && item.severity == severity) {
+          return item
+        }
+      }
+    })
+    // console.log({searchedTrains: searchedTrains})
+
+    let obj = {
+      driverId: 0,
+      driverName: null,
+      notes: null,
+      status: 1,
+      trainId: 0,
+      trainName: '',
+    }
+    if (severity !== '' || value !== '') {
+      console.log('in here ssss')
+      searchedTrains.unshift(obj)
+    }
+    // searchedTrains.unshift(obj)
+    let trainIds = searchedTrains.map((item: any) => {
+      return item.trainId
+    })
+
+    let _tBodyData: any = []
+
+    let s = 0
+    for (let i = 0; i < checks.length; i++) {
+      let check: any = checks[i]
+      let trData = []
+      trData.push({
+        carId: check.id,
+        carName: check.name,
+        checkId: check.id,
+        checkValue: null,
+        trainId: 0,
+      })
+      for (let j = 0; j < trains.length; j++) {
+        let trainId = trains[j].trainId
+        if (trainIds.includes(trainId)) {
+          let trainCheck = trains[j].Checks[i]
+          trainCheck.trainId = trains[j].trainId
+          //
+          trData.push(trainCheck)
+        }
+      }
+      s++
+      _tBodyData.push(trData)
+    }
+
+    // setSearch(value)
+    setThData(searchedTrains)
+    setBodyData(_tBodyData)
+  }
+  const handleSearchOnStart = (
+    value: any,
+    severity: any,
+    actualThData: any,
+    checks: any,
+    trains: any
+  ) => {
     let searchedTrains: any = actualThData.filter((item: any) => {
       if (severity == '') {
         if (item.trainName.indexOf(value) > -1) {
