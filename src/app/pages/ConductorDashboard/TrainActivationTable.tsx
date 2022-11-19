@@ -196,7 +196,7 @@ const TableDataViewForButton = (props: any) => {
   )
 }
 const TableDataViewForDrivers = (props: any) => {
-  const [ActiveDriver, setDriver] = useState(1)
+  const [ActiveDriver, setDriver] = useState<any>(1)
   const {
     // text,
     status,
@@ -207,7 +207,11 @@ const TableDataViewForDrivers = (props: any) => {
     id,
   } = props
   useEffect(() => {
-    setDriver(driverId)
+    if (driverId == null) {
+      setDriver('')
+    } else {
+      setDriver(driverId)
+    }
   }, [driverId])
   const renderDriversData = () => {
     return drivers?.map((item: any) => {
