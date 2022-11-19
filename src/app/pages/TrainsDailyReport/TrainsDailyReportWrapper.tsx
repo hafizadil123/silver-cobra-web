@@ -387,8 +387,12 @@ const DashboardPage: FC = () => {
         if (item.trainName.indexOf(value) > -1) {
           return item
         }
-      } else {
-        if (item.trainName.indexOf(value) > -1 && item.severity == severity) {
+      } else if (severity == 0) {
+        if (item.trainName.indexOf(value) > -1 && item.severity <= severity) {
+          return item
+        }
+      } else if (severity == 1) {
+        if (item.trainName.indexOf(value) > -1 && item.severity >= severity) {
           return item
         }
       }
