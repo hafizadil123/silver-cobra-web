@@ -37,9 +37,9 @@ jobs:
      
        NETLIFY_DEPLOY_MESSAGE: "Deploying new build on netlify"
       
-       build_directory: build
+       build_directory: ../build
     # Directory where built files are stored
 
-       install_command: npm install
+       install_command: cd.. && npm install
     
        build_command: npm run build
