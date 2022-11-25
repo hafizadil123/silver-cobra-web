@@ -61,6 +61,7 @@ const DailAttendaceTable: React.FC<Props> = ({
                 <TableHeadView className='min-w-150px' text={'עבור קרון'} />
                 <TableHeadView className='min-w-150px' text={'עבור חיבורים'} />
                 <TableHeadView className='min-w-150px' text={'סדר'} />
+                <TableHeadView className='min-w-150px' text={'ימי הצגה בחודש'} />
                 <TableHeadView className='min-w-150px' text={'חומרה'} />
               </tr>
             </thead>
@@ -156,6 +157,7 @@ const DailAttendaceTable: React.FC<Props> = ({
                         id={item.id}
                         handleDelete={handleDelete}
                       /> */}
+                      <td>{item.activeDays}</td>
                       <TableDataView
                         className='min-w-150px'
                         index={index}
@@ -221,6 +223,7 @@ const TableDataView = (props: any) => {
     order: '',
     severity: '',
     id: '',
+    activeDays: '',
   })
   const [showModal, setShowModal] = useState(false)
   const handleUpdateUser = () => {
@@ -250,6 +253,7 @@ const TableDataView = (props: any) => {
         order: user.order,
         severity: user.severity,
         id: user.id,
+        activeDays: user.activeDays,
       })
       setShowModal(true)
       // ActiveEditModel()
@@ -357,6 +361,21 @@ const TableDataView = (props: any) => {
                         setActiveUesr({
                           ...activeUser,
                           severity: e.target.value,
+                        })
+                      }}
+                      className='form-control'
+                    />
+                  </div>
+                  <div className='form-group'>
+                    <label>ימי הצגה בחודש</label>
+                    <input
+                      type='text'
+                      pattern='^[0-9,]*$'
+                      value={activeUser.activeDays}
+                      onChange={(e) => {
+                        setActiveUesr({
+                          ...activeUser,
+                          activeDays: e.target.value,
                         })
                       }}
                       className='form-control'

@@ -95,8 +95,16 @@ const ReportTable: React.FC<Props> = ({
                     return (
                       <tr>
                         {item.map((_item: any, index: any) => {
-                          const {carId, carName, checkId, checkValue, trainId, status, severity} =
-                            _item
+                          const {
+                            carId,
+                            carName,
+                            checkId,
+                            checkValue,
+                            trainId,
+                            status,
+                            severity,
+                            isActive,
+                          } = _item
                           return (
                             <TableDataView
                               index={index}
@@ -104,6 +112,7 @@ const ReportTable: React.FC<Props> = ({
                               severity={severity}
                               status={status}
                               carName={carName}
+                              isActive={isActive}
                               handleToastMessage={handleToastMessage}
                               checkId={checkId}
                               trainId={trainId}
@@ -167,6 +176,7 @@ const TableDataView = (props: any) => {
     handleToastMessage,
     selectedDate,
     severity,
+    isActive,
   } = props
   const SaveTrainDailyCheckValue = `${baseUrl}/api/Common/SaveTrainDailyCheckValue`
   const logged_user_detail: any = localStorage.getItem('logged_user_detail')
@@ -228,38 +238,42 @@ const TableDataView = (props: any) => {
           <span style={{float: 'right'}}> {text}</span>
         ) : (
           <>
-            <span style={{float: 'right'}}> {text}</span>
-            <span style={{float: 'left'}}>
-              <button
-                onClick={() => {
-                  handleUpdateCheckValue(false)
-                }}
-                className='btn btn-secondary btn-sm'
-                style={{
-                  background: checkValue == false ? '#3F4254' : '#E4E6EF',
-                  marginLeft: '16px',
-                }}
-              >
-                <i
-                  className='fa fa-times'
-                  style={{color: '#c18080', fontWeight: 'bold', cursor: 'pointer'}}
-                ></i>
-                {/* {'sssss' + checkValue} */}
-              </button>
-              <button
-                onClick={() => {
-                  handleUpdateCheckValue(true)
-                }}
-                className='btn btn-secondary btn-sm'
-                style={{background: checkValue == true ? '#3F4254' : '#E4E6EF'}}
-              >
-                <i
-                  className='fa fa-check'
-                  style={{color: '#1dd61d', fontWeight: 'bold', cursor: 'pointer'}}
-                  aria-hidden='true'
-                ></i>
-              </button>
-            </span>
+            {isActive === true ? (
+              <>
+                <span style={{float: 'right'}}> {text}</span>
+                <span style={{float: 'left'}}>
+                  <button
+                    onClick={() => {
+                      handleUpdateCheckValue(false)
+                    }}
+                    className='btn btn-secondary btn-sm'
+                    style={{
+                      background: checkValue == false ? '#3F4254' : '#E4E6EF',
+                      marginLeft: '16px',
+                    }}
+                  >
+                    <i
+                      className='fa fa-times'
+                      style={{color: '#c18080', fontWeight: 'bold', cursor: 'pointer'}}
+                    ></i>
+                    {/* {'sssss' + checkValue} */}
+                  </button>
+                  <button
+                    onClick={() => {
+                      handleUpdateCheckValue(true)
+                    }}
+                    className='btn btn-secondary btn-sm'
+                    style={{background: checkValue == true ? '#3F4254' : '#E4E6EF'}}
+                  >
+                    <i
+                      className='fa fa-check'
+                      style={{color: '#1dd61d', fontWeight: 'bold', cursor: 'pointer'}}
+                      aria-hidden='true'
+                    ></i>
+                  </button>
+                </span>
+              </>
+            ) : null}
           </>
         )}
       </td>

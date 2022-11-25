@@ -240,6 +240,17 @@ const DashboardPage: FC = () => {
   }
   const getMyTrainsDailyReport = async (date: any) => {
     setLoading(true)
+    let pathName = location.pathname
+    let splitedPath = pathName.split('/')
+    console.log({splitedPath, pathName})
+    let activeTrainId = splitedPath[splitedPath.length - 2]
+    let activeDate = splitedPath[splitedPath.length - 1]
+    console.log({activeDate})
+    if (activeDate !== '' && activeDate !== 'trains-daily-report') {
+      date = activeDate
+      setSelectedDate(activeDate)
+      // setSelectedDate()
+    }
     const response = await axios.post(getMyTrainsDailyReportEndPoint, {date: date}, headerJson)
 
     if (response && response.data) {
@@ -279,12 +290,13 @@ const DashboardPage: FC = () => {
           checkId: check.id,
           checkValue: null,
           trainId: 0,
+          isActive: true,
         })
         for (let j = 0; j < data.trains.length; j++) {
           let trainCheck = data.trains[j].Checks[i]
           trainCheck.trainId = data.trains[j].trainId
           trainCheck.severity = trainCheck.severity || 0
-
+          trainCheck.isActive = trainCheck.isActive
           trData.push(trainCheck)
         }
         tBodyData.push(trData)
@@ -296,11 +308,8 @@ const DashboardPage: FC = () => {
       setActualTBodyData(tBodyData)
       setChecks(data.checks)
       setLoading(false)
-      let pathName = location.pathname
-      let splitedPath = pathName.split('/')
-      console.log({splitedPath, pathName})
-      let activeTrainId = splitedPath[splitedPath.length - 1]
-      if (activeTrainId !== '' && activeTrainId !== 'trains-daily-report') {
+
+      if (activeDate !== '' && activeDate !== 'trains-daily-report') {
         console.log('it is with name actually ')
         const urlText = activeTrainId.replaceAll('trainNameQuery', ' ')
         console.log({urlText})
