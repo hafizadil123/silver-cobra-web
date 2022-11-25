@@ -133,6 +133,20 @@ const TableHeadViewInFloatingDiv = (props: any) => {
       setSelectedDriver(driverId)
     }
   }, [driverId])
+  const getDate = () => {
+    let date
+    let dateFormatted
+
+    // let dateFormatted = moment(date).format('yyyy-MM-DD')
+    if (selectedDate == '') {
+      date = new Date()
+      dateFormatted = moment(date).format('yyyy-MM-DD')
+    } else {
+      date = new Date(selectedDate)
+      dateFormatted = moment(date).format('yyyy-MM-DD')
+    }
+    return dateFormatted
+  }
   const handleChangeTrainStatus = async (statusToChange: number) => {
     let date
     let dateFormatted
@@ -215,7 +229,7 @@ const TableHeadViewInFloatingDiv = (props: any) => {
         <div>
           <Link
             style={{fontSize: '16px', fontWeight: 'bold'}}
-            to={`/trains-daily-report/${urlText}`}
+            to={`/trains-daily-report/${urlText}/${getDate()}`}
             className='header_fix'
           >
             {text}
