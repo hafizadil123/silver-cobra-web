@@ -6,6 +6,7 @@ type Props = {
   className: string
   trains: any[]
   hasEdit: boolean
+  isLockedPage: boolean
   drivers: any[]
   activeTab: string
   updateDriver: (data: any) => any
@@ -23,6 +24,7 @@ const TrainActiviationTable: React.FC<Props> = ({
   activeTab,
   updateStatus,
   handleUpdateDriverAndRedirect,
+  isLockedPage,
 }) => {
   return (
     <div className={`card ${className}`}>
@@ -31,7 +33,17 @@ const TrainActiviationTable: React.FC<Props> = ({
         {/* begin::Table container */}
         <div className='table-responsive'>
           {/* begin::Table */}
+
           <table className='table table-row-bordered table-row-gray-100 align-middle gs-0 gy-3'>
+            <thead>
+              <tr className='fw-bolder text-muted'>
+                <TableHeadView className='min-w-150px' text={`שם רכבת`} />
+                <TableHeadView className='min-w-150px' text={`האם פעילה`} />
+                <TableHeadView className='min-w-150px' text={`נהג`} />
+                <TableHeadView className='min-w-150px' text={``} />
+                <TableHeadView className='min-w-150px' text={`סטטוס מילוי`} />
+              </tr>
+            </thead>
             <tbody>
               {trains.map((item: any) => {
                 const {
@@ -49,6 +61,9 @@ const TrainActiviationTable: React.FC<Props> = ({
 
                 return (
                   <tr>
+                    <td className='text-muted' style={{fontSize: '16px', fontWeight: 'bold'}}>
+                      {name}
+                    </td>
                     <TableDataView
                       key={id}
                       flexValue={1}
@@ -56,6 +71,7 @@ const TrainActiviationTable: React.FC<Props> = ({
                       driverId={driverId}
                       drivers={drivers}
                       tab={'train'}
+                      isLockedPage={isLockedPage}
                       updateStatus={updateStatus}
                       Status={Status}
                       text={name}
@@ -63,39 +79,11 @@ const TrainActiviationTable: React.FC<Props> = ({
                       updateDriver={updateDriver}
                       edit={false}
                     />
-                    <TableDataView
-                      key={id}
-                      flexValue={1}
-                      activeTab={activeTab}
-                      updateStatus={updateStatus}
-                      drivers={drivers}
-                      driverId={driverId}
-                      tab={'driver'}
-                      Status={Status}
-                      text={driver}
-                      id={id}
-                      edit={false}
-                      updateDriver={updateDriver}
-                    />
-                    {/* {hasEdit === true ? (
-                      <TableDataView
-                        key={id}
-                        flexValue={1}
-                        updateDriver={updateDriver}
-                        activeTab={activeTab}
-                        updateStatus={updateStatus}
-                        driverId={driverId}
-                        tab={'driver'}
-                        drivers={drivers}
-                        edit={true}
-                        Status={Status}
-                        text={'edit'}
-                        id={id}
-                      />
-                    ) : null} */}
+
                     <TableDataViewForDrivers
                       driverId={driverId}
                       drivers={drivers}
+                      isLockedPage={isLockedPage}
                       status={Status}
                       id={id}
                       name={name}
@@ -103,6 +91,7 @@ const TrainActiviationTable: React.FC<Props> = ({
                     />
                     <TableDataViewForButton
                       driverId={driverId}
+                      isLockedPage={isLockedPage}
                       driver={driver}
                       id={id}
                       status={Status}
@@ -140,13 +129,18 @@ const TableDataViewForButton = (props: any) => {
     car2Id,
     car2Name,
     car1Name,
+    isLockedPage,
   } = props
   const createCarButtons = () => {
     return (
       <>
         {' '}
         <button
-          disabled={driverId === null || status == 2 || status == null ? true : false}
+          disabled={
+            driverId === null || status == 2 || status == null || isLockedPage === true
+              ? true
+              : false
+          }
           className='btn btn-sm btn-secondary'
           style={{marginLeft: '30px'}}
           onClick={(e) => {
@@ -160,7 +154,11 @@ const TableDataViewForButton = (props: any) => {
           {car1Name == null ? 'None' : car1Name}
         </button>
         <button
-          disabled={driverId === null || status == 2 || status == null ? true : false}
+          disabled={
+            driverId === null || status == 2 || status == null || isLockedPage === true
+              ? true
+              : false
+          }
           className='btn btn-sm btn-secondary'
           style={{marginLeft: '30px'}}
           onClick={(e) => {
@@ -198,17 +196,22 @@ const TableDataViewForButton = (props: any) => {
   )
 }
 const TableDataViewForDrivers = (props: any) => {
-  const [ActiveDriver, setDriver] = useState(1)
+  const [ActiveDriver, setDriver] = useState<any>(1)
   const {
     // text,
     status,
     drivers,
     driverId,
     updateDriver,
+    isLockedPage,
     id,
   } = props
   useEffect(() => {
-    setDriver(driverId)
+    if (driverId == null) {
+      setDriver('')
+    } else {
+      setDriver(driverId)
+    }
   }, [driverId])
   const renderDriversData = () => {
     return drivers?.map((item: any) => {
@@ -225,23 +228,31 @@ const TableDataViewForDrivers = (props: any) => {
       let data = drivers.find((driver: any) => driver.id == _activeDriver)
       data.trainId = id
       updateDriver(data)
+    } else if (_activeDriver == '') {
+      let data: any = {
+        driverId: '',
+      }
+      data.trainId = id
+      updateDriver(data)
     }
   }
   const renderFields = () => {
     return (
       <>
-        <select
-          disabled={status === 2 || status === null ? true : false}
-          className='form-control'
-          onChange={(e: any) => {
-            setDriver(e.target.value)
-            handleUpdateDriver(e.target.value)
-          }}
-          value={ActiveDriver}
-        >
-          <option value=''></option>
-          {renderDriversData()}
-        </select>
+        <td>
+          <select
+            disabled={status === 2 || status === null || isLockedPage === true ? true : false}
+            className='form-control'
+            onChange={(e: any) => {
+              setDriver(e.target.value)
+              handleUpdateDriver(e.target.value)
+            }}
+            value={ActiveDriver}
+          >
+            <option value=''></option>
+            {renderDriversData()}
+          </select>
+        </td>
       </>
     )
   }
@@ -260,6 +271,7 @@ const TableDataView = (props: any) => {
     id,
     activeTab,
     updateStatus,
+    isLockedPage,
   } = props
   const [showModal, setShowModal] = useState(false)
   const [ActiveDriver, setDriver] = useState(1)
@@ -298,13 +310,13 @@ const TableDataView = (props: any) => {
   const renderFields = () => {
     return tab === 'train' ? (
       <td className={`${className} `} style={{minWidth: '150px'}}>
-        <span> {text} </span>
-        <span style={{float: 'left'}}>
+        <span>
           {Status !== null ? (
             // not null
             Status === 2 ? (
               <>
                 <button
+                  disabled={isLockedPage}
                   style={{marginLeft: '16px', background: '#3F4254'}} //: '#E4E6EF'
                   className='btn btn-secondary btn-sm'
                   onClick={(e) => handleUpdateStatus(2)}
@@ -314,7 +326,11 @@ const TableDataView = (props: any) => {
                     style={{color: '#c18080', fontWeight: 'bold', cursor: 'pointer'}}
                   ></i>
                 </button>
-                <button onClick={(e) => handleUpdateStatus(1)} className='btn btn-secondary btn-sm'>
+                <button
+                  disabled={isLockedPage}
+                  onClick={(e) => handleUpdateStatus(1)}
+                  className='btn btn-secondary btn-sm'
+                >
                   <i
                     className='fa fa-check'
                     style={{color: '#1dd61d', fontWeight: 'bold', cursor: 'pointer'}}
@@ -325,6 +341,7 @@ const TableDataView = (props: any) => {
             ) : (
               <>
                 <button
+                  disabled={isLockedPage}
                   style={{marginLeft: '16px'}} //: '#E4E6EF'
                   className='btn btn-secondary btn-sm'
                   onClick={(e) => handleUpdateStatus(2)}
@@ -335,6 +352,7 @@ const TableDataView = (props: any) => {
                   ></i>
                 </button>
                 <button
+                  disabled={isLockedPage}
                   onClick={(e) => handleUpdateStatus(1)}
                   style={{background: '#3F4254'}}
                   className='btn btn-secondary btn-sm'
@@ -352,6 +370,7 @@ const TableDataView = (props: any) => {
 
             <>
               <button
+                disabled={isLockedPage}
                 style={{marginLeft: '16px'}} //: '#E4E6EF'
                 className='btn btn-secondary btn-sm'
                 onClick={(e) => handleUpdateStatus(2)}
@@ -361,7 +380,11 @@ const TableDataView = (props: any) => {
                   style={{color: '#c18080', fontWeight: 'bold', cursor: 'pointer'}}
                 ></i>
               </button>
-              <button onClick={(e) => handleUpdateStatus(1)} className='btn btn-secondary btn-sm'>
+              <button
+                disabled={isLockedPage}
+                onClick={(e) => handleUpdateStatus(1)}
+                className='btn btn-secondary btn-sm'
+              >
                 <i
                   className='fa fa-check'
                   style={{color: '#1dd61d', fontWeight: 'bold', cursor: 'pointer'}}
@@ -376,4 +399,28 @@ const TableDataView = (props: any) => {
   }
 
   return <>{renderFields()}</>
+}
+
+const TableHeadView = (props: any) => {
+  const {
+    text,
+    className,
+    index,
+    drivers,
+    driverName,
+    driverId,
+    status,
+    trainId,
+    reloadApi,
+    handleToastMessage,
+    selectedDate,
+    severity,
+    signedByDriver,
+  } = props
+
+  return (
+    <th>
+      <span>{text}</span>
+    </th>
+  )
 }

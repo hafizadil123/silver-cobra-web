@@ -14,8 +14,17 @@ const ConductorDashboard: FC = () => {
   const navigate = useNavigate()
   const location = useLocation()
   const {addToast} = useToasts()
+  const [search, setSearch] = useState('')
+  const [dataLoaded, setDataLoaded] = useState(false)
+  const [dummySearch, setDummySearch] = useState('')
+
   const [previousDayList, setPreviousDayList] = useState<any>([])
+  const [isLockedPage, setIsLockedPage] = useState<boolean>(true)
+  const [selectedDate, setSelectedDate] = useState<any>('')
+
   const [todayList, setTodayList] = useState<any>([])
+
+  const [ActualtodayList, setActualTodayList] = useState<any>([])
   const [loading, setLoading] = useState(true)
   const [message, setMessage] = useState('')
   const [drivers, setDrivers] = useState([])
@@ -38,8 +47,11 @@ const ConductorDashboard: FC = () => {
   }
 
   useEffect(() => {
+    let date = new Date()
+    let dateFormatted = moment(date).format('yyyy-MM-DD')
+    setSelectedDate(dateFormatted)
     getLoggedInUserdata()
-    getTrainsForActivation()
+    getTrainsForActivation(dateFormatted)
     getDrivers()
   }, [])
 
@@ -59,37 +71,27 @@ const ConductorDashboard: FC = () => {
     let date = new Date()
     return moment(date).format('DD/MM/yyyy')
   }
+  useEffect(() => {
+    if (dataLoaded) {
+      handleSearch(search)
+    }
+  }, [search, dataLoaded])
 
-  const getTrainsForActivation = async () => {
-    const response = await axios.post(getTrainActivationEndPoint, {}, headerJson)
+  const getTrainsForActivation = async (date: any) => {
+    setDataLoaded(false)
+    const response = await axios.post(getTrainActivationEndPoint, {date: date}, headerJson)
 
     if (response && response.data) {
       const {data} = response
       setTodayList(data.todayList)
+      setActualTodayList(data.todayList)
       setPreviousDayList(data.previousDayList)
       setLoading(false)
+      setIsLockedPage(data.isLockedPage)
+      setDataLoaded(true)
     }
   }
-  // const handlePrompt = () => {
-  //   confirmAlert({
-  //     title: ' העתק הגדרות מיום קודם',
-  //     message:
-  //       'כל ההגדרות היום ידרסו עלפי ההגדרות של יום קודם, האם בטוח להעתיק פעילות מיום קודם ? ',
-  //     buttons: [
-  //       {
-  //         label: 'כן',
-  //         onClick: () => {
-  //           console.log('yes')
-  //           setTodayList(previousDayList)
-  //         },
-  //       },
-  //       {
-  //         label: 'לא',
-  //         onClick: () => {},
-  //       },
-  //     ],
-  //   })
-  // }
+
   const getDrivers = async () => {
     const response = await axios.post(getDriversEndPoint, {}, headerJson)
 
@@ -113,6 +115,7 @@ const ConductorDashboard: FC = () => {
     })
 
     setTodayList(updatedTodaList)
+    setActualTodayList(updatedTodaList)
     await updateDriverAPI(data)
   }
   const updateStatus = async (data: any) => {
@@ -129,7 +132,7 @@ const ConductorDashboard: FC = () => {
     })
 
     setTodayList(updatedTodaList)
-    const date = new Date()
+    let date = new Date(selectedDate)
     const dateFormatted = moment(date).format('yyyy-MM-DD')
     const updateTrainData = {
       trainId: data.id,
@@ -143,7 +146,7 @@ const ConductorDashboard: FC = () => {
     )
     if (UpdateTrainStatusResponse.data.result === true) {
       // setLoading(true)
-      await getTrainsForActivation()
+      await getTrainsForActivation(dateFormatted)
       addToast('Status Updated', {appearance: 'success', autoDismiss: true})
     } else {
       addToast(UpdateTrainStatusResponse.data.message, {appearance: 'error', autoDismiss: true})
@@ -151,26 +154,9 @@ const ConductorDashboard: FC = () => {
 
     console.log({UpdateTrainStatusResponse})
   }
-  const handleSubmitTrainActivation = async (e: any) => {
-    e.preventDefault()
-    let trains = todayList
-    let date = new Date()
-    let dateFormatted = moment(date).format('yyyy-MM-DD')
 
-    let dataToSend = {
-      trains,
-      // date: dateFormatted,
-    }
-    //
-    const response = await axios.post(saveTrainActivationEndPoint, dataToSend, headerJson)
-    if (response.data.result === true) {
-      addToast('Your Train Activation Has Been Updated', {appearance: 'success', autoDismiss: true})
-    } else {
-      addToast(response.data.message, {appearance: 'error', autoDismiss: true})
-    }
-  }
   const updateDriverAPI = async (data: any) => {
-    const date = new Date()
+    const date = new Date(selectedDate)
     const dateFormatted = moment(date).format('yyyy-MM-DD')
     const dataToSend: any = {
       trainId: data.trainId,
@@ -182,7 +168,7 @@ const ConductorDashboard: FC = () => {
     }
     if (response.data.result === true) {
       // setLoading(true)
-      await getTrainsForActivation()
+      await getTrainsForActivation(dateFormatted)
       addToast('Driver Updated', {appearance: 'success', autoDismiss: true})
     } else {
       addToast(response.data.message, {appearance: 'error', autoDismiss: true})
@@ -193,6 +179,20 @@ const ConductorDashboard: FC = () => {
     const {name, carId} = data
     const urlText = name.replaceAll(' ', 'trainNameQuery')
     navigate(`/trains-inspection/${urlText}/${data.trainId}/${carId}`)
+  }
+  const handleSearch = (value: any) => {
+    // if (value == '') {
+    //   setTodayList(ActualtodayList)
+    //   return
+    // }
+    value = value.toLowerCase()
+    let searchedTrains = ActualtodayList.filter((item: any) => {
+      if (item.name.toLowerCase().indexOf(value) > -1) {
+        return item
+      }
+    })
+    console.log({searchedTrains})
+    setTodayList(searchedTrains)
   }
   return (
     <>
@@ -209,12 +209,61 @@ const ConductorDashboard: FC = () => {
             <div className='row'>
               <div className='col-md-12 col-lg-12'>
                 <h3>הגדרת רכבות פעילות יומית</h3>
+                <div className='row'>
+                  <div className='col-md-5'>
+                    <input
+                      type='date'
+                      className='form-control-sm mb-5'
+                      value={selectedDate}
+                      onChange={(e) => {
+                        setSelectedDate(e.target.value)
+                      }}
+                    />
 
+                    <button
+                      className='btn btn-primary'
+                      style={{marginRight: '30px'}}
+                      onClick={(e) => {
+                        let date = new Date(selectedDate)
+                        let dateFormatted = moment(date).format('yyyy-MM-DD')
+                        getTrainsForActivation(dateFormatted)
+                      }}
+                    >
+                      רענן
+                    </button>
+                  </div>
+                </div>
+                <div className='row'>
+                  <div className='col-md-8 col-lg-8'>
+                    <input
+                      type='text'
+                      className='form-control'
+                      value={search}
+                      onChange={(e) => {
+                        setSearch(e.target.value)
+                        // handleSearch(e.target.value)
+                      }}
+                      placeholder='חיפוש'
+                    />
+                  </div>
+                  <div className='col-md-4 col-lg-4'>
+                    <button
+                      type='button'
+                      className='btn btn-danger mx-3'
+                      onClick={(e) => {
+                        setSearch('')
+                      }}
+                    >
+                      נקה חיפוש
+                    </button>
+                  </div>
+                </div>
                 <TrainActiviationTable
                   className='mb-5 mb-xl-8'
                   drivers={drivers}
                   hasEdit={true}
                   activeTab={'today'}
+                  isLockedPage={isLockedPage}
                   updateStatus={updateStatus}
                   updateDriver={updateDriver}
                   handleUpdateDriverAndRedirect={handleUpdateDriverAndRedirect}

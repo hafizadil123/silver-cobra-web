@@ -1,0 +1,45 @@
+name: SilverCobra web CI
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  test:
+    name: Test on node ${{ matrix.node_version }} and ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        node_version: ['12']
+        os: [ubuntu-latest, windows-latest, macOS-latest]
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Use Node.js ${{ matrix.node_version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node_version }}
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    
+    - name: Netlify Deploy
+  # You may pin to the exact commit or the version.
+  # uses: jsmrcaga/action-netlify-deploy@53de32e559b0b3833615b9788c7a090cd2fddb03
+      uses: jsmrcaga/action-netlify-deploy@v1.8.0
+      with:
+    # Auth token to use with netlify
+       NETLIFY_AUTH_TOKEN: "UKfkKxheVnf2UZdi6fQL_zNupYSEUerOUPOTuUVSN5o"
+       NETLIFY_SITE_ID: "2fc7854b-c34f-4433-9733-6c6055b165e8"
+     
+       NETLIFY_DEPLOY_MESSAGE: "Deploying new build on netlify"
+      
+       build_directory: ../build
+    # Directory where built files are stored
+
+       install_command: cd.. && npm install
+    
+       build_command: npm run build

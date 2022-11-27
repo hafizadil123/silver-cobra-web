@@ -6,6 +6,8 @@ import moment from 'moment'
 import {PageTitle} from '../../../_metronic/layout/core'
 import './dashboard-page.css'
 import {ReportTable} from './Table'
+import {useIdleTimer} from 'react-idle-timer'
+
 const TrainsSummaryPage: FC = () => {
   const [checks, setChecks] = useState<any>([])
   const [selectedDate, setSelectedDate] = useState<any>('')
@@ -271,8 +273,12 @@ const TrainsSummaryPage: FC = () => {
         if (item.trainName.indexOf(value) > -1) {
           return item
         }
-      } else {
-        if (item.trainName.indexOf(value) > -1 && item.severity == severity) {
+      } else if (severity == 0) {
+        if (item.trainName.indexOf(value) > -1 && item.severity <= severity) {
+          return item
+        }
+      } else if (severity == 1) {
+        if (item.trainName.indexOf(value) > -1 && item.severity >= severity) {
           return item
         }
       }
@@ -281,6 +287,58 @@ const TrainsSummaryPage: FC = () => {
     setSearch(value)
     setThData(searchedTrains)
   }
+
+  const onIdle = () => {
+    console.log('you are idle')
+    let dateFormatted = moment(selectedDate).format('yyyy-MM-DD')
+    getMyTrainsSummaryReport(dateFormatted).then((res: any) => {
+      console.log('ran')
+      reset()
+    })
+    // Close Modal Prompt
+    // Do some idle action like log out your user
+  }
+
+  const onActive = (event: any) => {
+    // Close Modal Prompt
+    // Do some active action
+  }
+
+  const onAction = (event: any) => {
+    // Do something when a user triggers a watched event
+  }
+  const {isIdle, reset} = useIdleTimer({
+    onIdle,
+    onActive,
+    onAction,
+    timeout: 1000 * 30,
+    promptTimeout: 0,
+    events: [
+      'mousemove',
+      'keydown',
+      'wheel',
+      'DOMMouseScroll',
+      'mousewheel',
+      'mousedown',
+      'touchstart',
+      'touchmove',
+      'MSPointerDown',
+      'MSPointerMove',
+      'visibilitychange',
+    ],
+    immediateEvents: [],
+    debounce: 0,
+    throttle: 0,
+    eventsThrottle: 200,
+    element: document,
+    startOnMount: true,
+    startManually: false,
+    stopOnIdle: false,
+    crossTab: false,
+    name: 'idle-timer',
+    syncTimers: 0,
+    leaderElection: false,
+  })
   return (
     <>
       <div style={{height: 'auto'}} className='main-container-dashboard'>

@@ -1,5 +1,6 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, {FC, useState, useEffect} from 'react'
+import {useIdleTimer} from 'react-idle-timer'
 import {useIntl} from 'react-intl'
 import axios from 'axios'
 import moment from 'moment'
@@ -8,21 +9,20 @@ import './dashboard-page.css'
 import {useLocation} from 'react-router-dom'
 import Modal from 'react-bootstrap/Modal'
 import fileDownload from 'js-file-download'
-import { JsonToExcel } from "react-json-excel";
-
-
+// import UseIdel from './../../hooks/UseIdle'
 import {ReportTable} from './Table'
 const DashboardPage = () => {
   const location = useLocation()
   const [showModal, setShowModal] = useState(false)
-  const [checks, setChecks] = useState([])
-  const [selectedDate, setSelectedDate] = useState('')
-  const [startDate, setStartDate] = useState('')
-  const [endDate, setEndDate] = useState('')
-  const [selectedSeverity, setSelectedSeverity] = useState('')
-  const [actualTbodyData, setActualTBodyData] = useState([])
-  const [thData, setThData] = useState([])
-  const [tBodyData, setBodyData] = useState([])
+  const [loadingExcel, setLoadingExcel] = useState(false)
+  const [checks, setChecks] = useState<any>([])
+  const [selectedDate, setSelectedDate] = useState<any>('')
+  const [startDate, setStartDate] = useState<any>('')
+  const [endDate, setEndDate] = useState<any>('')
+  const [selectedSeverity, setSelectedSeverity] = useState<any>('')
+  const [actualTbodyData, setActualTBodyData] = useState<any>([])
+  const [thData, setThData] = useState<any>([])
+  const [tBodyData, setBodyData] = useState<any>([])
   const [search, setSearch] = useState('')
   const [trainNameSearch, setTrainNameSearch] = useState('')
   const [errorStatus, setErrorStatus] = useState('')
@@ -38,9 +38,8 @@ const DashboardPage = () => {
   const baseUrl = process.env.REACT_APP_API_URL
   const getLoggedInUserEndPoint = `${baseUrl}/api/Common/GetLoggedInUser`
   const getDriversEndPoint = `${baseUrl}/api/Common/GetDrivers`
-  const getMyTrainsForInspectionEndPoint = `${baseUrl}/api/Common/GetTrainsForInspection`
   const getMyTrainsDailyReportEndPoint = `${baseUrl}/api/Common/GetTrainsDailyReport`
-  const GetTrainsDailyReportExcel = `${baseUrl}/api/Report/GetTrainsDailyReportExcel`
+  const GetTrainsDailyReportExcelId = `${baseUrl}/api/Report/GetTrainsDailyReportExcelId`
 
   const headerJson = {
     headers: {
@@ -82,6 +81,57 @@ const DashboardPage = () => {
     }
   }
 
+  const onIdle = () => {
+    console.log('you are idle')
+    let dateFormatted = moment(selectedDate).format('yyyy-MM-DD')
+    getMyTrainsDailyReport(dateFormatted).then((res) => {
+      console.log('ran')
+      reset()
+    })
+    // Close Modal Prompt
+    // Do some idle action like log out your user
+  }
+
+  const onActive = (event) => {
+    // Close Modal Prompt
+    // Do some active action
+  }
+
+  const onAction = (event) => {
+    // Do something when a user triggers a watched event
+  }
+  const {isIdle, reset} = useIdleTimer({
+    onIdle,
+    onActive,
+    onAction,
+    timeout: 1000 * 30,
+    promptTimeout: 0,
+    events: [
+      'mousemove',
+      'keydown',
+      'wheel',
+      'DOMMouseScroll',
+      'mousewheel',
+      'mousedown',
+      'touchstart',
+      'touchmove',
+      'MSPointerDown',
+      'MSPointerMove',
+      'visibilitychange',
+    ],
+    immediateEvents: [],
+    debounce: 0,
+    throttle: 0,
+    eventsThrottle: 200,
+    element: document,
+    startOnMount: true,
+    startManually: false,
+    stopOnIdle: false,
+    crossTab: false,
+    name: 'idle-timer',
+    syncTimers: 0,
+    leaderElection: false,
+  })
   const handleDriverUpdate = (data) => {
     let updatedThData = thData.map((item) => {
       if (item.trainId == data.trainId) {
@@ -191,6 +241,17 @@ const DashboardPage = () => {
   }
   const getMyTrainsDailyReport = async (date) => {
     setLoading(true)
+    let pathName = location.pathname
+    let splitedPath = pathName.split('/')
+    console.log({splitedPath, pathName})
+    let activeTrainId = splitedPath[splitedPath.length - 2]
+    let activeDate = splitedPath[splitedPath.length - 1]
+    console.log({activeDate})
+    if (activeDate !== '' && activeDate !== 'trains-daily-report') {
+      date = activeDate
+      setSelectedDate(activeDate)
+      // setSelectedDate()
+    }
     const response = await axios.post(getMyTrainsDailyReportEndPoint, {date: date}, headerJson)
 
     if (response && response.data) {
@@ -230,12 +291,13 @@ const DashboardPage = () => {
           checkId: check.id,
           checkValue: null,
           trainId: 0,
+          isActive: true,
         })
         for (let j = 0; j < data.trains.length; j++) {
           let trainCheck = data.trains[j].Checks[i]
           trainCheck.trainId = data.trains[j].trainId
           trainCheck.severity = trainCheck.severity || 0
-
+          trainCheck.isActive = trainCheck.isActive
           trData.push(trainCheck)
         }
         tBodyData.push(trData)
@@ -247,19 +309,18 @@ const DashboardPage = () => {
       setActualTBodyData(tBodyData)
       setChecks(data.checks)
       setLoading(false)
-      let pathName = location.pathname
-      let splitedPath = pathName.split('/')
-      console.log({splitedPath, pathName})
-      let activeTrainId = splitedPath[splitedPath.length - 1]
-      if (activeTrainId !== '' && activeTrainId !== 'trains-daily-report') {
+
+      if (activeDate !== '' && activeDate !== 'trains-daily-report') {
         console.log('it is with name actually ')
         const urlText = activeTrainId.replaceAll('trainNameQuery', ' ')
         console.log({urlText})
         setSearch(urlText)
+        handleSearchOnStart(urlText, '', thData, data.checks, data.trains)
       } else {
         console.log('daily report simple')
       }
     }
+    console.log('done from here')
   }
 
   const getAllDrivers = async () => {
@@ -336,6 +397,77 @@ const DashboardPage = () => {
         if (item.trainName.indexOf(value) > -1) {
           return item
         }
+      } else if (severity == 0) {
+        if (item.trainName.indexOf(value) > -1 && item.severity <= severity) {
+          return item
+        }
+      } else if (severity == 1) {
+        if (item.trainName.indexOf(value) > -1 && item.severity >= severity) {
+          return item
+        }
+      }
+    })
+    // console.log({searchedTrains: searchedTrains})
+
+    let obj = {
+      driverId: 0,
+      driverName: null,
+      notes: null,
+      status: 1,
+      trainId: 0,
+      trainName: '',
+    }
+    if (severity !== '' || value !== '') {
+      console.log('in here ssss')
+      searchedTrains.unshift(obj)
+    }
+    // searchedTrains.unshift(obj)
+    let trainIds = searchedTrains.map((item) => {
+      return item.trainId
+    })
+
+    let _tBodyData = []
+
+    let s = 0
+    for (let i = 0; i < checks.length; i++) {
+      let check = checks[i]
+      let trData = []
+      trData.push({
+        carId: check.id,
+        carName: check.name,
+        checkId: check.id,
+        checkValue: null,
+        trainId: 0,
+      })
+      for (let j = 0; j < trains.length; j++) {
+        let trainId = trains[j].trainId
+        if (trainIds.includes(trainId)) {
+          let trainCheck = trains[j].Checks[i]
+          trainCheck.trainId = trains[j].trainId
+          //
+          trData.push(trainCheck)
+        }
+      }
+      s++
+      _tBodyData.push(trData)
+    }
+
+    // setSearch(value)
+    setThData(searchedTrains)
+    setBodyData(_tBodyData)
+  }
+  const handleSearchOnStart = (
+    value,
+    severity,
+    actualThData,
+    checks,
+    trains,
+  ) => {
+    let searchedTrains = actualThData.filter((item) => {
+      if (severity == '') {
+        if (item.trainName.indexOf(value) > -1) {
+          return item
+        }
       } else {
         if (item.trainName.indexOf(value) > -1 && item.severity == severity) {
           return item
@@ -403,30 +535,27 @@ const DashboardPage = () => {
       trainName: trainNameSearch,
       errorStatus: errorStatus,
     }
-    const header = {
-      headers: {
-        Authorization: `bearer ${loggedInUserDetails.access_token}`,
-        responseType: 'blob',
-        // contendDisposition: 'attachment',
-        // 'Content-Disposition': 'attachment; filename=report.xlsx',
-        'Content-Disposition': 'attachment; filename=report_01-11-2022-13-11-2022.xlsx',
-        // contentType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-      },
-    }
+    setLoadingExcel(true)
     try {
-      const response = await axios.post(GetTrainsDailyReportExcel, dataToSend, header)
-      let object = {}
-      response?.data.headers.forEach(item => {
-        let obj = {
-          [item.label]: item.key 
-        }
-        object = obj;
-      })
-      console.log('respnssss', object)
-
-      setHeaders(object);
-      setHeaderData(response?.data?.data)
+      const response = await axios.post(GetTrainsDailyReportExcelId, dataToSend, headerJson)
+      // fileDownload(response.data, 'report.xlsx')
+      // console.log({response})
+      if (response.data.result === true) {
+        console.log({reportId: response.data.reportId})
+        var link = document.createElement('a')
+        const url = `${baseUrl}/api/Report/GetTrainsDailyReportExcel?reportId=${response.data.reportId}`
+        link.href = url
+        link.download = `${baseUrl}/api/Report/GetTrainsDailyReportExcel?reportId=${response.data.reportId}`
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+        setLoadingExcel(false)
+      } else {
+        setLoadingExcel(false)
+      }
     } catch (error) {
+      setLoadingExcel(false)
+
       console.log({error})
     }
   }
@@ -633,15 +762,17 @@ const DashboardPage = () => {
                     width: '100%',
                   }}
                 >
-                {console.log('adddd', headerData, header)}
-                <JsonToExcel
-                  data={headerData}
-                  className={'btn btn-primary'}
-                  filename={'report.xlsx'}
-                  fields={header}
-                  text={'הפק דוח'}
-                />
-                        
+                  <button
+                    type='button'
+                    disabled={loadingExcel}
+                    onClick={() => {
+                      // setShowModal(false)
+                      downloadExcelFile()
+                    }}
+                    className='btn btn-primary'
+                  >
+                    הפק דוח{' '}
+                  </button>
                 </div>
               </Modal.Footer>
             </Modal>

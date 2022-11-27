@@ -110,9 +110,7 @@ export function Login(props: any) {
 
       {/* begin::Form group */}
       <div className='fv-row mb-10'>
-        <label className='form-label fs-6 fw-bolder text-dark'>
-          {<FormattedMessage id='AUTH.INPUT.USERNAME' />}
-        </label>
+        <label className='form-label fs-6 fw-bolder text-dark'>שם משתמש</label>
 
         <input
           placeholder='שם משתמש'
