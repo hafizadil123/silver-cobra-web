@@ -33,8 +33,8 @@ const DashboardPage = () => {
   const [drivers, setDrivers] = useState([])
   const logged_user_detail = localStorage.getItem('logged_user_detail')
   const loggedInUserDetails = JSON.parse(logged_user_detail)
-  const [header, setHeaders] = useState([]);
-  const [headerData, setHeaderData] = useState([]);
+  const [header, setHeaders] = useState([])
+  const [headerData, setHeaderData] = useState([])
   const baseUrl = process.env.REACT_APP_API_URL
   const getLoggedInUserEndPoint = `${baseUrl}/api/Common/GetLoggedInUser`
   const getDriversEndPoint = `${baseUrl}/api/Common/GetDrivers`
@@ -456,13 +456,7 @@ const DashboardPage = () => {
     setThData(searchedTrains)
     setBodyData(_tBodyData)
   }
-  const handleSearchOnStart = (
-    value,
-    severity,
-    actualThData,
-    checks,
-    trains,
-  ) => {
+  const handleSearchOnStart = (value, severity, actualThData, checks, trains) => {
     let searchedTrains = actualThData.filter((item) => {
       if (severity == '') {
         if (item.trainName.indexOf(value) > -1) {
@@ -559,9 +553,9 @@ const DashboardPage = () => {
       console.log({error})
     }
   }
-  useEffect(() => {
-   downloadExcelFile()
-  }, [startDate, endDate])
+  // useEffect(() => {
+  //  downloadExcelFile()
+  // }, [startDate, endDate])
   return (
     <>
       <div style={{height: 'auto'}} className='main-container-dashboard'>
