@@ -18,7 +18,9 @@ const initialValues = {
 
 export function Login(props: any) {
   const [loading, setLoading] = useState(false)
+  const [oneStep, setOneStep] = useState(false)
   const API_URL = process.env.REACT_APP_API_URL
+  const STEP_ONE_URL = `${API_URL}/api/account/LoginStepOne`
   const LOGIN_URL = `${API_URL}/Token`
   const userRole = localStorage.getItem('userType')
   const getLoggedInUser = async () => {
@@ -56,27 +58,36 @@ export function Login(props: any) {
             'Content-Type': 'application/x-www-form-urlencoded',
           },
         }
+        if (oneStep === true) {
+          const response = await axios.post(LOGIN_URL, params, config)
 
-        const response = await axios.post(LOGIN_URL, params, config)
-        if (response) {
+          if (response) {
+            setLoading(false)
+            const {data} = response
+            localStorage.setItem('logged_user_detail', JSON.stringify(data))
+            let role = await getLoggedInUser()
+            let userRole = localStorage.getItem('userType')
+            if (userRole === 'Admin') {
+              window.location.href = '/conductor-dashboard'
+            } else if (userRole === 'Driver') {
+              window.location.href = '/driver-dashboard'
+            } else if (userRole === 'OccUser') {
+              window.location.href = '/trains-daily-report'
+            } else if (userRole === 'Conductor') {
+              window.location.href = '/conductor-dashboard'
+            } else if (userRole === 'Cleaner') {
+              window.location.href = '/cleaner-dashboard'
+            } else {
+              window.location.href = '/trains-cleaning-report'
+            }
+          }
+        } else {
+          const response = await axios.post(STEP_ONE_URL, params, config)
+          const data = response.data
           setLoading(false)
-          const {data} = response
-          // return
-          localStorage.setItem('logged_user_detail', JSON.stringify(data))
-          let role = await getLoggedInUser()
-          let userRole = localStorage.getItem('userType')
-          if (userRole === 'Admin') {
-            window.location.href = '/conductor-dashboard'
-          } else if (userRole === 'Driver') {
-            window.location.href = '/driver-dashboard'
-          } else if (userRole === 'OccUser') {
-            window.location.href = '/trains-daily-report'
-          } else if (userRole === 'Conductor') {
-            window.location.href = '/conductor-dashboard'
-          } else if (userRole === 'Cleaner') {
-            window.location.href = '/cleaner-dashboard'
-          } else {
-            window.location.href = '/trains-cleaning-report'
+          values.password = ''
+          if (data.result) {
+            setOneStep(true)
           }
         }
       } catch (err) {
@@ -124,6 +135,7 @@ export function Login(props: any) {
           )}
           type='username'
           name='username'
+          disabled={oneStep}
           autoComplete='off'
         />
         {formik.touched.username && formik.errors.username && (
@@ -155,26 +167,55 @@ export function Login(props: any) {
             {/* end::Link */}
           </div>
         </div>
-        <input
-          type='password'
-          autoComplete='off'
-          {...formik.getFieldProps('password')}
-          className={clsx(
-            'form-control form-control-lg form-control-solid',
-            {
-              'is-invalid': formik.touched.password && formik.errors.password,
-            },
-            {
-              'is-valid': formik.touched.password && !formik.errors.password,
-            }
-          )}
-        />
-        {formik.touched.password && formik.errors.password && (
-          <div className='fv-plugins-message-container'>
-            <div className='fv-help-block'>
-              <span role='alert'>{formik.errors.password}</span>
-            </div>
-          </div>
+        {oneStep === true ? (
+          <>
+            <input
+              type='text'
+              autoComplete='off'
+              {...formik.getFieldProps('password')}
+              placeholder='ה ק'
+              className={clsx(
+                'form-control form-control-lg form-control-solid',
+                {
+                  'is-invalid': formik.touched.password && formik.errors.password,
+                },
+                {
+                  'is-valid': formik.touched.password && !formik.errors.password,
+                }
+              )}
+            />
+            {formik.touched.password && formik.errors.password && (
+              <div className='fv-plugins-message-container'>
+                <div className='fv-help-block'>
+                  <span role='alert'>{formik.errors.password}</span>
+                </div>
+              </div>
+            )}
+          </>
+        ) : (
+          <>
+            <input
+              type='password'
+              autoComplete='off'
+              {...formik.getFieldProps('password')}
+              className={clsx(
+                'form-control form-control-lg form-control-solid',
+                {
+                  'is-invalid': formik.touched.password && formik.errors.password,
+                },
+                {
+                  'is-valid': formik.touched.password && !formik.errors.password,
+                }
+              )}
+            />
+            {formik.touched.password && formik.errors.password && (
+              <div className='fv-plugins-message-container'>
+                <div className='fv-help-block'>
+                  <span role='alert'>{formik.errors.password}</span>
+                </div>
+              </div>
+            )}
+          </>
         )}
       </div>
       {/* end::Form group */}
@@ -200,6 +241,7 @@ export function Login(props: any) {
           )}
         </button>
       </div>
+
       {/* end::Action */}
     </form>
   )

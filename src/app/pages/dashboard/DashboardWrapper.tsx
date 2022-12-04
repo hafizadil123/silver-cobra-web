@@ -42,7 +42,8 @@ const DashboardPage: FC = () => {
   const getLoggedInUserEndPoint = `${baseUrl}/api/Common/GetLoggedInUser`
   const getDataEndPoint = `${baseUrl}/api/Common/GetData`
   const getUsersEndPoint = `${baseUrl}/api/Common/GetUsers`
-  const saveUserDetailsEndPoint = `${baseUrl}/api/Common/SaveUserDetails`
+  const saveUserDetailsEndPoint = `${baseUrl}/api/account/SaveUserDetails`
+  const resetPasswordEndPoint = `${baseUrl}/api/account/AdminResetPassword`
 
   const getMyTrainsDailyReportEndPoint = `${baseUrl}/api/Common/GetTrainsDailyReport`
   const getMyTrainsDailyCleaningReportEndPoint = `${baseUrl}/api/Common/GetTrainsDailyCleaningReport`
@@ -98,6 +99,7 @@ const DashboardPage: FC = () => {
   }
   const handleNavigation = (e: any) => {
     const window = e.currentTarget
+
     if (y > window.scrollY && window.scrollY === 238) {
       setStickyCss('white')
     } else if (y < window.scrollY) {
@@ -105,7 +107,24 @@ const DashboardPage: FC = () => {
     }
     setY(window.scrollY)
   }
-
+  const resetUserPassword = async (userId: any) => {
+    console.log({userId})
+    const activeUser = users.find((user: any) => user.userId === userId)
+    console.log({activeUser})
+    if (activeUser) {
+      const data = {
+        userName: activeUser.userName,
+      }
+      const response = await axios.post(resetPasswordEndPoint, data, headerJson)
+      console.log({data: response.data})
+      const result = response.data.result
+      if (result) {
+        addToast(response.data.message, {appearance: 'success', autoDismiss: true})
+      } else {
+        addToast(response.data.message, {appearance: 'error', autoDismiss: true})
+      }
+    }
+  }
   const saveUserDetails = async (details: any, type = 'Updated') => {
     const response = await axios.post(saveUserDetailsEndPoint, details, headerJson)
     if (response.data.result === false) {
@@ -187,6 +206,7 @@ const DashboardPage: FC = () => {
                   saveUserDetails={saveUserDetails}
                   users={users}
                   css={stickyCss}
+                  resetUserPassword={resetUserPassword}
                 />
               </>
             )}

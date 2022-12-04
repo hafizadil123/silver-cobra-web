@@ -11,6 +11,7 @@ type Props = {
   getSelectedUser: (id: any) => any
   saveUserDetails: (detalis: any) => any
   css: string
+  resetUserPassword: (id: any) => any
 }
 
 const ReportTable: React.FC<Props> = ({
@@ -19,6 +20,7 @@ const ReportTable: React.FC<Props> = ({
   getSelectedUser,
   saveUserDetails,
   userRoles,
+  resetUserPassword,
   css,
 }) => {
   const [y, setY] = useState(0)
@@ -58,6 +60,7 @@ const ReportTable: React.FC<Props> = ({
                 <TableHeadView className='min-w-150px' text={'מספר נייד'} />
                 <TableHeadView className='min-w-150px' text={'תפקיד'} />
                 <TableHeadView className='min-w-150px' text={'שם משתמש'} />
+                <TableHeadView className='min-w-150px' text={'יל ה'} />
                 <TableHeadView className='min-w-150px' text={'פעולות'} />
               </tr>
             </thead>
@@ -77,6 +80,7 @@ const ReportTable: React.FC<Props> = ({
                       saveUserDetails={saveUserDetails}
                       userId={item.userId}
                       isEdit={false}
+                      resetUserPassword={resetUserPassword}
                     />
                     <TableDataView
                       className='min-w-150px'
@@ -88,6 +92,7 @@ const ReportTable: React.FC<Props> = ({
                       userId={item.userId}
                       saveUserDetails={saveUserDetails}
                       isEdit={false}
+                      resetUserPassword={resetUserPassword}
                     />
                     <TableDataView
                       className='min-w-150px'
@@ -99,6 +104,7 @@ const ReportTable: React.FC<Props> = ({
                       saveUserDetails={saveUserDetails}
                       userId={item.userId}
                       isEdit={false}
+                      resetUserPassword={resetUserPassword}
                     />
                     <TableDataView
                       className='min-w-150px'
@@ -110,6 +116,7 @@ const ReportTable: React.FC<Props> = ({
                       getSelectedUser={getSelectedUser}
                       saveUserDetails={saveUserDetails}
                       isEdit={false}
+                      resetUserPassword={resetUserPassword}
                     />
                     <TableDataView
                       className='min-w-150px'
@@ -121,7 +128,9 @@ const ReportTable: React.FC<Props> = ({
                       userRoles={userRoles}
                       saveUserDetails={saveUserDetails}
                       isEdit={false}
+                      resetUserPassword={resetUserPassword}
                     />
+                    <td>{item.isActive === true ? `✅` : `❌`}</td>
                     <TableDataView
                       className='min-w-150px'
                       index={index}
@@ -132,6 +141,7 @@ const ReportTable: React.FC<Props> = ({
                       userRoles={userRoles}
                       userId={item.userId}
                       isEdit={true}
+                      resetUserPassword={resetUserPassword}
                     />
                   </tr>
                 )
@@ -150,7 +160,16 @@ const ReportTable: React.FC<Props> = ({
 
 export {ReportTable}
 const TableDataView = (props: any) => {
-  const {isEdit, text, className, getSelectedUser, userId, saveUserDetails, userRoles} = props
+  const {
+    isEdit,
+    text,
+    className,
+    getSelectedUser,
+    userId,
+    saveUserDetails,
+    userRoles,
+    resetUserPassword,
+  } = props
   const [activeUser, setActiveUesr] = useState({
     name: '',
     email: '',
@@ -162,6 +181,10 @@ const TableDataView = (props: any) => {
   const [showModal, setShowModal] = useState(false)
   const handleUpdateUser = () => {
     saveUserDetails(activeUser)
+  }
+  const handleResetPassword = (e: any) => {
+    e.preventDefault()
+    resetUserPassword(userId)
   }
   const renderFields = () => {
     return (
@@ -273,6 +296,12 @@ const TableDataView = (props: any) => {
                       }}
                       className='form-control'
                     />
+                  </div>
+
+                  <div className='form-group m-5'>
+                    <button type='button' className='btn btn-warning' onClick={handleResetPassword}>
+                      סיסמא א
+                    </button>
                   </div>
                 </form>
               </Modal.Body>
