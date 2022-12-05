@@ -177,6 +177,7 @@ const TableDataView = (props: any) => {
     mobile: '',
     userName: '',
     userId: '',
+    isActive: true,
   })
   const [showModal, setShowModal] = useState(false)
   const handleUpdateUser = () => {
@@ -206,6 +207,7 @@ const TableDataView = (props: any) => {
                   mobile: user.mobile,
                   userName: user.userName,
                   userId: user.userId,
+                  isActive: user.isActive,
                 })
                 setShowModal(true)
               }}
@@ -298,6 +300,40 @@ const TableDataView = (props: any) => {
                     />
                   </div>
 
+                  <div className='form-group mt-3 mb-3'>
+                    <label>“פעיל האם</label>
+                    <span style={{marginRight: '22px'}}>
+                      <label
+                        onClick={(e) => {
+                          setActiveUesr({
+                            ...activeUser,
+                            isActive: true,
+                          })
+                        }}
+                        style={{
+                          cursor: 'pointer',
+                          backgroundColor: activeUser.isActive === true ? 'black' : '',
+                        }}
+                      >
+                        ✅
+                      </label>
+                      <label
+                        onClick={(e) => {
+                          setActiveUesr({
+                            ...activeUser,
+                            isActive: false,
+                          })
+                        }}
+                        style={{
+                          cursor: 'pointer',
+                          marginRight: '20px',
+                          backgroundColor: activeUser.isActive === false ? 'black' : '',
+                        }}
+                      >
+                        ❌
+                      </label>
+                    </span>
+                  </div>
                   <div className='form-group m-5'>
                     <button type='button' className='btn btn-warning' onClick={handleResetPassword}>
                       סיסמא א
