@@ -10,11 +10,16 @@ const loginSchema = Yup.object().shape({
   username: Yup.string().required(` שדהשם משתמש הינו חובה`),
   password: Yup.string().required(` שדהסיסמה הינו חובה`),
 })
-
 const initialValues = {
   username: '',
   password: '',
+  twoFACode: '',
 }
+const step2Schema = Yup.object().shape({
+  username: Yup.string().required(` שדהשם משתמש הינו חובה`),
+  password: Yup.string().required(` שדהסיסמה הינו חובה`),
+  twoFACode: Yup.string().required(` שדהסיסמה הינו חובה`),
+})
 
 export function Login(props: any) {
   const [loading, setLoading] = useState(false)
@@ -43,15 +48,16 @@ export function Login(props: any) {
   }
   const formik = useFormik({
     initialValues,
-    validationSchema: loginSchema,
+    validationSchema: oneStep === true ? step2Schema : loginSchema,
     onSubmit: async (values, {setStatus, setSubmitting}) => {
       try {
         setLoading(true)
         setStatus('')
         let username = values.username
         const params = new URLSearchParams()
+        let password = oneStep === true ? values.twoFACode : values.password
         params.append('username', username)
-        params.append('password', values.password)
+        params.append('password', password)
         params.append('grant_type', 'password')
         const config = {
           headers: {
@@ -85,7 +91,6 @@ export function Login(props: any) {
           const response = await axios.post(STEP_ONE_URL, params, config)
           const data = response.data
           setLoading(false)
-          values.password = ''
           if (data.result) {
             setOneStep(true)
           }
@@ -167,57 +172,75 @@ export function Login(props: any) {
             {/* end::Link */}
           </div>
         </div>
-        {oneStep === true ? (
-          <>
+
+        <input
+          type='password'
+          disabled={oneStep}
+          autoComplete='off'
+          {...formik.getFieldProps('password')}
+          className={clsx(
+            'form-control form-control-lg form-control-solid',
+            {
+              'is-invalid': formik.touched.password && formik.errors.password,
+            },
+            {
+              'is-valid': formik.touched.password && !formik.errors.password,
+            }
+          )}
+        />
+        {formik.touched.password && formik.errors.password && (
+          <div className='fv-plugins-message-container'>
+            <div className='fv-help-block'>
+              <span role='alert'>{formik.errors.password}</span>
+            </div>
+          </div>
+        )}
+      </div>
+      {oneStep === true ? (
+        <>
+          <div className='fv-row mb-10'>
+            <div className='d-flex justify-content-between mt-n5'>
+              <div className='d-flex flex-stack mb-2'>
+                {/* begin::Label */}
+                <label className='form-label fw-bolder text-dark fs-6 mb-0'> כניסה קוד </label>
+                {/* end::Label */}
+                {/* begin::Link */}
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                {/* <Link
+              to='/auth/forgot-password'
+              className='link-primary fs-6 fw-bolder'
+              style={{marginLeft: '5px'}}
+            >
+              שכחת סיסמא ?
+            </Link> */}
+                {/* end::Link */}
+              </div>
+            </div>
             <input
               type='text'
               autoComplete='off'
-              {...formik.getFieldProps('password')}
+              {...formik.getFieldProps('twoFACode')}
               placeholder='ה ק'
               className={clsx(
                 'form-control form-control-lg form-control-solid',
                 {
-                  'is-invalid': formik.touched.password && formik.errors.password,
+                  'is-invalid': formik.touched.twoFACode && formik.errors.twoFACode,
                 },
                 {
-                  'is-valid': formik.touched.password && !formik.errors.password,
+                  'is-valid': formik.touched.twoFACode && !formik.errors.twoFACode,
                 }
               )}
             />
-            {formik.touched.password && formik.errors.password && (
+            {formik.touched.twoFACode && formik.errors.twoFACode && (
               <div className='fv-plugins-message-container'>
                 <div className='fv-help-block'>
-                  <span role='alert'>{formik.errors.password}</span>
+                  <span role='alert'>{formik.errors.twoFACode}</span>
                 </div>
               </div>
             )}
-          </>
-        ) : (
-          <>
-            <input
-              type='password'
-              autoComplete='off'
-              {...formik.getFieldProps('password')}
-              className={clsx(
-                'form-control form-control-lg form-control-solid',
-                {
-                  'is-invalid': formik.touched.password && formik.errors.password,
-                },
-                {
-                  'is-valid': formik.touched.password && !formik.errors.password,
-                }
-              )}
-            />
-            {formik.touched.password && formik.errors.password && (
-              <div className='fv-plugins-message-container'>
-                <div className='fv-help-block'>
-                  <span role='alert'>{formik.errors.password}</span>
-                </div>
-              </div>
-            )}
-          </>
-        )}
-      </div>
+          </div>
+        </>
+      ) : null}
       {/* end::Form group */}
 
       {/* begin::Action */}
