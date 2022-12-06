@@ -93,6 +93,8 @@ export function Login(props: any) {
           setLoading(false)
           if (data.result) {
             setOneStep(true)
+          } else {
+            setStatus(data.message || '')
           }
         }
       } catch (err) {

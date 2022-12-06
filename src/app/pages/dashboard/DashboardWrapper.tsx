@@ -108,6 +108,19 @@ const DashboardPage: FC = () => {
     }
     setY(window.scrollY)
   }
+
+  const handleModal = (e: any) => {
+    e.preventDefault();
+    setActiveUesr({
+      name: '',
+      email: '',
+      UserRoleName: '',
+      mobile: '',
+      userName: '',
+    });
+    setShowModal(true)
+    
+  }
   const resetUserPassword = async (userId: any) => {
     console.log({userId})
     const activeUser = users.find((user: any) => user.userId === userId)
@@ -134,7 +147,8 @@ const DashboardPage: FC = () => {
     const response = await axios.post(saveUserDetailsEndPoint, details, headerJson)
     if (response.data.result === false) {
       response.data.validationErrors.forEach((error: any) => {
-        addToast(error, {appearance: 'error', autoDismiss: true})
+        addToast(error, {appearance: 'error', autoDismiss: true});
+        setShowModal(true)
       })
     } else {
       setLoading(true)
@@ -202,7 +216,7 @@ const DashboardPage: FC = () => {
                   <div className='col-12'>
                     <button
                       className='btn btn-primary handleSubmit'
-                      onClick={(e) => setShowModal(true)}
+                      onClick={(e) => handleModal(e)}
                     >
                       הוסף משתמש
                     </button>
