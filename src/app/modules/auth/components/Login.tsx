@@ -242,6 +242,12 @@ export function Login(props: any) {
         </button>
       </div>
 
+      <div className='text-center'>
+        <Link className='btn btn-lg btn-outline-primary w-100 mb-5' to='/auth/forgot-password'>
+          סיסמא ש
+        </Link>
+      </div>
+
       {/* end::Action */}
     </form>
   )
