@@ -24,6 +24,7 @@ const DashboardPage: FC = () => {
   const [actualUsers, setActualUsers] = useState<any>([])
   const [loading, setLoading] = useState(true)
   const logged_user_detail: any = localStorage.getItem('logged_user_detail')
+  const [errors, setErrors] =  useState<any>([]);
   const [activeUser, setActiveUesr] = useState({
     name: '',
     email: '',
@@ -119,6 +120,7 @@ const DashboardPage: FC = () => {
       userName: '',
     });
     setShowModal(true)
+    setErrors([])
     
   }
   const resetUserPassword = async (userId: any) => {
@@ -147,7 +149,8 @@ const DashboardPage: FC = () => {
     const response = await axios.post(saveUserDetailsEndPoint, details, headerJson)
     if (response.data.result === false) {
       response.data.validationErrors.forEach((error: any) => {
-        addToast(error, {appearance: 'error', autoDismiss: true});
+        // addToast(error, {appearance: 'error', autoDismiss: true});
+        setErrors(response.data.validationErrors)
         setShowModal(true)
       })
     } else {
@@ -251,6 +254,7 @@ const DashboardPage: FC = () => {
         <Modal.Header closeButton></Modal.Header>
         <Modal.Body>
           <form>
+            {errors && errors.length > 0 && errors.map((item: any) => <><span style={{color: 'red'}}>{item}</span><br /></>)}
             <div className='form-group'>
               <label>שם</label>
               <input
