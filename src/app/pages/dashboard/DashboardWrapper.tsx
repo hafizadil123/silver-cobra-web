@@ -17,6 +17,7 @@ const DashboardPage: FC = () => {
 
   const [users, setUsers] = useState<any>([])
   const [userRoles, setUserRoles] = useState<any>([])
+  const [resetPasswordMessage, setResetPasswordMessage] = useState<any>('')
   const [y, setY] = useState(0)
   const [stickyCss, setStickyCss] = useState('')
   const [search, setSearch] = useState('')
@@ -119,7 +120,11 @@ const DashboardPage: FC = () => {
       console.log({data: response.data})
       const result = response.data.result
       if (result) {
-        addToast(response.data.message, {appearance: 'success', autoDismiss: true})
+        setResetPasswordMessage(response.data.message)
+        setTimeout(() => {
+          setResetPasswordMessage('')
+        }, 45000)
+        // addToast(response.data.message, {appearance: 'success', autoDismiss: true})
       } else {
         addToast(response.data.message, {appearance: 'error', autoDismiss: true})
       }
@@ -133,7 +138,11 @@ const DashboardPage: FC = () => {
       })
     } else {
       setLoading(true)
-      addToast(`User ${type} successfully`, {appearance: 'success', autoDismiss: true})
+      if (type == 'Created') {
+        addToast(response.data.message, {appearance: 'success', autoDismiss: true})
+      } else {
+        addToast(`User ${type} successfully`, {appearance: 'success', autoDismiss: true})
+      }
       getUsers()
     }
   }
@@ -207,6 +216,7 @@ const DashboardPage: FC = () => {
                   users={users}
                   css={stickyCss}
                   resetUserPassword={resetUserPassword}
+                  resetPasswordMessage={resetPasswordMessage}
                 />
               </>
             )}

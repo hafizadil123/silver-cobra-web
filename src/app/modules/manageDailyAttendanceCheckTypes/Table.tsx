@@ -57,13 +57,12 @@ const DailAttendaceTable: React.FC<Props> = ({
             {/* begin::Table head */}
             <thead style={{background: stickyCss, top: `${stickyCss && '65px'}`}}>
               <tr className='fw-bolder text-muted'>
-                <TableHeadView className='min-w-150px' text={'שם'} />
-                <TableHeadView className='min-w-150px' text={'עבור קרון'} />
-                <TableHeadView className='min-w-150px' text={'עבור חיבורים'} />
-                <TableHeadView className='min-w-150px' text={'סדר'} />
-                <TableHeadView className='min-w-150px' text={'חומרה'} />
-                <TableHeadView className='min-w-150px' text={'ימי הצגה בחודש'} />
-
+                <TableHeadView className='' text={'שם'} />
+                <TableHeadView className='' text={'עבור קרון'} />
+                <TableHeadView className='' text={'עבור חיבורים'} />
+                <TableHeadView className='' text={'סדר'} />
+                <TableHeadView className='' text={'חומרה'} />
+                <TableHeadView className='' text={'ימי הצגה בחודש'} />
               </tr>
             </thead>
             {/* end::Table head */}
@@ -75,7 +74,7 @@ const DailAttendaceTable: React.FC<Props> = ({
                   return (
                     <tr>
                       <TableDataView
-                        className='min-w-150px'
+                        className=''
                         index={index}
                         flexValue={1}
                         text={item.name}
@@ -89,7 +88,7 @@ const DailAttendaceTable: React.FC<Props> = ({
                         handleDelete={handleDelete}
                       />
                       <TableDataView
-                        className='min-w-150px'
+                        className=''
                         index={index}
                         flexValue={1}
                         userRoles={userRoles}
@@ -103,7 +102,7 @@ const DailAttendaceTable: React.FC<Props> = ({
                         handleDelete={handleDelete}
                       />
                       <TableDataView
-                        className='min-w-150px'
+                        className=''
                         index={index}
                         flexValue={1}
                         userRoles={userRoles}
@@ -117,7 +116,7 @@ const DailAttendaceTable: React.FC<Props> = ({
                         handleDelete={handleDelete}
                       />
                       <TableDataView
-                        className='min-w-150px'
+                        className=''
                         index={index}
                         flexValue={1}
                         text={item.order}
@@ -131,7 +130,7 @@ const DailAttendaceTable: React.FC<Props> = ({
                         handleDelete={handleDelete}
                       />
                       <TableDataView
-                        className='min-w-150px'
+                        className=''
                         index={index}
                         flexValue={1}
                         text={item.severity}
@@ -145,7 +144,7 @@ const DailAttendaceTable: React.FC<Props> = ({
                         handleDelete={handleDelete}
                       />
                       {/* <TableDataView
-                        className='min-w-150px'
+                        className=''
                         index={index}
                         flexValue={1}
                         text={`edit`}
@@ -160,7 +159,7 @@ const DailAttendaceTable: React.FC<Props> = ({
                       /> */}
                       <td>{item.activeDays}</td>
                       <TableDataView
-                        className='min-w-150px'
+                        className=''
                         index={index}
                         flexValue={1}
                         text={`trash`}

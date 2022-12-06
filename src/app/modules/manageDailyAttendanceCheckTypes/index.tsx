@@ -192,7 +192,7 @@ const ManageDailyAttendanceCheckTypesPage: FC = () => {
                       className='btn btn-primary handleSubmit'
                       onClick={(e) => setShowModal(true)}
                     >
-                      בדיקה ה
+                      בדיקה חדשה
                     </button>
                   </div>
                 </div>

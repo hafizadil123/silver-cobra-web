@@ -20,8 +20,8 @@ const TrainsTable: React.FC<Props> = ({className, trains}) => {
             {/* begin::Table head */}
             <thead>
               <tr className='fw-bolder text-muted'>
-                <TableHeadView className='min-w-150px' text={`שם רכבת`} />
-                <TableHeadView className='min-w-150px' text=' סטטוס רכבת' />
+                <TableHeadView className='' text={`שם רכבת`} />
+                <TableHeadView className='' text=' סטטוס רכבת' />
               </tr>
             </thead>
             {/* end::Table head */}

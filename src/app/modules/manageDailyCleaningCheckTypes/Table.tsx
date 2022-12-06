@@ -56,9 +56,9 @@ const DailCleaningAttendaceTable: React.FC<Props> = ({
             {/* begin::Table head */}
             <thead style={{background: stickyCss, top: `${stickyCss && '65px'}`}}>
               <tr className='fw-bolder text-muted'>
-                <TableHeadView className='min-w-150px' text={'שם'} />
-                <TableHeadView className='min-w-150px' text={'סדר'} />
-                <TableHeadView className='min-w-150px' text={'חומרה'} />
+                <TableHeadView className='' text={'שם'} />
+                <TableHeadView className='' text={'סדר'} />
+                <TableHeadView className='' text={'חומרה'} />
               </tr>
             </thead>
             {/* end::Table head */}
@@ -70,7 +70,7 @@ const DailCleaningAttendaceTable: React.FC<Props> = ({
                   return (
                     <tr>
                       <TableDataView
-                        className='min-w-150px'
+                        className=''
                         index={index}
                         flexValue={1}
                         text={item.name}
@@ -84,7 +84,7 @@ const DailCleaningAttendaceTable: React.FC<Props> = ({
                         handleDelete={handleDelete}
                       />
                       <TableDataView
-                        className='min-w-150px'
+                        className=''
                         index={index}
                         flexValue={1}
                         text={item.order}
@@ -98,7 +98,7 @@ const DailCleaningAttendaceTable: React.FC<Props> = ({
                         handleDelete={handleDelete}
                       />
                       <TableDataView
-                        className='min-w-150px'
+                        className=''
                         index={index}
                         flexValue={1}
                         text={item.severity}
@@ -112,7 +112,7 @@ const DailCleaningAttendaceTable: React.FC<Props> = ({
                         handleDelete={handleDelete}
                       />
                       <TableDataView
-                        className='min-w-150px'
+                        className=''
                         index={index}
                         flexValue={1}
                         text={`edit`}
@@ -127,7 +127,7 @@ const DailCleaningAttendaceTable: React.FC<Props> = ({
                         getUsersAfterUpdate={getUsersAfterUpdate}
                       />
                       {/* <TableDataView
-                        className='min-w-150px'
+                        className=''
                         index={index}
                         flexValue={1}
                         text={`trash`}

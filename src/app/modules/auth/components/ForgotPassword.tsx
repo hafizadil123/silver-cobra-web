@@ -104,28 +104,6 @@ export function ForgotPassword() {
 
         {/* begin::Form group */}
         <div className='fv-row mb-10'>
-          <label className='form-label fw-bolder text-gray-900 fs-6'>נייד ט</label>
-          <input
-            type='email'
-            placeholder=''
-            autoComplete='off'
-            {...formik.getFieldProps('mobile')}
-            className={clsx(
-              'form-control form-control-lg form-control-solid',
-              {'is-invalid': formik.touched.mobile && formik.errors.mobile},
-              {
-                'is-valid': formik.touched.mobile && !formik.errors.mobile,
-              }
-            )}
-          />
-          {formik.touched.mobile && formik.errors.mobile && (
-            <div className='fv-plugins-message-container'>
-              <div className='fv-help-block'>
-                <span role='alert'>{formik.errors.mobile}</span>
-              </div>
-            </div>
-          )}
-
           <label className='form-label fw-bolder text-gray-900 fs-6' style={{marginTop: '5px'}}>
             משתמש שם
           </label>
@@ -146,6 +124,27 @@ export function ForgotPassword() {
             <div className='fv-plugins-message-container'>
               <div className='fv-help-block'>
                 <span role='alert'>{formik.errors.username}</span>
+              </div>
+            </div>
+          )}
+          <label className='form-label fw-bolder text-gray-900 fs-6'>טלפון נייד</label>
+          <input
+            type='text'
+            placeholder=''
+            autoComplete='off'
+            {...formik.getFieldProps('mobile')}
+            className={clsx(
+              'form-control form-control-lg form-control-solid',
+              {'is-invalid': formik.touched.mobile && formik.errors.mobile},
+              {
+                'is-valid': formik.touched.mobile && !formik.errors.mobile,
+              }
+            )}
+          />
+          {formik.touched.mobile && formik.errors.mobile && (
+            <div className='fv-plugins-message-container'>
+              <div className='fv-help-block'>
+                <span role='alert'>{formik.errors.mobile}</span>
               </div>
             </div>
           )}
@@ -174,7 +173,7 @@ export function ForgotPassword() {
               className='btn btn-lg btn-light-primary fw-bolder'
               disabled={formik.isSubmitting || !formik.isValid}
             >
-              <FormattedMessage id='AUTH.GENERAL.CANCEL' />
+              ביטול
             </button>
           </Link>{' '}
         </div>

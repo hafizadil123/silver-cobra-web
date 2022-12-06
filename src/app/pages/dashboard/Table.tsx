@@ -12,6 +12,7 @@ type Props = {
   saveUserDetails: (detalis: any) => any
   css: string
   resetUserPassword: (id: any) => any
+  resetPasswordMessage: string
 }
 
 const ReportTable: React.FC<Props> = ({
@@ -21,6 +22,7 @@ const ReportTable: React.FC<Props> = ({
   saveUserDetails,
   userRoles,
   resetUserPassword,
+  resetPasswordMessage,
   css,
 }) => {
   const [y, setY] = useState(0)
@@ -55,13 +57,13 @@ const ReportTable: React.FC<Props> = ({
             {/* begin::Table head */}
             <thead style={{background: stickyCss, top: `${stickyCss && '65px'}`}}>
               <tr className='fw-bolder text-muted'>
-                <TableHeadView className='min-w-150px' text={'שם33 '} />
-                <TableHeadView className='min-w-150px' text={'דוא"ל'} />
-                <TableHeadView className='min-w-150px' text={'מספר נייד'} />
-                <TableHeadView className='min-w-150px' text={'תפקיד'} />
-                <TableHeadView className='min-w-150px' text={'שם משתמש'} />
-                <TableHeadView className='min-w-150px' text={'יל ה'} />
-                <TableHeadView className='min-w-150px' text={'פעולות'} />
+                <TableHeadView className='' text={'שם '} />
+                <TableHeadView className='' text={'דוא"ל'} />
+                <TableHeadView className='' text={'מספר נייד'} />
+                <TableHeadView className='' text={'תפקיד'} />
+                <TableHeadView className='' text={'שם משתמש'} />
+                <TableHeadView className='' text={'האם פעיל'} />
+                <TableHeadView className='' text={'פעולות'} />
               </tr>
             </thead>
             {/* end::Table head */}
@@ -71,7 +73,7 @@ const ReportTable: React.FC<Props> = ({
                 return (
                   <tr>
                     <TableDataView
-                      className='min-w-150px'
+                      className=''
                       index={index}
                       flexValue={1}
                       text={item.name}
@@ -83,7 +85,7 @@ const ReportTable: React.FC<Props> = ({
                       resetUserPassword={resetUserPassword}
                     />
                     <TableDataView
-                      className='min-w-150px'
+                      className=''
                       index={index}
                       flexValue={1}
                       userRoles={userRoles}
@@ -95,7 +97,7 @@ const ReportTable: React.FC<Props> = ({
                       resetUserPassword={resetUserPassword}
                     />
                     <TableDataView
-                      className='min-w-150px'
+                      className=''
                       index={index}
                       flexValue={1}
                       userRoles={userRoles}
@@ -107,7 +109,7 @@ const ReportTable: React.FC<Props> = ({
                       resetUserPassword={resetUserPassword}
                     />
                     <TableDataView
-                      className='min-w-150px'
+                      className=''
                       index={index}
                       flexValue={1}
                       text={item.UserRoleName}
@@ -119,7 +121,7 @@ const ReportTable: React.FC<Props> = ({
                       resetUserPassword={resetUserPassword}
                     />
                     <TableDataView
-                      className='min-w-150px'
+                      className=''
                       index={index}
                       flexValue={1}
                       text={item.userName}
@@ -132,7 +134,7 @@ const ReportTable: React.FC<Props> = ({
                     />
                     <td>{item.isActive === true ? `✅` : `❌`}</td>
                     <TableDataView
-                      className='min-w-150px'
+                      className=''
                       index={index}
                       flexValue={1}
                       text={`edit`}
@@ -142,6 +144,7 @@ const ReportTable: React.FC<Props> = ({
                       userId={item.userId}
                       isEdit={true}
                       resetUserPassword={resetUserPassword}
+                      resetPasswordMessage={resetPasswordMessage}
                     />
                   </tr>
                 )
@@ -169,6 +172,7 @@ const TableDataView = (props: any) => {
     saveUserDetails,
     userRoles,
     resetUserPassword,
+    resetPasswordMessage,
   } = props
   const [activeUser, setActiveUesr] = useState({
     name: '',
@@ -301,7 +305,7 @@ const TableDataView = (props: any) => {
                   </div>
 
                   <div className='form-group mt-3 mb-3'>
-                    <label>“פעיל האם</label>
+                    <label>פעיל האם</label>
                     <span style={{marginRight: '22px'}}>
                       <label
                         onClick={(e) => {
@@ -336,8 +340,13 @@ const TableDataView = (props: any) => {
                   </div>
                   <div className='form-group m-5'>
                     <button type='button' className='btn btn-warning' onClick={handleResetPassword}>
-                      סיסמא א
+                      איפוס סיסמא
                     </button>
+                    {resetPasswordMessage.length > 0 ? (
+                      <span className='alert alert-success' style={{marginRight: '30px'}}>
+                        {resetPasswordMessage}
+                      </span>
+                    ) : null}
                   </div>
                 </form>
               </Modal.Body>

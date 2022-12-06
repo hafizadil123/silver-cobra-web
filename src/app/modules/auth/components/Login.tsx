@@ -202,7 +202,7 @@ export function Login(props: any) {
             <div className='d-flex justify-content-between mt-n5'>
               <div className='d-flex flex-stack mb-2'>
                 {/* begin::Label */}
-                <label className='form-label fw-bolder text-dark fs-6 mb-0'> כניסה קוד </label>
+                <label className='form-label fw-bolder text-dark fs-6 mb-0'>קוד כניסה </label>
                 {/* end::Label */}
                 {/* begin::Link */}
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -220,7 +220,7 @@ export function Login(props: any) {
               type='text'
               autoComplete='off'
               {...formik.getFieldProps('twoFACode')}
-              placeholder='ה ק'
+              placeholder='קוד כניסה'
               className={clsx(
                 'form-control form-control-lg form-control-solid',
                 {
@@ -267,7 +267,7 @@ export function Login(props: any) {
 
       <div className='text-center'>
         <Link className='btn btn-lg btn-outline-primary w-100 mb-5' to='/auth/forgot-password'>
-          סיסמא ש
+          שכחתי סיסמא
         </Link>
       </div>
 
