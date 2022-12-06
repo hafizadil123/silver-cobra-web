@@ -60,7 +60,8 @@ const DailAttendaceTable: React.FC<Props> = ({
                 <TableHeadView className='' text={'שם'} />
                 <TableHeadView className='' text={'עבור קרון'} />
                 <TableHeadView className='' text={'עבור חיבורים'} />
-                <TableHeadView className='' text={'סדר'} />
+                <TableHeadView className='' text={'סדר מוביל'} />
+                <TableHeadView className='' text={'סדר נגרר'} />
                 <TableHeadView className='' text={'חומרה'} />
                 <TableHeadView className='' text={'ימי הצגה בחודש'} />
               </tr>
@@ -120,6 +121,20 @@ const DailAttendaceTable: React.FC<Props> = ({
                         index={index}
                         flexValue={1}
                         text={item.order}
+                        userRoles={userRoles}
+                        userId={item.userId}
+                        getSelectedUser={getSelectedUser}
+                        saveUserDetails={saveUserDetails}
+                        isEdit={false}
+                        isDelete={false}
+                        id={item.id}
+                        handleDelete={handleDelete}
+                      />
+                      <TableDataView
+                        className=''
+                        index={index}
+                        flexValue={1}
+                        text={item.order2 || ''}
                         userRoles={userRoles}
                         userId={item.userId}
                         getSelectedUser={getSelectedUser}
@@ -224,6 +239,7 @@ const TableDataView = (props: any) => {
     severity: '',
     id: '',
     activeDays: '',
+    order2: '',
   })
   const [showModal, setShowModal] = useState(false)
   const handleUpdateUser = () => {
@@ -254,6 +270,7 @@ const TableDataView = (props: any) => {
         severity: user.severity,
         id: user.id,
         activeDays: user.activeDays,
+        order2: user.order2,
       })
       setShowModal(true)
       // ActiveEditModel()
@@ -339,7 +356,7 @@ const TableDataView = (props: any) => {
                     </div>
                   </div>
                   <div className='form-group'>
-                    <label>סדר</label>
+                    <label>סדר מוביל</label>
                     <input
                       type='number'
                       value={activeUser.order}
@@ -347,6 +364,20 @@ const TableDataView = (props: any) => {
                         setActiveUesr({
                           ...activeUser,
                           order: e.target.value,
+                        })
+                      }}
+                      className='form-control'
+                    />
+                  </div>
+                  <div className='form-group'>
+                    <label>סדר נגרר</label>
+                    <input
+                      type='number'
+                      value={activeUser.order2}
+                      onChange={(e) => {
+                        setActiveUesr({
+                          ...activeUser,
+                          order2: e.target.value,
                         })
                       }}
                       className='form-control'

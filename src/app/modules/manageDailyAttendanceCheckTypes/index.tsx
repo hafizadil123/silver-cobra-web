@@ -31,6 +31,7 @@ const ManageDailyAttendanceCheckTypesPage: FC = () => {
     isForTrain: false,
     order: '',
     severity: '',
+    order2: '',
   })
   const handleUpdateUser = () => {
     //
@@ -272,7 +273,7 @@ const ManageDailyAttendanceCheckTypesPage: FC = () => {
               </div>
             </div>
             <div className='form-group'>
-              <label>סדר</label>
+              <label>סדר מוביל</label>
               <input
                 type='number'
                 value={activeUser.order}
@@ -280,6 +281,20 @@ const ManageDailyAttendanceCheckTypesPage: FC = () => {
                   setActiveUesr({
                     ...activeUser,
                     order: e.target.value,
+                  })
+                }}
+                className='form-control'
+              />
+            </div>
+            <div className='form-group'>
+              <label>סדר נגרר</label>
+              <input
+                type='number'
+                value={activeUser.order2}
+                onChange={(e) => {
+                  setActiveUesr({
+                    ...activeUser,
+                    order2: e.target.value,
                   })
                 }}
                 className='form-control'
