@@ -1,12 +1,12 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import { useEffect } from 'react'
-import { Outlet, Route, Routes } from 'react-router-dom'
-import { Registration } from './components/Registration'
-import { ForgotPassword } from './components/ForgotPassword'
-import { UpdatePassword } from './components/UpdatePassword';
-import { Success } from './components/success';
-import { Login } from './components/Login'
-import { toAbsoluteUrl } from '../../../_metronic/helpers'
+import {useEffect} from 'react'
+import {Outlet, Route, Routes} from 'react-router-dom'
+import {Registration} from './components/Registration'
+import {ForgotPassword} from './components/ForgotPassword'
+import {UpdatePassword} from './components/UpdatePassword'
+import {Success} from './components/success'
+import {Login} from './components/Login'
+import {toAbsoluteUrl} from '../../../_metronic/helpers'
 
 const AuthLayout = () => {
   useEffect(() => {
@@ -47,8 +47,6 @@ const AuthLayout = () => {
           <a href='#' className='text-muted text-hover-primary px-2' >
             Contact
           </a> */}
-
-
         </div>
       </div>
       {/* end::Footer */}
@@ -61,7 +59,7 @@ const AuthPage = () => (
     <Route element={<AuthLayout />}>
       <Route path='login' element={<Login />} />
       {/* <Route path='registration' element={<Registration />} /> */}
-      {/* <Route path='forgot-password' element={<ForgotPassword />} /> */}
+      <Route path='forgot-password' element={<ForgotPassword />} />
       <Route path='update-password' element={<UpdatePassword />} />
       <Route path='success' element={<Success />} />
       <Route index element={<Login />} />
@@ -69,4 +67,4 @@ const AuthPage = () => (
   </Routes>
 )
 
-export { AuthPage }
+export {AuthPage}

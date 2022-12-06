@@ -8,13 +8,13 @@ import {FormattedMessage} from 'react-intl'
 const API_URL = process.env.REACT_APP_API_URL
 
 const initialValues = {
-  contanctInfo: '',
-  userName: '',
+  mobile: '',
+  username: '',
 }
 
 const forgotPasswordSchema = Yup.object().shape({
-  contanctInfo: Yup.string().required(),
-  userName: Yup.string().required('Required'),
+  mobile: Yup.string().required(),
+  username: Yup.string().required('Required'),
 })
 
 export function ForgotPassword() {
@@ -24,13 +24,12 @@ export function ForgotPassword() {
     initialValues,
     validationSchema: forgotPasswordSchema,
     onSubmit: async (values, {setStatus, setSubmitting}) => {
-      
       try {
         setLoading(true)
         setStatus('')
         const response = await axios.post(
-          API_URL + '/api/Inner/RecoverPassword',
-          {userName: values.userName, contanctInfo: values.contanctInfo},
+          API_URL + '/api/account/ResetPassword',
+          {username: values.username, mobile: values.mobile},
           {
             headers: {
               'Access-Control-Allow-Origin': '*',
@@ -39,22 +38,20 @@ export function ForgotPassword() {
           }
         )
         if (response) {
-          
           // setStatus(msg)
           setHasErrors(false)
           setLoading(false)
           const {data} = response
-          
-          if(data.result) {
+
+          if (data.result) {
             setStatus('שחזור סיסמאות נשלח, אנא המתן מפנים אותך בכניסה')
             setTimeout(() => {
-                 window.location.href = '/auth';
+              window.location.href = '/auth'
             }, 3000)
-          // window.location.href = '/dashboard';
-          } else  {
+            // window.location.href = '/dashboard';
+          } else {
             setStatus(data.message)
           }
-        
         }
       } catch (err) {
         setHasErrors(true)
@@ -78,13 +75,13 @@ export function ForgotPassword() {
         <div className='text-center mb-10'>
           {/* begin::Title */}
           <h1 className='text-dark mb-3'>
-            <FormattedMessage id='AUTH.GENERAL.FORGOT_PASSWORD' />
+            לאיפוס הסיסמא יש להזין את שם המשתמש וטלפון הנייד המקושר אליו
           </h1>
           {/* end::Title */}
 
           {/* begin::Link */}
           <div className='text-gray-400 fw-bold fs-4'>
-            <FormattedMessage id='AUTH.GENERAL.ENTER_YOUR_EMAIL_TO_RESET_YOUR_PASSWRD' />
+            {/* <FormattedMessage id='AUTH.GENERAL.ENTER_YOUR_EMAIL_TO_RESET_YOUR_PASSWRD' /> */}
           </div>
           {/* end::Link */}
         </div>
@@ -93,7 +90,7 @@ export function ForgotPassword() {
         {hasErrors === true && (
           <div className='mb-lg-15 alert alert-danger'>
             <div className='alert-text font-weight-bold'>
-            מצטערים, נראה שזוהו כמה שגיאות, אנא נסה שוב.
+              מצטערים, נראה שזוהו כמה שגיאות, אנא נסה שוב.
             </div>
           </div>
         )}
@@ -107,50 +104,48 @@ export function ForgotPassword() {
 
         {/* begin::Form group */}
         <div className='fv-row mb-10'>
-          <label className='form-label fw-bolder text-gray-900 fs-6'>
-            <FormattedMessage id='AUTH.GENERAL.CONTACTINFO' />
-          </label>
+          <label className='form-label fw-bolder text-gray-900 fs-6'>נייד ט</label>
           <input
             type='email'
             placeholder=''
             autoComplete='off'
-            {...formik.getFieldProps('contanctInfo')}
+            {...formik.getFieldProps('mobile')}
             className={clsx(
               'form-control form-control-lg form-control-solid',
-              {'is-invalid': formik.touched.contanctInfo && formik.errors.contanctInfo},
+              {'is-invalid': formik.touched.mobile && formik.errors.mobile},
               {
-                'is-valid': formik.touched.contanctInfo && !formik.errors.contanctInfo,
+                'is-valid': formik.touched.mobile && !formik.errors.mobile,
               }
             )}
           />
-          {formik.touched.contanctInfo && formik.errors.contanctInfo && (
+          {formik.touched.mobile && formik.errors.mobile && (
             <div className='fv-plugins-message-container'>
               <div className='fv-help-block'>
-                <span role='alert'>{formik.errors.contanctInfo}</span>
+                <span role='alert'>{formik.errors.mobile}</span>
               </div>
             </div>
           )}
 
           <label className='form-label fw-bolder text-gray-900 fs-6' style={{marginTop: '5px'}}>
-            <FormattedMessage id='AUTH.GENERAL.USERNAME' />
+            משתמש שם
           </label>
           <input
             type='text'
             placeholder=''
             autoComplete='off'
-            {...formik.getFieldProps('userName')}
+            {...formik.getFieldProps('username')}
             className={clsx(
               'form-control form-control-lg form-control-solid',
-              {'is-invalid': formik.touched.userName && formik.errors.userName},
+              {'is-invalid': formik.touched.username && formik.errors.username},
               {
-                'is-valid': formik.touched.userName && !formik.errors.userName,
+                'is-valid': formik.touched.username && !formik.errors.username,
               }
             )}
           />
-          {formik.touched.userName && formik.errors.userName && (
+          {formik.touched.username && formik.errors.username && (
             <div className='fv-plugins-message-container'>
               <div className='fv-help-block'>
-                <span role='alert'>{formik.errors.userName}</span>
+                <span role='alert'>{formik.errors.username}</span>
               </div>
             </div>
           )}
