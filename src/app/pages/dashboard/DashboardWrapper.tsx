@@ -17,6 +17,7 @@ const DashboardPage: FC = () => {
 
   const [users, setUsers] = useState<any>([])
   const [userRoles, setUserRoles] = useState<any>([])
+  const [activeType, setActiveType] = useState<any>('Created')
   const [resetPasswordMessage, setResetPasswordMessage] = useState<any>('')
   const [y, setY] = useState(0)
   const [stickyCss, setStickyCss] = useState('')
@@ -24,7 +25,7 @@ const DashboardPage: FC = () => {
   const [actualUsers, setActualUsers] = useState<any>([])
   const [loading, setLoading] = useState(true)
   const logged_user_detail: any = localStorage.getItem('logged_user_detail')
-  const [errors, setErrors] =  useState<any>([]);
+  const [errors, setErrors] = useState<any>([])
   const [activeUser, setActiveUesr] = useState({
     name: '',
     email: '',
@@ -111,17 +112,16 @@ const DashboardPage: FC = () => {
   }
 
   const handleModal = (e: any) => {
-    e.preventDefault();
+    e.preventDefault()
     setActiveUesr({
       name: '',
       email: '',
       UserRoleName: '',
       mobile: '',
       userName: '',
-    });
+    })
     setShowModal(true)
     setErrors([])
-    
   }
   const resetUserPassword = async (userId: any) => {
     console.log({userId})
@@ -146,6 +146,8 @@ const DashboardPage: FC = () => {
     }
   }
   const saveUserDetails = async (details: any, type = 'Updated') => {
+    setActiveType(type)
+
     const response = await axios.post(saveUserDetailsEndPoint, details, headerJson)
     if (response.data.result === false) {
       response.data.validationErrors.forEach((error: any) => {
@@ -156,6 +158,13 @@ const DashboardPage: FC = () => {
     } else {
       setLoading(true)
       if (type == 'Created') {
+        setActiveUesr({
+          name: '',
+          email: '',
+          UserRoleName: '',
+          mobile: '',
+          userName: '',
+        })
         addToast(response.data.message, {appearance: 'success', autoDismiss: true})
       } else {
         addToast(`User ${type} successfully`, {appearance: 'success', autoDismiss: true})
@@ -234,6 +243,7 @@ const DashboardPage: FC = () => {
                   css={stickyCss}
                   resetUserPassword={resetUserPassword}
                   resetPasswordMessage={resetPasswordMessage}
+                  getUsers={getUsers}
                 />
               </>
             )}
@@ -254,7 +264,14 @@ const DashboardPage: FC = () => {
         <Modal.Header closeButton></Modal.Header>
         <Modal.Body>
           <form>
-            {errors && errors.length > 0 && errors.map((item: any) => <><span style={{color: 'red'}}>{item}</span><br /></>)}
+            {errors &&
+              errors.length > 0 &&
+              errors.map((item: any) => (
+                <>
+                  <span style={{color: 'red'}}>{item}</span>
+                  <br />
+                </>
+              ))}
             <div className='form-group'>
               <label>שם</label>
               <input
@@ -295,6 +312,7 @@ const DashboardPage: FC = () => {
                 }}
                 className='form-control'
               >
+                <option value=''></option>
                 {userRoles.map((role: any) => {
                   return <option value={role.id}>{role.name}</option>
                 })}

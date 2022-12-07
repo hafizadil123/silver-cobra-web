@@ -3,6 +3,9 @@ import React, {useState, useEffect} from 'react'
 import {KTSVG} from '../../../_metronic/helpers'
 import moment from 'moment'
 import Modal from 'react-bootstrap/Modal'
+import axios from 'axios'
+import {useToasts} from 'react-toast-notifications'
+
 import './user.css'
 type Props = {
   className: string
@@ -12,6 +15,7 @@ type Props = {
   saveUserDetails: (detalis: any) => any
   css: string
   resetUserPassword: (id: any) => any
+  getUsers: () => any
   resetPasswordMessage: string
 }
 
@@ -24,6 +28,7 @@ const ReportTable: React.FC<Props> = ({
   resetUserPassword,
   resetPasswordMessage,
   css,
+  getUsers,
 }) => {
   const [y, setY] = useState(0)
   const [stickyCss, setStickyCss] = useState('')
@@ -143,6 +148,7 @@ const ReportTable: React.FC<Props> = ({
                       userRoles={userRoles}
                       userId={item.userId}
                       isEdit={true}
+                      getUsers={getUsers}
                       resetUserPassword={resetUserPassword}
                       resetPasswordMessage={resetPasswordMessage}
                     />
@@ -163,17 +169,21 @@ const ReportTable: React.FC<Props> = ({
 
 export {ReportTable}
 const TableDataView = (props: any) => {
+  const {addToast} = useToasts()
+
   const {
     isEdit,
     text,
     className,
     getSelectedUser,
     userId,
-    saveUserDetails,
     userRoles,
     resetUserPassword,
     resetPasswordMessage,
+    getUsers,
   } = props
+  const [errors, setErrors] = useState<any>([])
+
   const [activeUser, setActiveUesr] = useState({
     name: '',
     email: '',
@@ -183,10 +193,35 @@ const TableDataView = (props: any) => {
     userId: '',
     isActive: true,
   })
+  const baseUrl = process.env.REACT_APP_API_URL
+  const logged_user_detail: any = localStorage.getItem('logged_user_detail')
+
+  const loggedInUserDetails = JSON.parse(logged_user_detail)
+
+  const headerJson = {
+    headers: {
+      Authorization: `bearer ${loggedInUserDetails.access_token}`,
+    },
+  }
+  const saveUserDetailsEndPoint = `${baseUrl}/api/account/SaveUserDetails`
   const [showModal, setShowModal] = useState(false)
   const handleUpdateUser = () => {
     saveUserDetails(activeUser)
   }
+  const saveUserDetails = async (details: any, type = 'Updated') => {
+    const response = await axios.post(saveUserDetailsEndPoint, details, headerJson)
+    if (response.data.result === false) {
+      response.data.validationErrors.forEach((error: any) => {
+        // addToast(error, {appearance: 'error', autoDismiss: true});
+        setErrors(response.data.validationErrors)
+        setShowModal(true)
+      })
+    } else {
+      addToast(`User ${type} successfully`, {appearance: 'success', autoDismiss: true})
+    }
+    getUsers()
+  }
+
   const handleResetPassword = (e: any) => {
     e.preventDefault()
     resetUserPassword(userId)
@@ -231,6 +266,14 @@ const TableDataView = (props: any) => {
               <Modal.Header closeButton></Modal.Header>
               <Modal.Body>
                 <form>
+                  {errors &&
+                    errors.length > 0 &&
+                    errors.map((item: any) => (
+                      <>
+                        <span style={{color: 'red'}}>{item}</span>
+                        <br />
+                      </>
+                    ))}
                   <div className='form-group'>
                     <label>שם</label>
                     <input

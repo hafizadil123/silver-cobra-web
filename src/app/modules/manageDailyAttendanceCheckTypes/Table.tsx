@@ -221,7 +221,7 @@ const TableDataView = (props: any) => {
     // ActiveEditModel,
   } = props
   const {addToast} = useToasts()
-
+  const [errors, setErrors] = useState<any>([])
   const baseUrl = process.env.REACT_APP_API_URL
   const logged_user_detail: any = localStorage.getItem('logged_user_detail')
   const saveUserDetailsEndPoint = `${baseUrl}/api/Common/SaveDailyAttendanceCheckTypeDetails`
@@ -250,7 +250,8 @@ const TableDataView = (props: any) => {
     const response = await axios.post(saveUserDetailsEndPoint, details, headerJson)
     if (response.data.result === false) {
       response.data.validationErrors.forEach((error: any) => {
-        addToast(error, {appearance: 'error', autoDismiss: true})
+        setErrors(response.data.validationErrors)
+        // addToast(error, {appearance: 'error', autoDismiss: true})
       })
     } else {
       setShowModal(false)
@@ -272,6 +273,7 @@ const TableDataView = (props: any) => {
         activeDays: user.activeDays,
         order2: user.order2,
       })
+      setErrors([])
       setShowModal(true)
       // ActiveEditModel()
     } else {
@@ -310,6 +312,14 @@ const TableDataView = (props: any) => {
             >
               <Modal.Header closeButton></Modal.Header>
               <Modal.Body>
+                {errors &&
+                  errors.length > 0 &&
+                  errors.map((item: any) => (
+                    <>
+                      <span style={{color: 'red'}}>{item}</span>
+                      <br />
+                    </>
+                  ))}
                 <form>
                   <div className='form-group'>
                     <label>שם</label>

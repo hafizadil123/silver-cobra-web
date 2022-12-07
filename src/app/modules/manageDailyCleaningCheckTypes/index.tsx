@@ -19,6 +19,7 @@ const ManageDailyCleaningCheckTypes: FC = () => {
   const [search, setSearch] = useState('')
   const [actualUsers, setActualUsers] = useState<any>([])
   const [loading, setLoading] = useState(true)
+  const [errors, setErrors] = useState<any>([])
   const logged_user_detail: any = localStorage.getItem('logged_user_detail')
   const [activeUser, setActiveUesr] = useState({
     name: '',
@@ -104,7 +105,8 @@ const ManageDailyCleaningCheckTypes: FC = () => {
     const response = await axios.post(saveUserDetailsEndPoint, details, headerJson)
     if (response.data.result === false) {
       response.data.validationErrors.forEach((error: any) => {
-        addToast(error, {appearance: 'error', autoDismiss: true})
+        // addToast(error, {appearance: 'error', autoDismiss: true})
+        setErrors(response.data.validationErrors)
       })
     } else {
       setShowModal(false)
@@ -181,7 +183,15 @@ const ManageDailyCleaningCheckTypes: FC = () => {
                   <div className='col-12'>
                     <button
                       className='btn btn-primary handleSubmit'
-                      onClick={(e) => setShowModal(true)}
+                      onClick={(e) => {
+                        setShowModal(true)
+                        setErrors([])
+                        setActiveUesr({
+                          name: '',
+                          order: '',
+                          severity: '',
+                        })
+                      }}
                     >
                       בדיקה חדשה
                     </button>
@@ -216,6 +226,14 @@ const ManageDailyCleaningCheckTypes: FC = () => {
         <Modal.Header closeButton></Modal.Header>
         <Modal.Body>
           <form>
+            {errors &&
+              errors.length > 0 &&
+              errors.map((item: any) => (
+                <>
+                  <span style={{color: 'red'}}>{item}</span>
+                  <br />
+                </>
+              ))}
             <div className='form-group'>
               <label>שם</label>
               <input

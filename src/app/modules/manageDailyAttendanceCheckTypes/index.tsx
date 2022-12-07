@@ -15,7 +15,7 @@ import Modal from 'react-bootstrap/Modal'
 const ManageDailyAttendanceCheckTypesPage: FC = () => {
   const [showModal, setShowModal] = useState(false)
   const [showEditModal, setShowEditModal] = useState(false)
-
+  const [errors, setErrors] = useState<any>([])
   const [users, setUsers] = useState<any>([])
   const [userRoles, setUserRoles] = useState<any>([])
   const [y, setY] = useState(0)
@@ -116,7 +116,8 @@ const ManageDailyAttendanceCheckTypesPage: FC = () => {
     const response = await axios.post(saveUserDetailsEndPoint, details, headerJson)
     if (response.data.result === false) {
       response.data.validationErrors.forEach((error: any) => {
-        addToast(error, {appearance: 'error', autoDismiss: true})
+        // addToast(error, {appearance: 'error', autoDismiss: true})
+        setErrors(response.data.validationErrors)
       })
     } else {
       setShowModal(false)
@@ -191,7 +192,18 @@ const ManageDailyAttendanceCheckTypesPage: FC = () => {
                   <div className='col-12'>
                     <button
                       className='btn btn-primary handleSubmit'
-                      onClick={(e) => setShowModal(true)}
+                      onClick={(e) => {
+                        setShowModal(true)
+                        setErrors([])
+                        setActiveUesr({
+                          name: '',
+                          isForCar: false,
+                          isForTrain: false,
+                          order: '',
+                          severity: '',
+                          order2: '',
+                        })
+                      }}
                     >
                       בדיקה חדשה
                     </button>
@@ -227,6 +239,14 @@ const ManageDailyAttendanceCheckTypesPage: FC = () => {
         <Modal.Header closeButton></Modal.Header>
         <Modal.Body>
           <form>
+            {errors &&
+              errors.length > 0 &&
+              errors.map((item: any) => (
+                <>
+                  <span style={{color: 'red'}}>{item}</span>
+                  <br />
+                </>
+              ))}
             <div className='form-group'>
               <label>שם</label>
               <input
