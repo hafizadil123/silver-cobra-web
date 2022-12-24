@@ -188,6 +188,7 @@ const TrainsSummaryPage: FC = () => {
           trainName: item.trainName,
           signedByDriver: item.signedByDriver,
           severity: item?.severity || 0,
+          time:item?.time
         })
       })
       console.log({thDDDDDD: thData})
@@ -290,8 +291,12 @@ const TrainsSummaryPage: FC = () => {
 
   const onIdle = () => {
     console.log('you are idle')
-    let dateFormatted = moment(selectedDate).format('yyyy-MM-DD')
-    getMyTrainsSummaryReport(dateFormatted).then((res: any) => {
+    window.location.reload();
+    setSearch('');
+    const _selectedDate=new Date();
+    setSelectedDate(_selectedDate)
+    let dateFormatted = moment(_selectedDate).format('yyyy-MM-DD')
+    getMyTrainsSummaryReport(_selectedDate).then((res: any) => {
       console.log('ran')
       reset()
     })
@@ -353,6 +358,14 @@ const TrainsSummaryPage: FC = () => {
           <>
             <div className='row'>
               <div className='col-lg-12'>
+                <ReportTable
+                  className='mb-5 mb-xl-8'
+                  drivers={drivers}
+                  trData={tBodyData}
+                  thData={thData}
+                  reloadApi={reloadApi}
+                  selectedDate={selectedDate}
+                />
                 <div className='row'>
                   <div className='row'>
                     <div className='col-md-5'>
@@ -418,14 +431,14 @@ const TrainsSummaryPage: FC = () => {
                     </button>
                   </div>
                 </div>
-                <ReportTable
+                {/* <ReportTable
                   className='mb-5 mb-xl-8'
                   drivers={drivers}
                   trData={tBodyData}
                   thData={thData}
                   reloadApi={reloadApi}
                   selectedDate={selectedDate}
-                />
+                /> */}
               </div>
             </div>
           </>

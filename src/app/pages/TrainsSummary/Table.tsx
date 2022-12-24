@@ -63,6 +63,7 @@ const ReportTable: React.FC<Props> = ({
                 trainName,
                 severity,
                 signedByDriver,
+                time
                 // signedByDriver,
               } = item
 
@@ -71,6 +72,7 @@ const ReportTable: React.FC<Props> = ({
                   driverId={driverId}
                   severity={severity}
                   driverName={driverName}
+                  time={time}
                   status={status}
                   trainId={trainId}
                   signedByDriver={signedByDriver}
@@ -124,6 +126,7 @@ const TableHeadViewInFloatingDiv = (props: any) => {
     selectedDate,
     severity,
     signedByDriver,
+    time
   } = props
   const [selectedDriver, setSelectedDriver] = useState('')
   useEffect(() => {
@@ -218,7 +221,7 @@ const TableHeadViewInFloatingDiv = (props: any) => {
         minWidth: '100px !important',
         float: 'left',
         width: '24%',
-        height: '150px',
+        height: '200px',
         padding: '0.75rem 0.75rem',
         border: '1px dashed black',
         margin: '2px',
@@ -228,14 +231,13 @@ const TableHeadViewInFloatingDiv = (props: any) => {
       <>
         <div>
           <Link
-            style={{fontSize: '16px', fontWeight: 'bold'}}
+            style={{fontSize: '16px', fontWeight: 'bold', color: 'black'}}
             to={`/trains-daily-report/${urlText}/${getDate()}`}
             className='header_fix'
           >
             {text}
           </Link>
           <br />
-
           {/* Status */}
           <br />
           {/* Status */}
@@ -261,6 +263,16 @@ const TableHeadViewInFloatingDiv = (props: any) => {
             })}
           </select>
           <br />
+          <span style={{fontSize: '16px', fontWeight: 'bold'}}>{driverName}</span>
+          <br />
+          {time && (
+            <>
+              <br />
+              <span style={{fontSize: '16px', fontWeight: 'bold'}}>{time}</span>
+              <br />
+            </>
+          )}
+
           <span>{signedByDriver}</span>
         </div>
       </>
