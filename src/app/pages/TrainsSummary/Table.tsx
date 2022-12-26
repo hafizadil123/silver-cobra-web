@@ -63,7 +63,7 @@ const ReportTable: React.FC<Props> = ({
                 trainName,
                 severity,
                 signedByDriver,
-                time
+                time,
                 // signedByDriver,
               } = item
 
@@ -126,7 +126,7 @@ const TableHeadViewInFloatingDiv = (props: any) => {
     selectedDate,
     severity,
     signedByDriver,
-    time
+    time,
   } = props
   const [selectedDriver, setSelectedDriver] = useState('')
   useEffect(() => {
@@ -216,66 +216,99 @@ const TableHeadViewInFloatingDiv = (props: any) => {
     }
   }
   return (
-    <div
-      style={{
-        minWidth: '100px !important',
-        float: 'left',
-        width: '24%',
-        height: '200px',
-        padding: '0.75rem 0.75rem',
-        border: '1px dashed black',
-        margin: '2px',
-      }}
-      className={`${className} ${getBackgroundColorAccordingToSeverity(severity)}`}
-    >
-      <>
+    <>
+      {/* Start */}
+      <div
+        className={`${className} ${getBackgroundColorAccordingToSeverity(severity)}`}
+        style={{
+          float: 'left',
+          height: '130px',
+          padding: '0.75rem',
+          border: '1px dashed black',
+          margin: '2px',
+        }}
+      >
         <div>
           <Link
-            style={{fontSize: '16px', fontWeight: 'bold', color: 'black'}}
+            style={{fontSize: '20px!important', fontWeight: 'bold', color: 'black'}}
             to={`/trains-daily-report/${urlText}/${getDate()}`}
             className='header_fix'
           >
             {text}
           </Link>
           <br />
-          {/* Status */}
-          <br />
-          {/* Status */}
-          {/* {driverName !== null ? <span>Driver : {driverName}</span> : null}<br /> */}
-          <select
-            className='form-control-sm'
-            style={{
-              marginRight: '20px',
-              marginTop: '20px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              width: '85%',
-            }}
-            onChange={(e) => {
-              handleDriverChangeUpdate(e.target.value)
-            }}
-            value={selectedDriver}
-          >
-            <option value=''></option>
-            {drivers?.map((driver: any) => {
-              return <option value={driver.id}>{driver.name}</option>
-            })}
-          </select>
           <br />
           <span style={{fontSize: '16px', fontWeight: 'bold'}}>{driverName}</span>
           <br />
-          {time && (
-            <>
-              <br />
-              <span style={{fontSize: '16px', fontWeight: 'bold'}}>{time}</span>
-              <br />
-            </>
-          )}
-
-          <span>{signedByDriver}</span>
+          <br />
+          <span style={{fontSize: '12px', fontWeight: 'bold'}}>{time}</span>
         </div>
-      </>
-    </div>
+      </div>
+      {/* End */}
+    </>
   )
 }
+
+/*
+<div
+        style={{
+          minWidth: '100px !important',
+          float: 'left',
+          width: '24%',
+          height: '200px',
+          padding: '0.75rem 0.75rem',
+          border: '1px dashed black',
+          margin: '2px',
+        }}
+        className={`${className} ${getBackgroundColorAccordingToSeverity(severity)}`}
+      >
+        <>
+          <div>
+            <Link
+              style={{fontSize: '16px', fontWeight: 'bold', color: 'black'}}
+              to={`/trains-daily-report/${urlText}/${getDate()}`}
+              className='header_fix'
+            >
+              {text}
+            </Link>
+            <br />
+           
+            <br />
+
+            <select
+              className='form-control-sm'
+              style={{
+                marginRight: '20px',
+                marginTop: '20px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: '85%',
+              }}
+              onChange={(e) => {
+                handleDriverChangeUpdate(e.target.value)
+              }}
+              value={selectedDriver}
+            >
+              <option value=''></option>
+              {drivers?.map((driver: any) => {
+                return <option value={driver.id}>{driver.name}</option>
+              })}
+            </select>
+            <br />
+            <span style={{fontSize: '16px', fontWeight: 'bold'}}>{driverName}</span>
+            <br />
+            {time && (
+              <>
+                <br />
+                <span style={{fontSize: '16px', fontWeight: 'bold'}}>{time}</span>
+                <br />
+              </>
+            )}
+
+            <span>{signedByDriver}</span>
+          </div>
+        </>
+      </div>
+
+      */

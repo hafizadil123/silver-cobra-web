@@ -188,7 +188,7 @@ const TrainsSummaryPage: FC = () => {
           trainName: item.trainName,
           signedByDriver: item.signedByDriver,
           severity: item?.severity || 0,
-          time:item?.time
+          time: item?.signedByDriver,
         })
       })
       console.log({thDDDDDD: thData})
@@ -291,13 +291,11 @@ const TrainsSummaryPage: FC = () => {
 
   const onIdle = () => {
     console.log('you are idle')
-    window.location.reload();
-    setSearch('');
-    const _selectedDate=new Date();
-    setSelectedDate(_selectedDate)
-    let dateFormatted = moment(_selectedDate).format('yyyy-MM-DD')
-    getMyTrainsSummaryReport(_selectedDate).then((res: any) => {
+    // window.location.reload();
+    let dateFormatted = moment(selectedDate).format('yyyy-MM-DD')
+    getMyTrainsSummaryReport(dateFormatted).then((res: any) => {
       console.log('ran')
+      handleSearch(search,selectedSeverity)
       reset()
     })
     // Close Modal Prompt
