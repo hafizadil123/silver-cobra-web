@@ -157,8 +157,10 @@ const TrainsSummaryPage: FC = () => {
     setTrains(updatedData)
     setThData(updatedThData)
   }
-  const getMyTrainsSummaryReport = async (date: any) => {
+  const getMyTrainsSummaryReport = async (date: any,isLoading=true) => {
+    if(isLoading){
     setLoading(true)
+    }
     const response = await axios.post(getMyTrainsSummaryReportEndPoint, {date: date}, headerJson)
 
     if (response && response.data) {
@@ -293,7 +295,7 @@ const TrainsSummaryPage: FC = () => {
     console.log('you are idle')
     // window.location.reload();
     let dateFormatted = moment(selectedDate).format('yyyy-MM-DD')
-    getMyTrainsSummaryReport(dateFormatted).then((res: any) => {
+    getMyTrainsSummaryReport(dateFormatted,false).then((res: any) => {
       console.log('ran')
       handleSearch(search,selectedSeverity)
       reset()
