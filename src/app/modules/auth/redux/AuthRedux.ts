@@ -3,7 +3,7 @@ import {persistReducer} from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 import {put, takeLatest, select} from 'redux-saga/effects'
 import {UserModel} from '../models/UserModel'
-import {getUserByToken} from "./AuthCRUD";
+import {getUserByToken} from './AuthCRUD'
 
 export interface ActionWithPayload<T> extends Action {
   payload?: T
@@ -73,7 +73,7 @@ export const actions = {
     type: actionTypes.UserRequested,
   }),
   fulfillUser: (user: UserModel) => ({type: actionTypes.UserLoaded, payload: {user}}),
-  setUser: (user: UserModel) => ({type: actionTypes.SetUser, payload: {user}})
+  setUser: (user: UserModel) => ({type: actionTypes.SetUser, payload: {user}}),
 }
 
 export function* saga() {
@@ -87,7 +87,7 @@ export function* saga() {
 
   yield takeLatest(actionTypes.UserRequested, function* userRequested() {
     // @ts-ignore
-    const getToken = (state) => state.auth.accessToken;
+    const getToken = (state) => state.auth.accessToken
     // @ts-ignore
     let token = yield select(getToken)
     const {data: user} = yield getUserByToken(token)

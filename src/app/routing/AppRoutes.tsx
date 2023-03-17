@@ -12,8 +12,7 @@ import {PrivateRoutes} from './PrivateRoutes'
 import {ErrorsPage} from '../modules/errors/ErrorsPage'
 import {Logout, AuthPage} from '../modules/auth'
 import {RootState} from '../../setup'
-import {App} from '../App';
-
+import {App} from '../App'
 
 // import {Tables} from './../modules/widgets/components/Tables'
 
@@ -23,9 +22,8 @@ import {App} from '../App';
  * @see https://facebook.github.io/create-react-app/docs/using-the-public-folder
  */
 
-
 const AppRoutes: FC = () => {
-  const isAuthorized =localStorage.getItem('logged_user_detail')
+  const isAuthorized = localStorage.getItem('logged_user_detail')
   // setLanguage('he')
   return (
     <BrowserRouter>
@@ -45,7 +43,6 @@ const AppRoutes: FC = () => {
               <Route path='*' element={<Navigate to='/auth' />} />
             </>
           )}
-       
         </Route>
       </Routes>
     </BrowserRouter>

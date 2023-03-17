@@ -22,7 +22,7 @@ export interface UserModel {
   website?: 'https://keenthemes.com'
   emailSettings?: UserEmailSettingsModel
   auth?: AuthModel
-  user?: object, 
+  user?: object
   communication?: UserCommunicationModel
   address?: UserAddressModel
   socialNetworks?: UserSocialNetworksModel

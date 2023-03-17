@@ -8,12 +8,12 @@ const routes: any = [
   {
     title: 'דיווח יומי',
     route: '/trains-daily-report',
-    role: ['OccUser', 'Admin'],
+    role: ['OccUser', 'Admin', 'UserManager'],
   },
   {
     title: ' סיכום דיווח יומי',
     route: '/trains-summary',
-    role: ['OccUser', 'Admin'],
+    role: ['OccUser', 'Admin', 'UserManager'],
   },
   {
     title: ' דיווח ניקיון יומי',
@@ -23,7 +23,7 @@ const routes: any = [
   {
     title: ' ניהול משתמשים',
     route: '/user-management',
-    role: ['Admin'],
+    role: ['Admin', 'UserManager'],
   },
   {
     title: 'ביקורת רכבות',

@@ -9,8 +9,6 @@ type Props = {
 const TablesWidget13: React.FC<Props> = ({className}) => {
   return (
     <div className={`card ${className}`}>
-
-    
       <div className='card-body py-3'>
         {/* begin::Table container */}
         <div className='table-responsive'>

@@ -1,0 +1,1 @@
+export {UpdatePasswordWrapper} from './ChangePassword'

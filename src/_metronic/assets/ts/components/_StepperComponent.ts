@@ -276,9 +276,7 @@ class StepperComponent {
     return EventHandlerUtil.off(this.element, name)
   }
 
-  public destroy = () => {
-    
-  }
+  public destroy = () => {}
 
   public trigger = (name: string, event: Event) => {
     return EventHandlerUtil.trigger(this.element, name, event)

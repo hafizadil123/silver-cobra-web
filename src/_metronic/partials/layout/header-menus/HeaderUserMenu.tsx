@@ -19,7 +19,7 @@ const toolbarButtonMarginClass = 'ms-1 ms-lg-3',
 const HeaderUserMenu: FC = () => {
   const [user, setUser] = useState<any>({})
   const API_URL = process.env.REACT_APP_API_URL
-
+  const navigate = useNavigate()
   const getUserDetailUrl = `${API_URL}/api/Common/GetLoggedInUser`
   const logged_user_detail: any = localStorage.getItem('logged_user_detail')
   const getUser = JSON.parse(logged_user_detail)
@@ -48,7 +48,9 @@ const HeaderUserMenu: FC = () => {
     dispatch(auth.actions.logout())
     window.location.href = '/auth'
   }
-
+  const _initateUpdatePassword = () => {
+    navigate('/update-password')
+  }
   return (
     <div
       className='menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg menu-state-primary fw-bold py-4 fs-6 w-275px'
@@ -77,6 +79,11 @@ const HeaderUserMenu: FC = () => {
         {/* <Link to='/profile/change-password' className='menu-link px-5'>
           Change Password
         </Link> */}
+      </div>
+      <div className='menu-item px-5'>
+        <a onClick={_initateUpdatePassword} className='menu-link px-5'>
+          החלף סיסמא
+        </a>
       </div>
 
       <div className='menu-item px-5'>

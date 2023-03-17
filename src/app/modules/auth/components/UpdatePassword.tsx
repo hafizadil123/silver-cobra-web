@@ -11,15 +11,15 @@ const initialValues = {
 }
 
 const updatePasswordSchema = Yup.object().shape({
-    password: Yup.string()
+  password: Yup.string()
     .min(3, 'מינימום 3 סמלים')
     .max(50, 'מקסימום 50 סמלים')
     .required('דרושה סיסמא'),
-    confirmPassword: Yup.string()
+  confirmPassword: Yup.string()
     .required('נדרש אישור סיסמה')
     .when('password', {
       is: (val: string) => (val && val.length > 0 ? true : false),
-      then: Yup.string().oneOf([Yup.ref('password')], "הסיסמה ואישור הסיסמה לא התאימו"),
+      then: Yup.string().oneOf([Yup.ref('password')], 'הסיסמה ואישור הסיסמה לא התאימו'),
     }),
 })
 
@@ -27,8 +27,8 @@ export function UpdatePassword() {
   const [loading, setLoading] = useState(false)
   const [hasErrors, setHasErrors] = useState<boolean | undefined>(undefined)
   const location = useLocation()
-  
-  const token = location.search.split('=')[1];
+
+  const token = location.search.split('=')[1]
   const formik = useFormik({
     initialValues,
     validationSchema: updatePasswordSchema,
@@ -37,7 +37,7 @@ export function UpdatePassword() {
       setHasErrors(undefined)
       setTimeout(() => {
         updatePassword(values.password, token)
-          .then(({data: { msg }}) => {
+          .then(({data: {msg}}) => {
             setStatus(msg)
             setHasErrors(false)
             setLoading(false)
@@ -66,7 +66,9 @@ export function UpdatePassword() {
           {/* end::Title */}
 
           {/* begin::Link */}
-          <div className='text-gray-400 fw-bold fs-4'>Enter password and confirm password to update.</div>
+          <div className='text-gray-400 fw-bold fs-4'>
+            Enter password and confirm password to update.
+          </div>
           {/* end::Link */}
         </div>
 
@@ -74,7 +76,7 @@ export function UpdatePassword() {
         {hasErrors === true && (
           <div className='mb-lg-15 alert alert-danger'>
             <div className='alert-text font-weight-bold'>
-            מצטערים, נראה שזוהו כמה שגיאות, אנא נסה שוב.
+              מצטערים, נראה שזוהו כמה שגיאות, אנא נסה שוב.
             </div>
           </div>
         )}
@@ -144,7 +146,9 @@ export function UpdatePassword() {
           >
             {loading ? (
               <span className='indicator-label'>Please wait...</span>
-            ):  <span className='indicator-label'>Submit</span>}
+            ) : (
+              <span className='indicator-label'>Submit</span>
+            )}
           </button>
           <Link to='/auth/login'>
             <button

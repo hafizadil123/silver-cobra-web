@@ -19,6 +19,7 @@ const DashboardPage: FC = () => {
   const [userRoles, setUserRoles] = useState<any>([])
   const [activeType, setActiveType] = useState<any>('Created')
   const [resetPasswordMessage, setResetPasswordMessage] = useState<any>('')
+  const [_initateUpdateOtherPassMessage, setInitiateOtherPassMessage] = useState<any>('')
   const [y, setY] = useState(0)
   const [stickyCss, setStickyCss] = useState('')
   const [search, setSearch] = useState('')
@@ -47,7 +48,7 @@ const DashboardPage: FC = () => {
   const getUsersEndPoint = `${baseUrl}/api/Common/GetUsers`
   const saveUserDetailsEndPoint = `${baseUrl}/api/account/SaveUserDetails`
   const resetPasswordEndPoint = `${baseUrl}/api/account/AdminResetPassword`
-
+  const _initateUpdateOtherPassEndPoint = `${baseUrl}/api/account/AdminChangePassword`
   const getMyTrainsDailyReportEndPoint = `${baseUrl}/api/Common/GetTrainsDailyReport`
   const getMyTrainsDailyCleaningReportEndPoint = `${baseUrl}/api/Common/GetTrainsDailyCleaningReport`
   const headerJson = {
@@ -145,6 +146,32 @@ const DashboardPage: FC = () => {
       }
     }
   }
+
+  const _initiateOtherPass = async (userId: any, newPassword: string, confirmPassword: string) => {
+    console.log({userId})
+    const activeUser = users.find((user: any) => user.userId === userId)
+    console.log({activeUser})
+    if (activeUser) {
+      const data = {
+        userName: activeUser.userName,
+        newPassword,
+        confirmPassword,
+      }
+      const response = await axios.post(_initateUpdateOtherPassEndPoint, data, headerJson)
+      console.log({data: response.data})
+      const result = response.data
+      if (result) {
+        // setInitiateOtherPassMessage(response.data.message)
+        // setTimeout(() => {
+        //   setInitiateOtherPassMessage('')
+        // }, 45000)
+        addToast(response.data.message, {appearance: 'success', autoDismiss: true})
+      } else {
+        addToast(response.data.message, {appearance: 'error', autoDismiss: true})
+      }
+    }
+  }
+
   const saveUserDetails = async (details: any, type = 'Updated') => {
     setActiveType(type)
 
@@ -242,6 +269,8 @@ const DashboardPage: FC = () => {
                   users={users}
                   css={stickyCss}
                   resetUserPassword={resetUserPassword}
+                  _initiateOtherPass={_initiateOtherPass}
+                  _initateUpdateOtherPassMessage={_initateUpdateOtherPassMessage}
                   resetPasswordMessage={resetPasswordMessage}
                   getUsers={getUsers}
                 />

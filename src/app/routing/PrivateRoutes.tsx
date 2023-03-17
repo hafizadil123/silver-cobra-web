@@ -18,7 +18,7 @@ import {AdminInterface} from '../modules/admin-interface'
 import {HebrewBirthDate} from '../modules/hebrew-birth-date'
 import {ManageDailyAttendanceCheckTypesPageWrapper} from '../modules/manageDailyAttendanceCheckTypes'
 import {ManageDailyCleaningCheckTypesPageWrapper} from '../modules/manageDailyCleaningCheckTypes'
-
+import {UpdatePasswordWrapper} from '../modules/UpdatePassword'
 const PrivateRoutes = () => {
   const BuilderPageWrapper = lazy(() => import('../pages/layout-builder/BuilderPageWrapper'))
   const ProfilePage = lazy(() => import('../modules/profile/ProfilePage'))
@@ -52,6 +52,7 @@ const PrivateRoutes = () => {
         <Route path='/main-attendance' element={<DailyAttendancePage />} />
         <Route path='/documents' element={<DocumentsPage />} />
         <Route path='/upload-document' element={<UploadDocumentSection />} />
+        <Route path='/update-password' element={<UpdatePasswordWrapper />} />
         <Route
           path='/manage-daily-attendance-check-types'
           element={<ManageDailyAttendanceCheckTypesPageWrapper />}

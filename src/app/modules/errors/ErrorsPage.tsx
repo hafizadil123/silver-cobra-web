@@ -13,11 +13,7 @@ const ErrorsLayout = () => {
       >
         <div className='d-flex flex-column flex-column-fluid text-center p-10 py-lg-20'>
           <a href='/dashboard' className='mb-10 pt-lg-20'>
-            <img
-              alt='Logo'
-              src={toAbsoluteUrl('/media/logos/logo.png')}
-              className='h-50px mb-5'
-            />
+            <img alt='Logo' src={toAbsoluteUrl('/media/logos/logo.png')} className='h-50px mb-5' />
           </a>
           <div className='pt-lg-10 mb-10'>
             <Outlet />

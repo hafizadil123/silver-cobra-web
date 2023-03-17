@@ -1,24 +1,24 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React from 'react'
-import { Demos } from './Demos'
-import { KTSVG } from '../../../helpers'
+import {Demos} from './Demos'
+import {KTSVG} from '../../../helpers'
 
 export function DemosDrawer() {
   return (
     <>
       {/* begin::Demos drawer */}
       <div
-        id="kt_engage_demos"
-        className="bg-body"
-        data-kt-drawer="true"
-        data-kt-drawer-name="explore"
-        data-kt-drawer-activate="true"
-        data-kt-drawer-overlay="true"
+        id='kt_engage_demos'
+        className='bg-body'
+        data-kt-drawer='true'
+        data-kt-drawer-name='explore'
+        data-kt-drawer-activate='true'
+        data-kt-drawer-overlay='true'
         data-kt-drawer-width="{default:'350px', 'lg': '475px'}"
-        data-kt-drawer-direction="end"
-        data-kt-drawer-toggle="#kt_engage_demos_toggle"
-        data-kt-drawer-close="#kt_engage_demos_close"
+        data-kt-drawer-direction='end'
+        data-kt-drawer-toggle='#kt_engage_demos_toggle'
+        data-kt-drawer-close='#kt_engage_demos_close'
       >
         {/* begin::Card  */}
         <div className='card shadow-none w-100'>
@@ -43,13 +43,13 @@ export function DemosDrawer() {
           <div className='card-body' id='kt_explore_body'>
             {/* begin::Content */}
             <div
-              id="kt_explore_scroll"
-              className="scroll-y me-n5 pe-5"
-              data-kt-scroll="true"
-              data-kt-scroll-height="auto"
-              data-kt-scroll-wrappers="#kt_engage_demos_body"
-              data-kt-scroll-dependencies="#kt_engage_demos_header"
-              data-kt-scroll-offset="5px"
+              id='kt_explore_scroll'
+              className='scroll-y me-n5 pe-5'
+              data-kt-scroll='true'
+              data-kt-scroll-height='auto'
+              data-kt-scroll-wrappers='#kt_engage_demos_body'
+              data-kt-scroll-dependencies='#kt_engage_demos_header'
+              data-kt-scroll-offset='5px'
             >
               <div className='mb-7'>
                 <div className='d-flex flex-stack'>

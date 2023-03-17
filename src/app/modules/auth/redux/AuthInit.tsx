@@ -21,7 +21,7 @@ const AuthInit: FC<PropsFromRedux> = (props) => {
       try {
         if (!didRequest.current) {
           const {data: user} = await getUserByToken(accessToken as string)
-          localStorage.setItem('user', JSON.stringify(user));
+          localStorage.setItem('user', JSON.stringify(user))
           dispatch(props.fulfillUser(user))
         }
       } catch (error) {

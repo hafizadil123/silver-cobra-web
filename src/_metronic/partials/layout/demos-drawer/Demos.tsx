@@ -1,5 +1,5 @@
-import React, { FC } from 'react'
-import { toAbsoluteUrl } from '../../../helpers'
+import React, {FC} from 'react'
+import {toAbsoluteUrl} from '../../../helpers'
 
 const Demos: FC = () => {
   const demos = [
@@ -54,10 +54,11 @@ const Demos: FC = () => {
         {demos.map((item, index) => (
           <div className='col-6' key={index}>
             <div
-              className={`overlay overflow-hidden position-relative ${process.env.REACT_APP_THEME_DEMO === item.name
+              className={`overlay overflow-hidden position-relative ${
+                process.env.REACT_APP_THEME_DEMO === item.name
                   ? 'border border-4 border-success'
                   : 'border border-4 border-gray-200'
-                } rounded`}
+              } rounded`}
             >
               <div className='overlay-wrapper'>
                 <img
@@ -90,4 +91,4 @@ const Demos: FC = () => {
   )
 }
 
-export { Demos }
+export {Demos}

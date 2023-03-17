@@ -16,7 +16,7 @@ export function AsideMenuMain() {
   const intl = useIntl()
   const userRole = localStorage.getItem('userType')
   const myRoutes = Routes(userRole)
-  
+
   return (
     <>
       <div className='menu-item'>

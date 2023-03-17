@@ -1,8 +1,8 @@
 import React from 'react'
-import { MenuItem } from './MenuItem'
-import { MenuInnerWithSub } from './MenuInnerWithSub'
-import { MegaMenu } from './MegaMenu'
-import { useIntl } from 'react-intl'
+import {MenuItem} from './MenuItem'
+import {MenuInnerWithSub} from './MenuInnerWithSub'
+import {MegaMenu} from './MegaMenu'
+import {useIntl} from 'react-intl'
 
 export function MenuInner() {
   const intl = useIntl()
@@ -98,7 +98,6 @@ export function MenuInner() {
           <MenuItem to='/crafted/widgets/tables' title='Tables' hasBullet={true} />
           <MenuItem to='/crafted/widgets/feeds' title='Feeds' hasBullet={true} />
         </MenuInnerWithSub> */}
-
 
       {/* </MenuInnerWithSub> */}
 

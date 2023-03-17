@@ -84,6 +84,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "pretty": "prettier --write \"./**/*.{js,jsx,ts,tsx,json}\"",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "lint": "prettier --check .",

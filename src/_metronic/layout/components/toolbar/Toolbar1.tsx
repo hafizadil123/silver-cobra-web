@@ -10,7 +10,7 @@ const Toolbar1: FC = () => {
 
   return (
     <div className='toolbar' id='kt_toolbar'>
-       {/* end::Container */}
+      {/* end::Container */}
     </div>
   )
 }

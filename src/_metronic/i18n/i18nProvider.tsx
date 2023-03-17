@@ -14,7 +14,7 @@ import heMessages from './messages/he.json'
 
 const allMessages = {
   en: enMessages,
-  he: heMessages
+  he: heMessages,
 }
 
 const I18nProvider: FC = ({children}) => {
@@ -23,9 +23,7 @@ const I18nProvider: FC = ({children}) => {
 
   return (
     <IntlProvider locale={locale} messages={messages}>
-      <div dir='rtl'>
-      {children}
-      </div>
+      <div dir='rtl'>{children}</div>
     </IntlProvider>
   )
 }
