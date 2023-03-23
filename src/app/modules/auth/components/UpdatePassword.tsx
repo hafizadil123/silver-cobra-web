@@ -145,7 +145,7 @@ export function UpdatePassword() {
             className='btn btn-lg btn-primary fw-bolder me-4'
           >
             {loading ? (
-              <span className='indicator-label'>Please wait...</span>
+              <span className='indicator-label'>אנא המתן...</span>
             ) : (
               <span className='indicator-label'>Submit</span>
             )}

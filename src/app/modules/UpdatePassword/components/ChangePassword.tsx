@@ -21,6 +21,7 @@ const updatePasswordSchema = Yup.object().shape({
   ConfirmPassword: Yup.string().required(),
 })
 
+
 export function UpdatePassword() {
   const [loading, setLoading] = useState(false)
   const [hasErrors, setHasErrors] = useState<boolean | undefined>(undefined)
@@ -28,14 +29,41 @@ export function UpdatePassword() {
   const getUser = JSON.parse(logged_user_detail)
   const {addToast} = useToasts()
   const navigate = useNavigate()
+
+  const formateError = (data: any) => {
+    let messages: any = {};
+    for (let field in data) {
+      messages[field] = data[field].join(' ');
+      
+    }
+    console.log({
+      messages
+    })
+    return messages;
+  }
+
+  const error = (data: any) => {
+    let messages = ''
+    for (const key in data) {
+        if (true) {
+          const value = data[key];
+          messages = value + messages
+          console.log('aaaaa', messages)
+
+        }
+      }
+      return messages
+}
+  
   const formik = useFormik({
     initialValues,
     validationSchema: updatePasswordSchema,
     onSubmit: async (values, {setStatus, setSubmitting}) => {
+      let response : any;
       try {
         setLoading(true)
         setStatus('')
-        const response = await axios.post(
+        response = await axios.post(
           API_URL + '/api/account/ChangePassword',
           {
             oldPassword: values.oldPassword,
@@ -58,11 +86,13 @@ export function UpdatePassword() {
             navigate('/')
           }, 2000)
         }
+    
       } catch (err: any) {
         setHasErrors(true)
         setLoading(false)
         setSubmitting(false)
-        addToast(JSON.stringify(err.ModelState), {appearance: 'error', autoDismiss: true})
+        console.log("asdfdasf", err.response)
+        addToast(error(formateError(err.response?.data?.ModelState)), {appearance: 'error', autoDismiss: true})
       }
     },
   })
@@ -168,7 +198,7 @@ export function UpdatePassword() {
             className='btn btn-lg btn-primary fw-bolder me-4'
           >
             {loading ? (
-              <span className='indicator-label'>please wait....</span>
+              <span className='indicator-label'>אנא המתן....</span>
             ) : (
               <span className='indicator-label'>
                 <FormattedMessage id='AUTH.GENERAL.SUBMIT' />

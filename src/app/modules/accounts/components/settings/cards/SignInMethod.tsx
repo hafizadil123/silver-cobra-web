@@ -156,7 +156,7 @@ const SignInMethod: React.FC = () => {
                     {!loading1 && 'Update Email'}
                     {loading1 && (
                       <span className='indicator-progress' style={{display: 'block'}}>
-                        Please wait...{' '}
+                        אנא המתן...{' '}
                         <span className='spinner-border spinner-border-sm align-middle ms-2'></span>
                       </span>
                     )}
@@ -280,7 +280,7 @@ const SignInMethod: React.FC = () => {
                     {!loading2 && 'Update Password'}
                     {loading2 && (
                       <span className='indicator-progress' style={{display: 'block'}}>
-                        Please wait...{' '}
+                        אנא המתן...{' '}
                         <span className='spinner-border spinner-border-sm align-middle ms-2'></span>
                       </span>
                     )}

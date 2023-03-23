@@ -77,7 +77,7 @@ const ProfileHeader: React.FC = () => {
 
                   <span className='indicator-label'>Follow</span>
                   <span className='indicator-progress'>
-                    Please wait...
+                    אנא המתן...
                     <span className='spinner-border spinner-border-sm align-middle ms-2'></span>
                   </span>
                 </a>

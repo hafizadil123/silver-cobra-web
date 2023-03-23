@@ -579,7 +579,7 @@ const BuilderPage: React.FC = () => {
                   {!configLoading && <span className='indicator-label'>Preview</span>}
                   {configLoading && (
                     <span className='indicator-progress' style={{display: 'block'}}>
-                      Please wait...{' '}
+                      אנא המתן...{' '}
                       <span className='spinner-border spinner-border-sm align-middle ms-2'></span>
                     </span>
                   )}
@@ -594,7 +594,7 @@ const BuilderPage: React.FC = () => {
                   {!resetLoading && <span className='indicator-label'>Reset</span>}
                   {resetLoading && (
                     <span className='indicator-progress' style={{display: 'block'}}>
-                      Please wait...{' '}
+                      אנא המתן...{' '}
                       <span className='spinner-border spinner-border-sm align-middle ms-2'></span>
                     </span>
                   )}

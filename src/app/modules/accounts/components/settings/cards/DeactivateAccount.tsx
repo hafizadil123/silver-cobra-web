@@ -90,7 +90,7 @@ const DeactivateAccount: React.FC = () => {
               {!loading && 'Deactivate Account'}
               {loading && (
                 <span className='indicator-progress' style={{display: 'block'}}>
-                  Please wait...{' '}
+                  אנא המתן...{' '}
                   <span className='spinner-border spinner-border-sm align-middle ms-2'></span>
                 </span>
               )}

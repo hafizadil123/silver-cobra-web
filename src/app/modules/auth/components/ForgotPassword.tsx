@@ -159,7 +159,7 @@ export function ForgotPassword() {
             className='btn btn-lg btn-primary fw-bolder me-4'
           >
             {loading ? (
-              <span className='indicator-label'>please wait....</span>
+              <span className='indicator-label'>אנא המתן....</span>
             ) : (
               <span className='indicator-label'>
                 <FormattedMessage id='AUTH.GENERAL.SUBMIT' />

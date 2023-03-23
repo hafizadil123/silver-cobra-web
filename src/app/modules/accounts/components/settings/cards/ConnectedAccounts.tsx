@@ -166,7 +166,7 @@ const ConnectedAccounts: React.FC = () => {
             {!loading && 'Save Changes'}
             {loading && (
               <span className='indicator-progress' style={{display: 'block'}}>
-                Please wait...{' '}
+                אנא המתן...{' '}
                 <span className='spinner-border spinner-border-sm align-middle ms-2'></span>
               </span>
             )}

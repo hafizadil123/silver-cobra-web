@@ -174,7 +174,7 @@ const ManageDailyCleaningCheckTypes: FC = () => {
             {loading ? (
               <div className='d-flex justify-content-center mb-5'>
                 <div className='spinner-border text-primary'>
-                  <span className='sr-only'>Please wait...</span>
+                  <span className='sr-only'>אנא המתן...</span>
                 </div>
               </div>
             ) : (

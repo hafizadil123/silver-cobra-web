@@ -11,7 +11,7 @@ export function Success() {
   }, 2000)
   return (
     <>
-      <h4>please wait we will redirect you soon.....</h4>
+      <h4>אנא המתן... will redirect you soon.....</h4>
     </>
   )
 }
