@@ -25,6 +25,7 @@ const TrainCarDashboardPage: FC = () => {
   const [stickyCss, setStickyCss] = useState('')
   const [search, setSearch] = useState('')
   const [actualUsers, setActualUsers] = useState<any>([])
+  const [actualCars, setActualCars] = useState<any>([])
   const [loading, setLoading] = useState(true)
   const logged_user_detail: any = localStorage.getItem('logged_user_detail')
   const [errors, setErrors] = useState<any>([])
@@ -51,7 +52,9 @@ const TrainCarDashboardPage: FC = () => {
   const DeleteCar =`${baseUrl}/api/Common/DeleteCar`
 
   // const getUsersEndPoint = `${baseUrl}/api/Common/GetUsers`
-  const saveUserDetailsEndPoint = `${baseUrl}/api/account/SaveUserDetails`
+  // const saveUserDetailsEndPoint = `${baseUrl}/api/account/SaveUserDetails`
+  const SaveCarDetailsEndPoint = `${baseUrl}/api/Common/SaveCarDetails`
+  
   // const resetPasswordEndPoint = `${baseUrl}/api/account/AdminResetPassword`
   // const _initateUpdateOtherPassEndPoint = `${baseUrl}/api/account/AdminChangePassword`
   // const getMyTrainsDailyReportEndPoint = `${baseUrl}/api/Common/GetTrainsDailyReport`
@@ -90,6 +93,7 @@ const TrainCarDashboardPage: FC = () => {
       const {data} = response
       console.log(data,"data")
       setCarsList(data.CarsList)
+      setActualCars(data.CarsList)
       // setActualUsers(data.users)
       console.log(carsList, "CarsList")
 
@@ -124,7 +128,7 @@ const TrainCarDashboardPage: FC = () => {
   const saveTrainCarDetails = async (details: any, type = 'Updated') => {
     setActiveType(type)
 
-    const response = await axios.post(saveUserDetailsEndPoint, details, headerJson)
+    const response = await axios.post(SaveCarDetailsEndPoint, details, headerJson)
     if (response.data.result === false) {
       response.data.validationErrors.forEach((error: any) => {
         // addToast(error, {appearance: 'error', autoDismiss: true});
@@ -151,7 +155,7 @@ const TrainCarDashboardPage: FC = () => {
   const handleSearch = (value: any) => {
     value = value.toLowerCase()
     // let searchedUsers = actualUsers.filter((item: any) => {
-      let searchedCars = carsList.filter((item: any) => {
+      let searchedCars = actualCars.filter((item: any) => {
       if (
         item.name.toLowerCase().indexOf(value) > -1 ||
         item.trainName.toLowerCase().indexOf(value) > -1 
@@ -344,7 +348,6 @@ const TrainCarDashboardPage: FC = () => {
               type='button'
               onClick={() => {
                 setShowModal(false)
-                // handleUpdateUser()
                 handleUpdateTrainCar()
               }}
               className='btn btn-primary'

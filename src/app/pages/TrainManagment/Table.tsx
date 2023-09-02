@@ -21,6 +21,7 @@ type Props = {
   getTrainsList: ()=> any
   getTrainsAfterUpdate: () => any
   handleDelete: any
+  handleUpdateTrain: () =>any
 }
 
 const ReportTable: React.FC<Props> = ({
@@ -31,6 +32,7 @@ const ReportTable: React.FC<Props> = ({
   getTrainsList,
   handleDelete,
   getTrainsAfterUpdate,
+  handleUpdateTrain
 }) => {
   const [y, setY] = useState(0)
   const [stickyCss, setStickyCss] = useState('')
@@ -97,31 +99,56 @@ const ReportTable: React.FC<Props> = ({
                       isEdit={false}
                       
                     />
-                    <TableDataView
-                      className=''
-                      index={index}
-                      flexValue={1}
-                      text={item.IsEnabled}
-                      getSelectedTrain={getSelectedTrain}
-                      isEdit={false}
-                     
-                    />
-                    {/* <TableDataView
-                      className=''
-                      index={index}
-                      flexValue={1}
-                      text={item.userName}
-                      userId={item.userId}
-                      getSelectedUser={getSelectedUser}
-                      userRoles={userRoles}
-                      saveUserDetails={saveUserDetails}
-                      isEdit={false}
-                      resetUserPassword={resetUserPassword}
-                      _initiateOtherPass={_initiateOtherPass}
-                      _initateUpdateOtherPassMessage={_initateUpdateOtherPassMessage}
-                      resetPasswordMessage={resetPasswordMessage}
-                    />
-                    <td>{item.isActive === true ? `✅` : `❌`}</td> */}
+                  
+                    <td>
+                      {item.IsEnabled === true ? 
+                    (
+                        <div
+                          className=''
+                          style={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            width: '100%',
+                            paddingLeft: "60%"
+                          }}
+                        >
+                          <button
+                            type='button'
+                            onClick={() => {
+                              handleUpdateTrain()
+                            }}
+                            className='btn btn-success'
+                          >
+                            הפעל רכבת
+                          </button>
+                        </div>
+                      )
+                      : (
+                        <div
+                          className=''
+                          style={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            width: '100%',
+                            paddingLeft: "60%"
+                          }}
+                        >
+                          <button
+                            type='button'
+                            onClick={() => {
+                              handleUpdateTrain()
+                            }}
+                            className='btn btn-danger'
+                          >
+                            כבה רכבת
+                          </button>
+                        </div>
+                      )
+                    }
+                    </td> 
+                   
                     <TableDataView
                       className=''
                       index={index}
@@ -183,8 +210,6 @@ const TableDataView = (props: any) => {
     getTrainsList,
     getSelectedTrain,
     userId,
-    resetUserPassword,
-    getUsers,
     handleDelete,
   } = props
   const [errors, setErrors] = useState<any>([])
@@ -205,7 +230,7 @@ const TableDataView = (props: any) => {
       Authorization: `bearer ${loggedInUserDetails.access_token}`,
     },
   }
-  const saveTrainDetailsEndPoint = `${baseUrl}/api/Common/GetTrainDetails`
+  const saveTrainDetailsEndPoint = `${baseUrl}/api/Common/SaveTrainDetails`
   const [showModal, setShowModal] = useState(false)
   const [status, setStatus] = useState<any>({})
   const handleUpdateTrain = () => {
@@ -347,7 +372,7 @@ const TableDataView = (props: any) => {
                 
                 </>
               </Modal.Body>
-              {/* {!openSecondModal && (
+              {!openSecondModal && (
                 <Modal.Footer>
                   <div
                     className=''
@@ -370,7 +395,7 @@ const TableDataView = (props: any) => {
                     </button>
                   </div>
                 </Modal.Footer>
-              )} */}
+              )}
             </Modal>
 
             {/* Modal End */}

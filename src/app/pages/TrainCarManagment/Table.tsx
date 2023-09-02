@@ -161,16 +161,7 @@ const TableDataView = (props: any) => {
     ConfirmPassword: '',
   }
 
-  const updatePasswordSchema = Yup.object().shape({
-    NewPassword: Yup.string().required(),
-    ConfirmPassword: Yup.string().required(),
-  })
-
-  const formik = useFormik({
-    initialValues,
-    validationSchema: updatePasswordSchema,
-    onSubmit: () => {},
-  })
+ 
 
   const {
     isEdit,
@@ -178,13 +169,12 @@ const TableDataView = (props: any) => {
     className,
     getSelectedCar,
     userId,
-    resetUserPassword,
-    getUsers,
+    getCarsList,
     handleDelete,
   } = props
   const [errors, setErrors] = useState<any>([])
 
-  const [activeUser, setActiveUesr] = useState({
+  const [activeCar, setActiveCar] = useState({
     name: '',
     trainName: '',
     lastUpdated: '',
@@ -200,14 +190,15 @@ const TableDataView = (props: any) => {
       Authorization: `bearer ${loggedInUserDetails.access_token}`,
     },
   }
-  const saveUserDetailsEndPoint = `${baseUrl}/api/Common/GetCarDetails`
+  // const saveUserDetailsEndPoint = `${baseUrl}/api/Common/GetCarDetails`
+  const SaveCarDetailsEndPoint = `${baseUrl}/api/Common/SaveCarDetails`
   const [showModal, setShowModal] = useState(false)
   const [status, setStatus] = useState<any>({})
-  const handleUpdateUser = () => {
-    saveUserDetails(activeUser)
+  const handleUpdateTrainCar = () => {
+    saveTrainCarDetails(activeCar)
   }
-  const saveUserDetails = async (details: any, type = 'Updated') => {
-    const response = await axios.post(saveUserDetailsEndPoint, details, headerJson)
+  const saveTrainCarDetails = async (details: any, type = 'Updated') => {
+    const response = await axios.post(SaveCarDetailsEndPoint, details, headerJson)
     if (response.data.result === false) {
       response.data.validationErrors.forEach((error: any) => {
         // addToast(error, {appearance: 'error', autoDismiss: true});
@@ -217,7 +208,7 @@ const TableDataView = (props: any) => {
     } else {
       addToast(`User ${type} successfully`, {appearance: 'success', autoDismiss: true})
     }
-    getUsers()
+    getCarsList()
   }
 
  
@@ -227,7 +218,7 @@ const TableDataView = (props: any) => {
   const handleChangeActions = (isDelete: boolean, id: any) => {
     let car = getSelectedCar(id)
     if (!isDelete) {
-      setActiveUesr({
+      setActiveCar({
         name: car.name,
         // order: user.order,
         // severity: user.severity,
@@ -256,10 +247,10 @@ const TableDataView = (props: any) => {
               onClick={(e) => {
                 let car = getSelectedCar(userId)
 
-                setActiveUesr({
+                setActiveCar({
                   name: car.name,
                   trainName: car.trainName,
-                  lastUpdated: car.lastupdated,
+                  lastUpdated: car.lastUpdated,
                   id: car.id
                 })
                 setShowModal(true)
@@ -288,6 +279,7 @@ const TableDataView = (props: any) => {
               <Modal.Body>
                 <>
                   {!openSecondModal && (
+
                     <form>
                       {errors &&
                         errors.length > 0 &&
@@ -301,10 +293,10 @@ const TableDataView = (props: any) => {
                         <label>שם קרון</label>
                         <input
                           type='text'
-                          value={activeUser.name}
+                          value={activeCar.name}
                           onChange={(e) => {
-                            setActiveUesr({
-                              ...activeUser,
+                            setActiveCar({
+                              ...activeCar,
                               name: e.target.value,
                             })
                           }}
@@ -316,16 +308,33 @@ const TableDataView = (props: any) => {
                         <input
                           type='text'
                           onChange={(e) => {
-                            setActiveUesr({
-                              ...activeUser,
+                            setActiveCar({
+                              ...activeCar,
                               trainName: e.target.value,
                             })
                           }}
-                          value={activeUser.trainName}
+                          value={activeCar.trainName}
                           className='form-control'
                         />
                       </div>
                        
+
+                      <div className='form-group'>
+                        <label>תאריך עדכון אחרון</label>
+                        <input
+                          type='text'
+                          readOnly
+                          // onChange={(e) => {
+                          //   setActiveCar({
+                          //     ...activeCar,
+                          //     lastUpdated: e.target.value,
+                          //   })
+                          // }}
+                          value={activeCar.lastUpdated}
+                          className='form-control'
+                        />
+                      </div>
+
                     </form>
                   )}
 
@@ -347,7 +356,7 @@ const TableDataView = (props: any) => {
                       type='button'
                       onClick={() => {
                         setShowModal(false)
-                        handleUpdateUser()
+                        handleUpdateTrainCar()
                       }}
                       className='btn btn-primary'
                     >

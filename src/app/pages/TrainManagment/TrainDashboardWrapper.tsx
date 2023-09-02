@@ -14,18 +14,11 @@ import Modal from 'react-bootstrap/Modal'
 
 const TrainDashboardPage: FC = () => {
   const [showModal, setShowModal] = useState(false)
-
-  const [users, setUsers] = useState<any>([])
-  const [userRoles, setUserRoles] = useState<any>([])
-  // const [carsList, setCarsList] = useState<any>([])
   const [trainsList, setTrainsList] = useState<any>([])
-  const [activeType, setActiveType] = useState<any>('Created')
-  const [resetPasswordMessage, setResetPasswordMessage] = useState<any>('')
-  const [_initateUpdateOtherPassMessage, setInitiateOtherPassMessage] = useState<any>('')
   const [y, setY] = useState(0)
   const [stickyCss, setStickyCss] = useState('')
   const [search, setSearch] = useState('')
-  const [actualUsers, setActualUsers] = useState<any>([])
+  const [actualTrains, setActualTrains] = useState<any>([])
   const [loading, setLoading] = useState(true)
   const logged_user_detail: any = localStorage.getItem('logged_user_detail')
   const [errors, setErrors] = useState<any>([])
@@ -43,14 +36,12 @@ const TrainDashboardPage: FC = () => {
   const {addToast} = useToasts()
 
   const baseUrl = process.env.REACT_APP_API_URL
-  const getLoggedInUserEndPoint = `${baseUrl}/api/Common/GetLoggedInUser`
-  const getDataEndPoint = `${baseUrl}/api/Common/GetData`
+ 
 
   const GetTrainsList =`${baseUrl}/api/Common/GetTrainsList`
   const DeleteTrain =`${baseUrl}/api/Common/DeleteTrain`
   // const saveTrainDetailsEndPoint = `${baseUrl}/api/account/SaveUserDetails`
 
-  const getUsersEndPoint = `${baseUrl}/api/Common/GetUsers`
   const headerJson = {
     headers: {
       Authorization: `bearer ${loggedInUserDetails.access_token}`,
@@ -83,6 +74,8 @@ const TrainDashboardPage: FC = () => {
       const {data} = response
       console.log(data,"data")
       setTrainsList(data.TrainsList)
+      setActualTrains(data.TrainsList)
+      
       // setActualUsers(data.users)
       console.log(trainsList, "trainsList")
 
@@ -141,7 +134,7 @@ const TrainDashboardPage: FC = () => {
   // }
   const handleSearch = (value: any) => {
     value = value.toLowerCase()
-      let searchedTrains = trainsList.filter((item: any) => {
+      let searchedTrains = actualTrains.filter((item: any) => {
       if (
         item.name.toLowerCase().indexOf(value) > -1 
       ) {
@@ -220,21 +213,13 @@ const TrainDashboardPage: FC = () => {
                 </div>
                 <ReportTable
                   className='mb-5 mb-xl-8'
-                  // getSelectedUser={getSelectedUser}
                   getSelectedTrain={getSelectedTrain}
-                  // userRoles={userRoles}
-                  // saveUserDetails={saveUserDetails}
-                  // users={users}
                   trainsList={trainsList}
                   css={stickyCss}
-                  // resetUserPassword={resetUserPassword}
-                  // _initiateOtherPass={_initiateOtherPass}
-                  // _initateUpdateOtherPassMessage={_initateUpdateOtherPassMessage}
-                  // resetPasswordMessage={resetPasswordMessage}
-                  // getUsers={getUsers}
                   getTrainsList={getTrainsList}
                   getTrainsAfterUpdate={getTrainsAfterUpdate}
                   handleDelete={(id: any) => handleDeleteF(id)}
+                  handleUpdateTrain={handleUpdateTrain}
 
                 />
               </>
