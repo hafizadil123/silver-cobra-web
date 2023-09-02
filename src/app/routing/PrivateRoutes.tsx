@@ -3,6 +3,8 @@ import {Route, Routes, Navigate} from 'react-router-dom'
 import {MasterLayout} from '../../_metronic/layout/MasterLayout'
 import TopBarProgress from 'react-topbar-progress-indicator'
 import {DashboardWrapper} from '../pages/dashboard/DashboardWrapper'
+import {TrainCarDashboardWrapper} from '../pages/TrainCarManagment/TrainCarDashboardWrapper'
+import {TrainDashboardWrapper} from '../pages/TrainManagment/TrainDashboardWrapper'
 import {TrainsDailyReportWrapper} from '../pages/TrainsDailyReport/TrainsDailyReportWrapper'
 import {TrainsSummaryReportWrapper} from '../pages/TrainsSummary/SummaryWrapper'
 import {CleaningReportWrapper} from '../pages/CleaningReport/CleaningReportWrapper'
@@ -42,6 +44,10 @@ const PrivateRoutes = () => {
         <Route path='profile/*' element={<ChangePassword1 />} />
         <Route path='/user-details' element={<UserDetailsPage />} />
         <Route path='/user-management' element={<DashboardWrapper />} />
+        {/* added */}
+        <Route path='/train-car-managment' element={<TrainCarDashboardWrapper />} />
+        <Route path='/train-managment' element={<TrainDashboardWrapper />} />
+        {/* added */}
         <Route path='/trains-daily-report/*' element={<TrainsDailyReportWrapper />} />
         <Route path='/trains-summary/*' element={<TrainsSummaryReportWrapper />} />
         <Route path='/trains-cleaning-report/*' element={<CleaningReportWrapper />} />
