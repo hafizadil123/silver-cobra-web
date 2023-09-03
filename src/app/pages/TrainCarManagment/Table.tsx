@@ -303,7 +303,7 @@ const TableDataView = (props: any) => {
                           className='form-control'
                         />
                       </div>
-                      <div className='form-group'>
+                      {/* <div className='form-group'>
                         <label>שם רכבת</label>
                         <input
                           type='text'
@@ -316,7 +316,7 @@ const TableDataView = (props: any) => {
                           value={activeCar.trainName}
                           className='form-control'
                         />
-                      </div>
+                      </div> */}
                        
 
                       <div className='form-group'>
