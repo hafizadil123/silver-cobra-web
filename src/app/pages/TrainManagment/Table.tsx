@@ -181,28 +181,10 @@ const ReportTable: React.FC<Props> = ({
 export {ReportTable}
 const TableDataView = (props: any) => {
   const [openSecondModal, setOpenSecondModal] = useState(false)
-  const [loading, setLoading] = useState(false)
-  const [hasErrors, setHasErrors] = useState<boolean | undefined>(undefined)
+  
   const logged_user_detail: any = localStorage.getItem('logged_user_detail')
   const getUser = JSON.parse(logged_user_detail)
   const {addToast} = useToasts()
-  const initialValues = {
-    oldPassword: '',
-    NewPassword: '',
-    ConfirmPassword: '',
-  }
-
-  const updatePasswordSchema = Yup.object().shape({
-    NewPassword: Yup.string().required(),
-    ConfirmPassword: Yup.string().required(),
-  })
-
-  const formik = useFormik({
-    initialValues,
-    validationSchema: updatePasswordSchema,
-    onSubmit: () => {},
-  })
-
   const {
     isEdit,
     text,
@@ -232,7 +214,6 @@ const TableDataView = (props: any) => {
   }
   const saveTrainDetailsEndPoint = `${baseUrl}/api/Common/SaveTrainDetails`
   const [showModal, setShowModal] = useState(false)
-  const [status, setStatus] = useState<any>({})
   const handleUpdateTrain = () => {
     saveTrainDetails(activeTrain)
   }
@@ -303,7 +284,6 @@ const TableDataView = (props: any) => {
               onHide={() => {
                 setShowModal(false)
                 setOpenSecondModal(false)
-                setStatus({})
               }}
               // style={{    minWidth: "700px"}}
               size='lg'

@@ -317,20 +317,21 @@ const TrainCarDashboardPage: FC = () => {
               />
             </div>
             
-            <div className='form-group'>
+            {/* <div className='form-group'>
               <label>תאריך עדכון אחרון</label>
               <input
                 type='text'
-                onChange={(e) => {
-                  setActiveTrainCar({
-                    ...activeTrainCar,
-                    lastUpdated: e.target.value,
-                  })
-                }}
+                readOnly
+                // onChange={(e) => {
+                //   setActiveTrainCar({
+                //     ...activeTrainCar,
+                //     lastUpdated: e.target.value,
+                //   })
+                // }}
                 value={activeTrainCar.lastUpdated}
                 className='form-control'
               />
-            </div>
+            </div> */}
             
           </form>
         </Modal.Body>
