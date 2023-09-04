@@ -2,7 +2,7 @@ const routes: any = [
   {
     title: 'דיווח פעילות יומי',
     route: '/conductor-dashboard',
-    role: ['Conductor', 'Admin'],
+    role: ['Conductor', 'Admin', 'UserManager'],
   },
 
   {
@@ -13,7 +13,7 @@ const routes: any = [
   {
     title: ' סיכום דיווח יומי',
     route: '/trains-summary',
-    role: ['OccUser', 'Admin', 'UserManager'],
+    role: ['OccUser', 'Admin', 'UserManager', 'Conductor'],
   },
   {
     title: ' דיווח ניקיון יומי',
@@ -44,7 +44,7 @@ const routes: any = [
     title: 'ניהול רשימת בדיקות ניקיון יומיות',
     route: '/manage-daily-cleaning-attendance-check-types',
     role: ['Admin'],
-  },
+  }
 ]
 export const Routes = (role: any) => {
   return routes.filter((r: any) => r.role.includes(role))

@@ -22,7 +22,10 @@ const TrainsSummaryPage: FC = () => {
   const [drivers, setDrivers] = useState<any>([])
   const logged_user_detail: any = localStorage.getItem('logged_user_detail')
   const loggedInUserDetails = JSON.parse(logged_user_detail)
-
+  const userRole = localStorage.getItem('userType')
+  console.log({
+    userRole
+  })
   const baseUrl = process.env.REACT_APP_API_URL
   const getLoggedInUserEndPoint = `${baseUrl}/api/Common/GetLoggedInUser`
   const getDriversEndPoint = `${baseUrl}/api/Common/GetDrivers`
@@ -366,6 +369,7 @@ const TrainsSummaryPage: FC = () => {
                   reloadApi={reloadApi}
                   selectedDate={selectedDate}
                 />
+               {userRole !== 'Conductor' &&
                 <div className='row'>
                   <div className='row'>
                     <div className='col-md-5'>
@@ -430,7 +434,9 @@ const TrainsSummaryPage: FC = () => {
                       נקה חיפוש
                     </button>
                   </div>
+                
                 </div>
+}
                 {/* <ReportTable
                   className='mb-5 mb-xl-8'
                   drivers={drivers}
