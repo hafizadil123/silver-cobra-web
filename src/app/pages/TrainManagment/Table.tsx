@@ -1,36 +1,28 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, {useState, useEffect} from 'react'
-import {KTSVG} from '../../../_metronic/helpers'
-import moment from 'moment'
 import Modal from 'react-bootstrap/Modal'
 import axios from 'axios'
 import {useToasts} from 'react-toast-notifications'
-import {FormattedMessage} from 'react-intl'
 import {useFormik} from 'formik'
-import * as Yup from 'yup'
-import clsx from 'clsx'
 
-import './user.css'
-const API_URL = process.env.REACT_APP_API_URL
+import './train.css'
 
 type Props = {
   className: string
-  trainsList: any[]
-  getSelectedTrain : (id: any) => any
+  trainList: any[]
+  getSelectedTrain: (id: any) => any
   css: string
-  getTrainsList: ()=> any
-  getTrainsAfterUpdate: () => any
+  getTrainList: () => any
   handleDelete: any
 }
 
 const ReportTable: React.FC<Props> = ({
-  trainsList,
+  trainList,
   className,
   getSelectedTrain,
   css,
-  getTrainsList,
+  getTrainList,
   handleDelete,
-  getTrainsAfterUpdate,
 }) => {
   const [y, setY] = useState(0)
   const [stickyCss, setStickyCss] = useState('')
@@ -49,13 +41,7 @@ const ReportTable: React.FC<Props> = ({
 
     window.addEventListener('scroll', (e) => handleNavigation(e))
   }, [])
-  console.log({
-    stickyCss,
-    y,
-    px: window.screenY,
-  })
 
-  console.log("trainsList", trainsList)
   return (
     <div className={`card ${className}`}>
       <div className='card-body py-3'>
@@ -66,79 +52,72 @@ const ReportTable: React.FC<Props> = ({
             {/* begin::Table head */}
             <thead style={{background: stickyCss, top: `${stickyCss && '65px'}`}}>
               <tr className='fw-bolder text-muted'>
-                <TableHeadView className='' text={'שם קרון'} />
+                <TableHeadView className='' text={'שם קרוןadsss'} />
+                <TableHeadView className='' text={'האם פעיל'} />
                 <TableHeadView className='' text={'תאריך עדכון אחרון'} />
-                <TableHeadView className='' text={'האם פעילה'} />
                 <TableHeadView className='' text={'פעולות'} />
               </tr>
             </thead>
             {/* end::Table head */}
             {/* begin::Table body */}
+          
             <tbody>
-              {trainsList.map((item: any, index: any) => {
-                return (
-                  <tr>
-                    
-                    <TableDataView
-                      className=''
-                      index={index}
-                      flexValue={1}
-                      text={item.name}
-                      getSelectedTrain={getSelectedTrain}
-                      isEdit={false}
-                    
-                    />
-                    <TableDataView
-                      className=''
-                      index={index}
-                      flexValue={1}
-                      text={item.lastUpdated}
-                      getSelectedTrain={getSelectedTrain}
-                      isEdit={false}
-                      
-                    />
-                    <TableDataView
-                      className=''
-                      index={index}
-                      flexValue={1}
-                      text={item.IsEnabled}
-                      getSelectedTrain={getSelectedTrain}
-                      isEdit={false}
-                     
-                    />
-                    {/* <TableDataView
-                      className=''
-                      index={index}
-                      flexValue={1}
-                      text={item.userName}
-                      userId={item.userId}
-                      getSelectedUser={getSelectedUser}
-                      userRoles={userRoles}
-                      saveUserDetails={saveUserDetails}
-                      isEdit={false}
-                      resetUserPassword={resetUserPassword}
-                      _initiateOtherPass={_initiateOtherPass}
-                      _initateUpdateOtherPassMessage={_initateUpdateOtherPassMessage}
-                      resetPasswordMessage={resetPasswordMessage}
-                    />
-                    <td>{item.isActive === true ? `✅` : `❌`}</td> */}
-                    <TableDataView
-                      className=''
-                      index={index}
-                      flexValue={1}
-                      text={`edit`}
-                      getSelectedTrain={getSelectedTrain}
-                      userId={item.id}
-                      isEdit={true}
-                      getTrainsList={getTrainsList}
-                      isDelete={false}
-                      id={item.id}
-                      handleDelete={handleDelete}
-                      getTrainsAfterUpdate={getTrainsAfterUpdate}
-                    />
-                  </tr>
-                )
-              })}
+              {trainList && trainList.length > 0 && trainList &&
+                trainList.length > 0 &&
+                trainList.map((item: any, index: any) => {
+                  return (
+                    <tr>
+                      <TableDataView
+                        className=''
+                        index={index}
+                        flexValue={1}
+                        text={item.name}
+                        getSelectedTrain={getSelectedTrain}
+                        isEdit={false}
+                        IsEnabledButton={false}
+                        getTrainList={getTrainList}
+                      />
+
+                      <TableDataView
+                        className=''
+                        index={index}
+                        flexValue={1}
+                        text={item.IsEnabled}
+                        getSelectedTrain={getSelectedTrain}
+                        isEdit={false}
+                        trainId={item.id}
+                        isDelete={false}
+                        getTrainList={getTrainList}
+                        IsEnabledButton={true}
+                      />
+                      <TableDataView
+                        className=''
+                        index={index}
+                        flexValue={1}
+                        text={item.lastUpdated}
+                        getSelectedTrain={getSelectedTrain}
+                        isEdit={false}
+                        getTrainList={getTrainList}
+                        IsEnabledButton={false}
+                      />
+
+                      <TableDataView
+                        className=''
+                        index={index}
+                        flexValue={1}
+                        text={`edit`}
+                        getSelectedTrain={getSelectedTrain}
+                        trainId={item.id}
+                        isEdit={true}
+                        getTrainList={getTrainList}
+                        isDelete={false}
+                        id={item.id}
+                        IsEnabledButton={false}
+                        handleDelete={handleDelete}
+                      />
+                    </tr>
+                  )
+                })}
             </tbody>
             {/* end::Table body */}
           </table>
@@ -159,41 +138,31 @@ const TableDataView = (props: any) => {
   const logged_user_detail: any = localStorage.getItem('logged_user_detail')
   const getUser = JSON.parse(logged_user_detail)
   const {addToast} = useToasts()
-  const initialValues = {
-    oldPassword: '',
-    NewPassword: '',
-    ConfirmPassword: '',
-  }
-
-  const updatePasswordSchema = Yup.object().shape({
-    NewPassword: Yup.string().required(),
-    ConfirmPassword: Yup.string().required(),
-  })
-
-  const formik = useFormik({
-    initialValues,
-    validationSchema: updatePasswordSchema,
-    onSubmit: () => {},
-  })
 
   const {
     isEdit,
     text,
     className,
-    getTrainsList,
     getSelectedTrain,
-    userId,
-    resetUserPassword,
+    trainId,
     getUsers,
+    getTrainList,
+    IsEnabledButton,
     handleDelete,
+    isDelete,
   } = props
   const [errors, setErrors] = useState<any>([])
 
   const [activeTrain, setActiveTrain] = useState({
     name: '',
-    isEnabled: '',
     lastUpdated: '',
-    id:'',
+    lastUpdater: '',
+    car1: [],
+    car1Id: 0,
+    car2Id: 0,
+    car2: [],
+    IsEnabled: '',
+    id: '',
   })
   const baseUrl = process.env.REACT_APP_API_URL
   const logged_user_details: any = localStorage.getItem('logged_user_detail')
@@ -205,14 +174,22 @@ const TableDataView = (props: any) => {
       Authorization: `bearer ${loggedInUserDetails.access_token}`,
     },
   }
-  const saveTrainDetailsEndPoint = `${baseUrl}/api/Common/GetTrainDetails`
+  const saveTrainDetailsEndPoint = `${baseUrl}/api/Common/SaveTrainDetails`
+  const setTrainVisibilityEndpoint = `${baseUrl}/api/Common/SetTrainUsability`
   const [showModal, setShowModal] = useState(false)
   const [status, setStatus] = useState<any>({})
   const handleUpdateTrain = () => {
     saveTrainDetails(activeTrain)
   }
   const saveTrainDetails = async (details: any, type = 'Updated') => {
-    const response = await axios.post(saveTrainDetailsEndPoint, details, headerJson)
+      console.log("saveTrainDetails", details);
+      const reqObj = {
+        id: details?.id,
+        name : details?.name,
+        car1Id: details?.car1Id,
+        car2Id: details?.car2Id
+      }
+    const response = await axios.post(saveTrainDetailsEndPoint, reqObj, headerJson)
     if (response.data.result === false) {
       response.data.validationErrors.forEach((error: any) => {
         // addToast(error, {appearance: 'error', autoDismiss: true});
@@ -220,161 +197,232 @@ const TableDataView = (props: any) => {
         setShowModal(true)
       })
     } else {
-      addToast(`User ${type} successfully`, {appearance: 'success', autoDismiss: true})
+      addToast(`${type} successfully`, {appearance: 'success', autoDismiss: true})
     }
-    getTrainsList()
+    getTrainList()
   }
 
-
-
-  const handleChangeActions = (isDelete: boolean, id: any) => {
-    let train = getSelectedTrain(id)
-    if (!isDelete) {
-      setActiveTrain({
-        name: train.name,
-        isEnabled: train.isEnabled,
-        lastUpdated: train.lastUpdated,
-        id: train.id,
+  const setTrainVisibility = async ({trainId, IsEnabled, type}: any) => {
+    alert('are you sure, you want to execute this?')
+    const response = await axios.post(
+      setTrainVisibilityEndpoint,
+      {trainId: trainId, IsEnabled: IsEnabled},
+      headerJson
+    )
+    if (response.data.result === false) {
+      response.data.validationErrors.forEach((error: any) => {
+        // addToast(error, {appearance: 'error', autoDismiss: true});
+        setErrors(response.data.validationErrors)
+        setShowModal(true)
       })
-      setShowModal(true)
-      setErrors([])
     } else {
-      handleDelete(id)
+      addToast(`${type} updated successfully`, {appearance: 'success', autoDismiss: true})
     }
+    getTrainList()
+    // window.location.reload();
+  }
+  const handleChangeActions = (isDelete: boolean, id: any) => {
+     getSelectedTrain(id).then((res: any) => {
+      if (!isDelete) {
+        setActiveTrain({
+          name: res.name,
+          car1: res.availableCars,
+          car2: res.availableCars,
+          lastUpdated: res.lastUpdated,
+          IsEnabled: res.IsEnabled,
+          car1Id: 0,
+          car2Id: 0,
+          lastUpdater: res.lastUpdater,
+          id: res.id,
+        })
+        setShowModal(true)
+        setErrors([])
+      } else {
+        handleDelete(id)
+      }
+    })
   }
 
   const renderFields = () => {
+  
     return (
       <td className={`${className} `}>
-        {isEdit === false ? (
-          <span style={{float: 'right'}}> {text}</span>
+        {!isEdit && !isDelete && IsEnabledButton && (
+          <button
+            style={{float: 'right', cursor: 'pointer', marginLeft: '20px'}}
+            onClick={(e) => {
+              let Train = setTrainVisibility({trainId, IsEnabled: !text, type: 'Train visibility'})
+              console.log({
+                Train,
+              })
+            }}
+            className={`${!text ? `btn btn-success mx-2` : `btn btn-danger mx-2`}`}
+          >
+            {!text ? 'Enable' : 'Disable'}
+          </button>
+        )}
+        {!IsEnabledButton && isEdit === false ? (
+          <span style={{float: 'right'}}>{text}</span>
         ) : (
-          <>
-            {/* Modal Start */}
-            <i
-              style={{float: 'right', cursor: 'pointer' , marginLeft: '20px'}}
-              onClick={(e) => {
-                // let user = getSelectedUser(userId)
-                let train = getSelectedTrain(userId)
-
-                setActiveTrain({
-                  name: train.name,
-                  isEnabled: train.isEnabled,
-                  lastUpdated: train.lastupdated,
-                  id: train.id
-                })
-                setShowModal(true)
-              }}
-              className='fa fa-edit'
-            ></i>
-             <i
-              style={{float: 'right', cursor: 'pointer'}}
-              onClick={(e) => handleChangeActions(true, userId)}
-              className={`fa fa-trash`}
-            ></i>
-            <Modal
-              show={showModal}
-              style={{direction: 'rtl'}}
-              onHide={() => {
-                setShowModal(false)
-                setOpenSecondModal(false)
-                setStatus({})
-              }}
-              // style={{    minWidth: "700px"}}
-              size='lg'
-              backdrop='static'
-              keyboard={false}
-            >
-              <Modal.Header closeButton></Modal.Header>
-              <Modal.Body>
-                <>
-                  {!openSecondModal && (
-                    <form>
-                      {errors &&
-                        errors.length > 0 &&
-                        errors.map((item: any) => (
-                          <>
-                            <span style={{color: 'red'}}>{item}</span>
-                            <br />
-                          </>
-                        ))}
-                      <div className='form-group'>
-                        <label>שם רכבת</label>
-                        <input
-                          type='text'
-                          value={activeTrain.name}
-                          onChange={(e) => {
-                            setActiveTrain({
-                              ...activeTrain,
-                              name: e.target.value,
-                            })
-                          }}
-                          className='form-control'
-                        />
-                      </div>
-                      <div className='form-group'>
-                        <label>תאריך עדכון אחרון</label>
-                        <input
-                          type='text'
-                          onChange={(e) => {
-                            setActiveTrain({
-                              ...activeTrain,
-                              lastUpdated: e.target.value,
-                            })
-                          }}
-                          value={activeTrain.lastUpdated}
-                          className='form-control'
-                        />
-                      </div>
-                      <div className='form-group'>
-                        <label>האם פעילה</label>
-                        <input
-                          type='text'
-                          onChange={(e) => {
-                            setActiveTrain({
-                              ...activeTrain,
-                              isEnabled: e.target.value,
-                            })
-                          }}
-                          value={activeTrain.isEnabled}
-                          className='form-control'
-                        />
-                      </div>
-                     
-                    </form>
-                  )}
-
+          !IsEnabledButton && (
+            <>
+              {/* Modal Start */}
+              <i
+                style={{float: 'right', cursor: 'pointer', marginLeft: '20px'}}
+                onClick={(e) => {
+                   getSelectedTrain(trainId).then((res: any) => {
+                    setActiveTrain({
+                      name: res.name,
+                      car1: res.availableCars,
+                      car2: res.availableCars,
+                      lastUpdated: res.lastUpdated,
+                      car1Id: 0,
+                      car2Id: 0,
+                      lastUpdater: res.lastUpdater,
+                      IsEnabled: res.isIsEnabled,
+                      id: res.id,
+                    })
+                    setShowModal(true)
+                  })
                 
-                </>
-              </Modal.Body>
-              {/* {!openSecondModal && (
-                <Modal.Footer>
-                  <div
-                    className=''
-                    style={{
-                      display: 'flex',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      width: '100%',
-                    }}
-                  >
-                    <button
-                      type='button'
-                      onClick={() => {
-                        setShowModal(false)
-                        handleUpdateTrain()
-                      }}
-                      className='btn btn-primary'
-                    >
-                      שמירה
-                    </button>
-                  </div>
-                </Modal.Footer>
-              )} */}
-            </Modal>
+                }}
+                className='fa fa-edit'
+              ></i>
+              <i
+                style={{float: 'right', cursor: 'pointer'}}
+                onClick={(e) => handleChangeActions(true, trainId)}
+                className={`fa fa-trash`}
+              ></i>
+              <Modal
+                show={showModal}
+                style={{direction: 'rtl'}}
+                onHide={() => {
+                  setShowModal(false)
+                  setOpenSecondModal(false)
+                  setStatus({})
+                }}
+                // style={{    minWidth: "700px"}}
+                size='lg'
+                backdrop='static'
+                keyboard={false}
+              >
+                <Modal.Header closeButton></Modal.Header>
+                <Modal.Body>
+                  <>
+                    {!openSecondModal && (
+                      <form>
+                        {errors &&
+                          errors.length > 0 &&
+                          errors.map((item: any) => (
+                            <>
+                              <span style={{color: 'red'}}>{item}</span>
+                              <br />
+                            </>
+                          ))}
+                        <div className='form-group'>
+                          <label>שם קרון</label>
+                          <input
+                            type='text'
+                            value={activeTrain.name}
+                            onChange={(e) => {
+                              setActiveTrain({
+                                ...activeTrain,
+                                name: e.target.value,
+                              })
+                            }}
+                            className='form-control'
+                          />
+                        </div>
+                        <div className='form-group'>
+                          <label>מעדכן אחרון car1</label>
 
-            {/* Modal End */}
-          </>
+                          <select
+                            className='form-select form-select-solid'
+                            data-kt-select2='true'
+                            data-placeholder='Select option'
+                            data-allow-clear='true'
+                            onChange={(e) => {
+                              setActiveTrain({
+                                ...activeTrain,
+                                car1Id: +(e.target.value),
+                              })
+                            }}
+                          >
+                            <option />
+                            {activeTrain.car1.map((item: any) =>  <option value={item.id}>{item.name}</option>)}
+                           
+                          </select>
+                        </div>
+                        <div className='form-group'>
+                          <label>מעדכן אחרון car12</label>
+                          <select
+                            className='form-select form-select-solid'
+                            data-kt-select2='true'
+                            data-placeholder='Select option'
+                            data-allow-clear='true'
+                            onChange={(e) => {
+                              setActiveTrain({
+                                ...activeTrain,
+                                car2Id: +(e.target.value),
+                              })
+                            }}
+                            
+                          >
+                             <option />
+                            {activeTrain.car1.map((item: any) =>  <option value={item.id}>{item.name}</option>)}
+                          </select>
+                        </div>
+                        <div className='form-group'>
+                          <label>מעדכן אחרון</label>
+                          <input
+                            type='text'
+                            value={activeTrain.lastUpdater}
+                            readOnly={true}
+                            className='form-control'
+                          />
+                        </div>
+                        <div className='form-group'>
+                          <label>תאריך עדכון אחרון</label>
+                          <input
+                            type='text'
+                            value={activeTrain.lastUpdated}
+                            readOnly={true}
+                            className='form-control'
+                          />
+                        </div>
+                      </form>
+                    )}
+                  </>
+                </Modal.Body>
+                {!openSecondModal && (
+                  <Modal.Footer>
+                    <div
+                      className=''
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        width: '100%',
+                      }}
+                    >
+                      <button
+                        type='button'
+                        onClick={() => {
+                          setShowModal(false)
+                          handleUpdateTrain()
+                        }}
+                        className='btn btn-primary'
+                      >
+                        שמירה
+                      </button>
+                    </div>
+                  </Modal.Footer>
+                )}
+              </Modal>
+
+              {/* Modal End */}
+            </>
+          )
         )}
       </td>
     )

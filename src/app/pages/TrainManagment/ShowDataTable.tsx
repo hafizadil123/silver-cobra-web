@@ -24,7 +24,7 @@ const ShowDataTable: React.FC<Props> = ({className, listData}) => {
               <tr className='fw-bolder text-muted'>
                 <TableHeadView className='min-w-150px text-center' text={'פעילות'} />
                 <TableHeadView className='min-w-150px text-center' text='שעת התחלה<' />
-                <TableHeadView className='min-w-150px text-center' text=' שעת סיום' />
+                <TableHeadView className='min-w-150px text-center' text='שעת סיום' />
                 <TableHeadView className='min-w-150px text-center' text='סוג היעדרות' />
                 <TableHeadView className='min-w-150px text-center' text='הערה לפעילות' />
               </tr>

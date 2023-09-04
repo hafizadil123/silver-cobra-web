@@ -1,13 +1,8 @@
-/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, {FC, useState, useEffect} from 'react'
 import {useIntl} from 'react-intl'
 import axios from 'axios'
-import moment from 'moment'
-import DataTable, {createTheme} from 'react-data-table-component'
 import {PageTitle} from '../../../_metronic/layout/core'
-import {ChecksComponent} from './Checks'
 import './dashboard-page.css'
-import {ShowDataTable} from './ShowDataTable'
 import {ReportTable} from './Table'
 import {useToasts} from 'react-toast-notifications'
 import Modal from 'react-bootstrap/Modal'
@@ -15,12 +10,9 @@ import Modal from 'react-bootstrap/Modal'
 const TrainCarDashboardPage: FC = () => {
   const [showModal, setShowModal] = useState(false)
 
-  const [users, setUsers] = useState<any>([])
-  const [userRoles, setUserRoles] = useState<any>([])
   const [carsList, setCarsList] = useState<any>([])
   const [activeType, setActiveType] = useState<any>('Created')
-  const [resetPasswordMessage, setResetPasswordMessage] = useState<any>('')
-  const [_initateUpdateOtherPassMessage, setInitiateOtherPassMessage] = useState<any>('')
+
   const [y, setY] = useState(0)
   const [stickyCss, setStickyCss] = useState('')
   const [search, setSearch] = useState('')
@@ -31,7 +23,7 @@ const TrainCarDashboardPage: FC = () => {
 
   const [activeTrainCar, setActiveTrainCar] = useState({
     name: '',
-    trainName: ''
+    trainName: '',
   })
   const handleUpdateTrainCar = () => {
     //
@@ -42,18 +34,12 @@ const TrainCarDashboardPage: FC = () => {
   const {addToast} = useToasts()
 
   const baseUrl = process.env.REACT_APP_API_URL
-  const getLoggedInUserEndPoint = `${baseUrl}/api/Common/GetLoggedInUser`
-  const getDataEndPoint = `${baseUrl}/api/Common/GetData`
 
-  const GetCarsList =`${baseUrl}/api/Common/GetCarsList`
-  const DeleteCar =`${baseUrl}/api/Common/DeleteCar`
+  const GetCarsList = `${baseUrl}/api/Common/GetCarsList`
+  const DeleteCar = `${baseUrl}/api/Common/DeleteCar`
 
-  // const getUsersEndPoint = `${baseUrl}/api/Common/GetUsers`
   const saveCarDetailsEndPoint = `${baseUrl}/api/Common/SaveCarDetails`
-  // const resetPasswordEndPoint = `${baseUrl}/api/account/AdminResetPassword`
-  // const _initateUpdateOtherPassEndPoint = `${baseUrl}/api/account/AdminChangePassword`
-  // const getMyTrainsDailyReportEndPoint = `${baseUrl}/api/Common/GetTrainsDailyReport`
-  // const getMyTrainsDailyCleaningReportEndPoint = `${baseUrl}/api/Common/GetTrainsDailyCleaningReport`
+
   const headerJson = {
     headers: {
       Authorization: `bearer ${loggedInUserDetails.access_token}`,
@@ -69,24 +55,17 @@ const TrainCarDashboardPage: FC = () => {
     setLoading(true)
     getCarsList()
   }, [])
- 
- 
- 
 
   const getSelectedCar = (id: any) => {
     let car = carsList.find((u: any) => u.id == id)
     return car
   }
- 
 
   const getCarsList = async () => {
-   
     const response = await axios.post(GetCarsList, {}, headerJson)
-    console.log(response,"response")
-    
+
     if (response && response.data) {
       const {data} = response
-      console.log(data,"data")
       setCarsList(data.CarsList)
       setActualCars(data.CarsList)
       setLoading(false)
@@ -108,13 +87,12 @@ const TrainCarDashboardPage: FC = () => {
     e.preventDefault()
     setActiveTrainCar({
       name: '',
-      trainName: ''
+      trainName: '',
     })
     setShowModal(true)
     setErrors([])
   }
 
-  
   const saveTrainCarDetails = async (details: any, type = 'Updated') => {
     setActiveType(type)
 
@@ -127,12 +105,15 @@ const TrainCarDashboardPage: FC = () => {
       })
     } else {
       setLoading(true)
-      if (type == 'Created') {
+      if (type === 'Created') {
         setActiveTrainCar({
           name: '',
-          trainName: ''
+          trainName: '',
         })
-        addToast(response.data.message || 'Car has been created successfully!', {appearance: 'success', autoDismiss: true})
+        addToast(response.data.message || 'Car has been created successfully!', {
+          appearance: 'success',
+          autoDismiss: true,
+        })
       } else {
         addToast(`Car ${type} successfully`, {appearance: 'success', autoDismiss: true})
       }
@@ -143,10 +124,10 @@ const TrainCarDashboardPage: FC = () => {
   const handleSearch = (value: any) => {
     value = value.toLowerCase()
     // let searchedUsers = actualUsers.filter((item: any) => {
-      let searchedCars = actualCars.filter((item: any) => {
+    let searchedCars = actualCars.filter((item: any) => {
       if (
         item.name.toLowerCase().indexOf(value) > -1 ||
-        item.trainName.toLowerCase().indexOf(value) > -1 
+        item.trainName.toLowerCase().indexOf(value) > -1
       ) {
         return item
       }
@@ -154,8 +135,6 @@ const TrainCarDashboardPage: FC = () => {
     setSearch(value)
     setCarsList(searchedCars)
   }
-
-
 
   const handleDeleteF = async (id: any) => {
     if (window.confirm('Are you sure you want to delete?')) {
@@ -167,22 +146,20 @@ const TrainCarDashboardPage: FC = () => {
           setLoading(true)
           getCarsList()
         } else {
-          alert(data.validationErrors[0] || 'לא ניתן למחוק את הקרון מפני שיש לו היסטוריה, יש לכבות את הרכבת במקום')
+          alert(
+            data.validationErrors[0] ||
+              'לא ניתן למחוק את הקרון מפני שיש לו היסטוריה, יש לכבות את הרכבת במקום'
+          )
         }
       }
     }
-  }
-  const getUsersAfterUpdate = () => {
-    // getUsers()
-    getCarsList()
   }
 
   return (
     <>
       <div style={{height: 'auto'}} className='main-container-dashboard'>
-        {/* <h1>ניהול משתמשים </h1> */}
         <h1>ניהול קרונות</h1>
-        
+
         <div className='row'>
           <div className='col-lg-12'>
             <div className='row'>
@@ -227,22 +204,11 @@ const TrainCarDashboardPage: FC = () => {
                 </div>
                 <ReportTable
                   className='mb-5 mb-xl-8'
-                  // getSelectedUser={getSelectedUser}
                   getSelectedCar={getSelectedCar}
-                  // userRoles={userRoles}
-                  // saveUserDetails={saveUserDetails}
-                  // users={users}
                   carsList={carsList}
                   css={stickyCss}
-                  // resetUserPassword={resetUserPassword}
-                  // _initiateOtherPass={_initiateOtherPass}
-                  // _initateUpdateOtherPassMessage={_initateUpdateOtherPassMessage}
-                  // resetPasswordMessage={resetPasswordMessage}
-                  // getUsers={getUsers}
                   getCarsList={getCarsList}
-                  getUsersAfterUpdate={getUsersAfterUpdate}
                   handleDelete={(id: any) => handleDeleteF(id)}
-
                 />
               </>
             )}
@@ -299,7 +265,6 @@ const TrainCarDashboardPage: FC = () => {
                 className='form-control'
               />
             </div>
-            
           </form>
         </Modal.Body>
         <Modal.Footer>
@@ -316,7 +281,6 @@ const TrainCarDashboardPage: FC = () => {
               type='button'
               onClick={() => {
                 setShowModal(false)
-                // handleUpdateUser()
                 handleUpdateTrainCar()
               }}
               className='btn btn-primary'

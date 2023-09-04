@@ -1,13 +1,8 @@
-/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, {FC, useState, useEffect} from 'react'
 import {useIntl} from 'react-intl'
 import axios from 'axios'
-import moment from 'moment'
-import DataTable, {createTheme} from 'react-data-table-component'
 import {PageTitle} from '../../../_metronic/layout/core'
-import {ChecksComponent} from './Checks'
 import './dashboard-page.css'
-import {ShowDataTable} from './ShowDataTable'
 import {ReportTable} from './Table'
 import {useToasts} from 'react-toast-notifications'
 import Modal from 'react-bootstrap/Modal'
@@ -15,42 +10,43 @@ import Modal from 'react-bootstrap/Modal'
 const TrainDashboardPage: FC = () => {
   const [showModal, setShowModal] = useState(false)
 
-  const [users, setUsers] = useState<any>([])
-  const [userRoles, setUserRoles] = useState<any>([])
-  // const [carsList, setCarsList] = useState<any>([])
-  const [trainsList, setTrainsList] = useState<any>([])
+  const [trainList, setTrainList] = useState<any>([])
   const [activeType, setActiveType] = useState<any>('Created')
-  const [resetPasswordMessage, setResetPasswordMessage] = useState<any>('')
-  const [_initateUpdateOtherPassMessage, setInitiateOtherPassMessage] = useState<any>('')
+
   const [y, setY] = useState(0)
   const [stickyCss, setStickyCss] = useState('')
   const [search, setSearch] = useState('')
-  const [actualUsers, setActualUsers] = useState<any>([])
+  const [actualTrains, setActualTrains] = useState<any>([])
   const [loading, setLoading] = useState(true)
   const logged_user_detail: any = localStorage.getItem('logged_user_detail')
   const [errors, setErrors] = useState<any>([])
+
   const [activeTrain, setActiveTrain] = useState({
     name: '',
-    IsEnabled: '',
     lastUpdated: '',
+    lastUpdater: '',
+    car1: [],
+    car1Id: 0,
+    car2Id: 0,
+    car2: [],
+    IsEnabled: '',
+    id: '',
   })
   const handleUpdateTrain = () => {
-    //
-    // saveTrainDetails(activeTrain, 'Created')
+    saveTrainDetails(activeTrain, 'Created')
   }
   const loggedInUserDetails = JSON.parse(logged_user_detail)
 
   const {addToast} = useToasts()
 
   const baseUrl = process.env.REACT_APP_API_URL
-  const getLoggedInUserEndPoint = `${baseUrl}/api/Common/GetLoggedInUser`
-  const getDataEndPoint = `${baseUrl}/api/Common/GetData`
 
-  const GetTrainsList =`${baseUrl}/api/Common/GetTrainsList`
-  const DeleteTrain =`${baseUrl}/api/Common/DeleteTrain`
-  // const saveTrainDetailsEndPoint = `${baseUrl}/api/account/SaveUserDetails`
+  const getTrainListEndpoint = `${baseUrl}/api/Common/GetTrainsList`
+  const getTrainDetailsEndpoint = `${baseUrl}/api/Common/GetTrainDetails`
+  const DeleteTrain = `${baseUrl}/api/Common/DeleteTrain`
 
-  const getUsersEndPoint = `${baseUrl}/api/Common/GetUsers`
+  const saveTrainDetailsEndPoint = `${baseUrl}/api/Common/SaveTrainDetails`
+
   const headerJson = {
     headers: {
       Authorization: `bearer ${loggedInUserDetails.access_token}`,
@@ -64,32 +60,31 @@ const TrainDashboardPage: FC = () => {
 
   useEffect(() => {
     setLoading(true)
-    getTrainsList()
+    getTrainList()
   }, [])
 
-  
-
   const getSelectedTrain = (id: any) => {
-    let train = trainsList.find((u: any) => u.id == id)
-    return train
-  }
- 
-  const getTrainsList = async () => {
+    const response = axios.post(getTrainDetailsEndpoint, {
+      id: id
+    }, headerJson).then(res => {
+      return res.data
+    })
+  
+    return response
    
-    const response = await axios.post(GetTrainsList, {}, headerJson)
-    console.log(response,"response")
-    
+  }
+
+  const getTrainList = async () => {
+    const response = await axios.post(getTrainListEndpoint, {}, headerJson)
+
     if (response && response.data) {
       const {data} = response
-      console.log(data,"data")
-      setTrainsList(data.TrainsList)
-      // setActualUsers(data.users)
-      console.log(trainsList, "trainsList")
-
+      setTrainList(data.TrainsList)
+      setActualTrains(data.TrainsList)
       setLoading(false)
     }
   }
-  // console.log(carsList, "CarsList")
+
   const handleNavigation = (e: any) => {
     const window = e.currentTarget
 
@@ -103,56 +98,68 @@ const TrainDashboardPage: FC = () => {
 
   const handleModal = (e: any) => {
     e.preventDefault()
-    setActiveTrain({
-      name: '',
-      IsEnabled: '',
-      lastUpdated: '',
-    })
-    setShowModal(true)
-    setErrors([])
+    getSelectedTrain(0).then((res: any) => {
+        setActiveTrain({
+          name: res.name,
+          car1: res.availableCars || [],
+          car2: res.availableCars || [],
+          lastUpdated: res.lastUpdated,
+          IsEnabled: res.IsEnabled,
+          car1Id: 0,
+          car2Id: 0,
+          lastUpdater: res.lastUpdater,
+          id: res.id,
+        })
+        setShowModal(true)
+        setErrors([])
+      })
   }
 
- 
+  const saveTrainDetails = async (details: any, type = 'Updated') => {
+    setActiveType(type)
 
-  // const saveTrainDetails = async (details: any, type = 'Updated') => {
-  //   setActiveType(type)
+    const response = await axios.post(saveTrainDetailsEndPoint, details, headerJson)
+    if (response.data.result === false) {
+      response.data.validationErrors.forEach((error: any) => {
+        // addToast(error, {appearance: 'error', autoDismiss: true});
+        setErrors(response.data.validationErrors)
+        setShowModal(true)
+      })
+    } else {
+      setLoading(true)
+      if (type === 'Created') {
+        setActiveTrain({
+            name: '',
+      lastUpdated: '',
+      lastUpdater: '',
+      car1: [],
+      car1Id: 0,
+      car2Id: 0,
+      car2: [],
+      IsEnabled: '',
+      id: '',
+        })
+        addToast(response.data.message || 'Train has been created successfully!', {
+          appearance: 'success',
+          autoDismiss: true,
+        })
+      } else {
+        addToast(`Train ${type} successfully`, {appearance: 'success', autoDismiss: true})
+      }
+      getTrainList()
+    }
+  }
 
-  //   const response = await axios.post(saveTrainDetailsEndPoint, details, headerJson)
-  //   if (response.data.result === false) {
-  //     response.data.validationErrors.forEach((error: any) => {
-  //       // addToast(error, {appearance: 'error', autoDismiss: true});
-  //       setErrors(response.data.validationErrors)
-  //       setShowModal(true)
-  //     })
-  //   } else {
-  //     setLoading(true)
-  //     if (type == 'Created') {
-  //       setActiveTrain({
-  //         name: '',
-  //         IsEnabled: '',
-  //         lastUpdated: ''
-  //       })
-  //       addToast(response.data.message, {appearance: 'success', autoDismiss: true})
-  //     } else {
-  //       addToast(`User ${type} successfully`, {appearance: 'success', autoDismiss: true})
-  //     }
-  //     getTrainsList()
-  //   }
-  // }
   const handleSearch = (value: any) => {
     value = value.toLowerCase()
-      let searchedTrains = trainsList.filter((item: any) => {
-      if (
-        item.name.toLowerCase().indexOf(value) > -1 
-      ) {
+    let searchedTrains = actualTrains.filter((item: any) => {
+      if (item.name.toLowerCase().indexOf(value) > -1) {
         return item
       }
     })
     setSearch(value)
-    setTrainsList(searchedTrains)
+    setTrainList(searchedTrains)
   }
-
-
 
   const handleDeleteF = async (id: any) => {
     if (window.confirm('Are you sure you want to delete?')) {
@@ -162,20 +169,22 @@ const TrainDashboardPage: FC = () => {
         const {data} = response
         if (data.result) {
           setLoading(true)
-          getTrainsList()
+          getTrainList()
+        } else {
+          alert(
+            data.validationErrors[0] ||
+              'לא ניתן למחוק את הקרון מפני שיש לו היסטוריה, יש לכבות את הרכבת במקום'
+          )
         }
       }
     }
-  }
-  const getTrainsAfterUpdate = () => {
-    getTrainsList()
   }
 
   return (
     <>
       <div style={{height: 'auto'}} className='main-container-dashboard'>
-        <h1>ניהול רכבות</h1>
-        
+        <h1>ניהול קרונות</h1>
+
         <div className='row'>
           <div className='col-lg-12'>
             <div className='row'>
@@ -220,22 +229,11 @@ const TrainDashboardPage: FC = () => {
                 </div>
                 <ReportTable
                   className='mb-5 mb-xl-8'
-                  // getSelectedUser={getSelectedUser}
                   getSelectedTrain={getSelectedTrain}
-                  // userRoles={userRoles}
-                  // saveUserDetails={saveUserDetails}
-                  // users={users}
-                  trainsList={trainsList}
+                  trainList={trainList}
                   css={stickyCss}
-                  // resetUserPassword={resetUserPassword}
-                  // _initiateOtherPass={_initiateOtherPass}
-                  // _initateUpdateOtherPassMessage={_initateUpdateOtherPassMessage}
-                  // resetPasswordMessage={resetPasswordMessage}
-                  // getUsers={getUsers}
-                  getTrainsList={getTrainsList}
-                  getTrainsAfterUpdate={getTrainsAfterUpdate}
+                  getTrainList={getTrainList}
                   handleDelete={(id: any) => handleDeleteF(id)}
-
                 />
               </>
             )}
@@ -255,59 +253,70 @@ const TrainDashboardPage: FC = () => {
       >
         <Modal.Header closeButton></Modal.Header>
         <Modal.Body>
-          <form>
-            {errors &&
-              errors.length > 0 &&
-              errors.map((item: any) => (
-                <>
-                  <span style={{color: 'red'}}>{item}</span>
-                  <br />
-                </>
-              ))}
-            <div className='form-group'>
-              <label>שם רכבת</label>
-              <input
-                type='text'
-                value={activeTrain.name}
-                onChange={(e) => {
-                  setActiveTrain({
-                    ...activeTrain,
-                    name: e.target.value,
-                  })
-                }}
-                className='form-control'
-              />
-            </div>
-            <div className='form-group'>
-              <label>תאריך עדכון אחרון</label>
-              <input
-                type='text'
-                onChange={(e) => {
-                  setActiveTrain({
-                    ...activeTrain,
-                    IsEnabled: e.target.value,
-                  })
-                }}
-                value={activeTrain.IsEnabled}
-                className='form-control'
-              />
-            </div>
-            <div className='form-group'>
-              <label>האם פעילה</label>
-              <input
-                type='text'
-                onChange={(e) => {
-                  setActiveTrain({
-                    ...activeTrain,
-                    lastUpdated: e.target.value,
-                  })
-                }}
-                value={activeTrain.lastUpdated}
-                className='form-control'
-              />
-            </div>
-            
-          </form>
+        <form>
+                        {errors &&
+                          errors.length > 0 &&
+                          errors.map((item: any) => (
+                            <>
+                              <span style={{color: 'red'}}>{item}</span>
+                              <br />
+                            </>
+                          ))}
+                        <div className='form-group'>
+                          <label>שם קרון</label>
+                          <input
+                            type='text'
+                            value={activeTrain.name}
+                            onChange={(e) => {
+                              setActiveTrain({
+                                ...activeTrain,
+                                name: e.target.value,
+                              })
+                            }}
+                            className='form-control'
+                          />
+                        </div>
+                        <div className='form-group'>
+                          <label>מעדכן אחרון car1</label>
+
+                          <select
+                            className='form-select form-select-solid'
+                            data-kt-select2='true'
+                            data-placeholder='Select option'
+                            data-allow-clear='true'
+                            onChange={(e) => {
+                              setActiveTrain({
+                                ...activeTrain,
+                                car1Id: +(e.target.value),
+                              })
+                            }}
+                          >
+                            <option />
+                            {activeTrain.car1.map((item: any) =>  <option value={item.id}>{item.name}</option>)}
+                           
+                          </select>
+                        </div>
+                        <div className='form-group'>
+                          <label>מעדכן אחרון car12</label>
+                          <select
+                            className='form-select form-select-solid'
+                            data-kt-select2='true'
+                            data-placeholder='Select option'
+                            data-allow-clear='true'
+                            onChange={(e) => {
+                              setActiveTrain({
+                                ...activeTrain,
+                                car2Id: +(e.target.value),
+                              })
+                            }}
+                            
+                          >
+                             <option />
+                            {activeTrain.car1.map((item: any) =>  <option value={item.id}>{item.name}</option>)}
+                          </select>
+                        </div>
+                   
+                      </form>
         </Modal.Body>
         <Modal.Footer>
           <div
