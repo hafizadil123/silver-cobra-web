@@ -28,6 +28,7 @@ const ReportTable: React.FC<Props> = ({
   const {addToast} = useToasts()
   const [y, setY] = useState(0)
   const [stickyCss, setStickyCss] = useState('')
+
   const handleToastMessage = (message: any, appearance: any) => {
     addToast(message, {appearance: appearance, autoDismiss: true})
   }
@@ -205,6 +206,8 @@ const TableHeadViewInFloatingDiv = (props: any) => {
     }
   }
   const urlText = text.replaceAll(' ', 'trainNameQuery')
+  const userRole = localStorage.getItem('userType')
+
   const getBackgroundColorAccordingToSeverity = (severity: any) => {
     switch (severity) {
       case 1:
@@ -229,13 +232,23 @@ const TableHeadViewInFloatingDiv = (props: any) => {
         }}
       >
         <div>
+          {userRole !== 'Conductor' ? 
           <Link
+          style={{fontSize: '20px!important', fontWeight: 'bold', color: 'black'}}
+          to={`/trains-daily-report/${urlText}/${getDate()}`}
+          className='header_fix'
+        >
+          {text}
+        </Link>
+        :
+        <Link
             style={{fontSize: '20px!important', fontWeight: 'bold', color: 'black'}}
-            to={`/trains-daily-report/${urlText}/${getDate()}`}
+            to={`#`}
             className='header_fix'
           >
             {text}
-          </Link>
+          </Link> }
+          
           <br />
           <br />
           <span style={{fontSize: '16px', fontWeight: 'bold'}}>{driverName}</span>

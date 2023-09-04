@@ -659,7 +659,7 @@ const TableDataView = (props: any) => {
                       }}
                       className='btn btn-primary'
                     >
-                      שמירה13213
+                      שמירה
                     </button>
                   </div>
                 </Modal.Footer>

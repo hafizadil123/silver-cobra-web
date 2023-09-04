@@ -98,18 +98,22 @@ const DriverDashboardPage: FC = () => {
                 </button>
               </div>
             </div>
-            {trains && trains.length === 0 && (
+            {console.log({
+              trains: trains.length
+            })}
+            {trains && trains.length === 0 ? (
               <div className='d-flex justify-content-center mb-5'>
-                <div className='spinner-border text-primary'>
-                  <span className='sr-only'>אנא המתן...</span>
+                <div className='text-primary'>
+                  <span className='' style={{fontSize: "16px", marginTop: "20px"}}>לא נמצאו רכבות פנויות לבחירה</span>
                 </div>
               </div>
-            )}
+            ) : 
             <TrainsTable
               className='mb-5 mb-xl-8'
               trains={trains}
               handleUpdateDriverAndRedirect={handleUpdateDriverAndRedirect}
             />
+}
           </div>
         </div>
       </div>
