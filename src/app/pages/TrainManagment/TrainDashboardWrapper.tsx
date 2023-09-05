@@ -30,12 +30,20 @@ const TrainDashboardPage: FC = () => {
   })
   const handleUpdateTrain = () => {
     //
+
+    saveTrainDetails(activeTrain , 'Created')
+  }
+
+
+  const handleTrainUsability = () => {
+    //
     const id = activeTrain.id;
     const IsEnabled =activeTrain.IsEnabled;
     const useAbility = {id: id, IsEnabled: IsEnabled}
     console.log(useAbility, "useAbility")
-    saveTrainDetails(useAbility , 'Created')
+    SetTrainUsability(useAbility , 'Created')
   }
+
   const loggedInUserDetails = JSON.parse(logged_user_detail)
 
   const {addToast} = useToasts()
@@ -109,6 +117,33 @@ const TrainDashboardPage: FC = () => {
     })
     setShowModal(true)
     setErrors([])
+  }
+
+  const SetTrainUsability = async (details: any, type = 'Updated') => {
+    // setActiveType(type)
+
+    const response = await axios.post(SetTrainUsabilityEndPoint, details, headerJson)
+    if (response.data.result === false) {
+      response.data.validationErrors.forEach((error: any) => {
+        // addToast(error, {appearance: 'error', autoDismiss: true});
+        setErrors(response.data.validationErrors)
+        setShowModal(true)
+      })
+    } else {
+      setLoading(true)
+      if (type == 'Created') {
+        setActiveTrain({
+          name: '',
+          IsEnabled: '',
+          lastUpdated: '',
+          id: ''
+        })
+        addToast(response.data.message, {appearance: 'success', autoDismiss: true})
+      } else {
+        addToast(`User ${type} successfully`, {appearance: 'success', autoDismiss: true})
+      }
+      getTrainsList()
+    }
   }
 
  

@@ -302,7 +302,7 @@ const TrainCarDashboardPage: FC = () => {
                 className='form-control'
               />
             </div>
-            <div className='form-group'>
+            {/* <div className='form-group'>
               <label>שם רכבת</label>
               <input
                 type='text'
@@ -316,7 +316,7 @@ const TrainCarDashboardPage: FC = () => {
                 className='form-control'
               />
             </div>
-            
+             */}
             {/* <div className='form-group'>
               <label>תאריך עדכון אחרון</label>
               <input
