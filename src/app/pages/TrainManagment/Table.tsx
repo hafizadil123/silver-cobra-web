@@ -90,6 +90,8 @@ const ReportTable: React.FC<Props> = ({
                         getTrainList={getTrainList}
                         IsEnabledButton={true}
                       />
+                      {/* <td>{item.IsEnabled === true ? `✅` : `❌`}</td> */}
+
                       <TableDataView
                         className=''
                         index={index}
@@ -105,7 +107,7 @@ const ReportTable: React.FC<Props> = ({
                         className=''
                         index={index}
                         flexValue={1}
-                        text={`edit`}
+                        // text={`edit`}
                         getSelectedTrain={getSelectedTrain}
                         trainId={item.id}
                         isEdit={true}
@@ -114,6 +116,8 @@ const ReportTable: React.FC<Props> = ({
                         id={item.id}
                         IsEnabledButton={false}
                         handleDelete={handleDelete}
+                        text={item.IsEnabled}
+
                       />
                     </tr>
                   )
@@ -181,6 +185,12 @@ const TableDataView = (props: any) => {
   const handleUpdateTrain = () => {
     saveTrainDetails(activeTrain)
   }
+  const showAlert = (customText: any) => {
+    // const customText = "This is your custom alert text!";
+    window.alert(customText);
+    // window.confirm(customText)
+  };
+
   const saveTrainDetails = async (details: any, type = 'Updated') => {
       console.log("saveTrainDetails", details);
       const reqObj = {
@@ -197,13 +207,14 @@ const TableDataView = (props: any) => {
         setShowModal(true)
       })
     } else {
-      addToast(`${type} successfully`, {appearance: 'success', autoDismiss: true})
+      // addToast(`${type} successfully`, {appearance: 'success', autoDismiss: true})
+      addToast(`עדכון התבצע בהצלחה`, {appearance: 'success', autoDismiss: true})
     }
     getTrainList()
   }
 
   const setTrainVisibility = async ({trainId, IsEnabled, type}: any) => {
-    alert('are you sure, you want to execute this?')
+    // alert('are you sure, you want to execute this?')
     const response = await axios.post(
       setTrainVisibilityEndpoint,
       {trainId: trainId, IsEnabled: IsEnabled},
@@ -216,7 +227,9 @@ const TableDataView = (props: any) => {
         setShowModal(true)
       })
     } else {
-      addToast(`${type} updated successfully`, {appearance: 'success', autoDismiss: true})
+      // addToast(`${type} updated successfully`, {appearance: 'success', autoDismiss: true})
+      addToast(`עדכון סטטוס הרכבת בוצע בהצלחה`, {appearance: 'success', autoDismiss: true})
+
     }
     getTrainList()
     // window.location.reload();
@@ -247,7 +260,7 @@ const TableDataView = (props: any) => {
   
     return (
       <td className={`${className} `}>
-        {!isEdit && !isDelete && IsEnabledButton && (
+        {/* {!isEdit && !isDelete && IsEnabledButton && (
           <button
             style={{float: 'right', cursor: 'pointer', marginLeft: '20px'}}
             onClick={(e) => {
@@ -260,7 +273,13 @@ const TableDataView = (props: any) => {
           >
             {!text ? 'Enable' : 'Disable'}
           </button>
-        )}
+        )} */}
+
+        {!isEdit && !isDelete && IsEnabledButton &&
+          <td>{text === true ? `✅` : `❌`}</td>
+
+        }
+
         {!IsEnabledButton && isEdit === false ? (
           <span style={{float: 'right'}}>{text}</span>
         ) : (
@@ -276,8 +295,10 @@ const TableDataView = (props: any) => {
                       car1: res.availableCars,
                       car2: res.availableCars,
                       lastUpdated: res.lastUpdated,
-                      car1Id: 0,
-                      car2Id: 0,
+                      // car1Id: 0,
+                      // car2Id: 0,
+                      car1Id: res.car1Id,
+                      car2Id: res.car2Id,
                       lastUpdater: res.lastUpdater,
                       IsEnabled: res.isIsEnabled,
                       id: res.id,
@@ -290,9 +311,33 @@ const TableDataView = (props: any) => {
               ></i>
               <i
                 style={{float: 'right', cursor: 'pointer'}}
-                onClick={(e) => handleChangeActions(true, trainId)}
+                onClick={(e) => 
+                  {
+                  showAlert("האם בטוח למחוק את הרכבת?");
+                  handleChangeActions(true, trainId)
+                }
+                }
                 className={`fa fa-trash`}
               ></i>
+
+
+                <button
+                  style={{ float: "right", cursor: "pointer", marginLeft: "20px", paddingLeft: "10px", paddingRight: "10px", paddingTop: "5px", paddingBottom: "5px" }}
+                  onClick={(e) => {
+
+                    showAlert(!text ? "האם בטוח להפעיל את הרכבת?" : "האם בטוח להשבית את הרכבת?");
+                    let car = setTrainVisibility({ trainId, IsEnabled: !text, type: 'Train visibility' })
+                    console.log({
+                      car
+                    })
+                  }}
+                  className={`${!text ? `btn btn-success mx-2` : `btn btn-danger mx-2`}`}
+
+                >
+                  {!text ? 'הפעל' : 'השבת'}
+                </button>
+                
+
               <Modal
                 show={showModal}
                 style={{direction: 'rtl'}}
@@ -334,7 +379,7 @@ const TableDataView = (props: any) => {
                           />
                         </div>
                         <div className='form-group'>
-                          <label>מעדכן אחרון car1</label>
+                          <label> קרון 1</label>
 
                           <select
                             className='form-select form-select-solid'
@@ -347,6 +392,7 @@ const TableDataView = (props: any) => {
                                 car1Id: +(e.target.value),
                               })
                             }}
+                            value={activeTrain.car1Id} // Set the default value here
                           >
                             <option />
                             {activeTrain.car1.map((item: any) =>  <option value={item.id}>{item.name}</option>)}
@@ -354,7 +400,7 @@ const TableDataView = (props: any) => {
                           </select>
                         </div>
                         <div className='form-group'>
-                          <label>מעדכן אחרון car12</label>
+                          <label >קרון 2</label>
                           <select
                             className='form-select form-select-solid'
                             data-kt-select2='true'
@@ -366,7 +412,7 @@ const TableDataView = (props: any) => {
                                 car2Id: +(e.target.value),
                               })
                             }}
-                            
+                            value={activeTrain.car2Id} // Set the default value here
                           >
                              <option />
                             {activeTrain.car1.map((item: any) =>  <option value={item.id}>{item.name}</option>)}

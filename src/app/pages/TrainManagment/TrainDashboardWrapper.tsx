@@ -139,12 +139,17 @@ const TrainDashboardPage: FC = () => {
       IsEnabled: '',
       id: '',
         })
-        addToast(response.data.message || 'Train has been created successfully!', {
+        // addToast(response.data.message || 'Train has been created successfully!', {
+        //   appearance: 'success',
+        //   autoDismiss: true,
+        // })
+        addToast('הקרון החדש נוצר בהצלחה', {
           appearance: 'success',
           autoDismiss: true,
         })
       } else {
-        addToast(`Train ${type} successfully`, {appearance: 'success', autoDismiss: true})
+        // addToast(`Train ${type} successfully`, {appearance: 'success', autoDismiss: true})
+        addToast(`עדכון התבצע בהצלחה`, {appearance: 'success', autoDismiss: true})
       }
       getTrainList()
     }
@@ -162,7 +167,8 @@ const TrainDashboardPage: FC = () => {
   }
 
   const handleDeleteF = async (id: any) => {
-    if (window.confirm('Are you sure you want to delete?')) {
+    // if (window.confirm('האם בטוח למחוק את הרכבת?')) 
+    {
       const response = await axios.post(DeleteTrain, {id: id}, headerJson)
 
       if (response && response.data) {
@@ -183,8 +189,8 @@ const TrainDashboardPage: FC = () => {
   return (
     <>
       <div style={{height: 'auto'}} className='main-container-dashboard'>
-        <h1>ניהול קרונות</h1>
-
+        {/* <h1>ניהול קרונות</h1> */}
+        <h1>ניהול רכבות</h1>
         <div className='row'>
           <div className='col-lg-12'>
             <div className='row'>
@@ -223,7 +229,8 @@ const TrainDashboardPage: FC = () => {
                       className='btn btn-primary handleSubmit'
                       onClick={(e) => handleModal(e)}
                     >
-                      הוסף משתמש
+                      {/* הוסף משתמש */}
+                      הוסף רכבת
                     </button>
                   </div>
                 </div>
@@ -277,7 +284,7 @@ const TrainDashboardPage: FC = () => {
                           />
                         </div>
                         <div className='form-group'>
-                          <label>מעדכן אחרון car1</label>
+                          <label>קרון1</label>
 
                           <select
                             className='form-select form-select-solid'
@@ -297,7 +304,7 @@ const TrainDashboardPage: FC = () => {
                           </select>
                         </div>
                         <div className='form-group'>
-                          <label>מעדכן אחרון car12</label>
+                          <label>קרון2</label>
                           <select
                             className='form-select form-select-solid'
                             data-kt-select2='true'

@@ -1,18 +1,18 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, {useState, useEffect} from 'react'
+import React, { useState, useEffect } from 'react'
 import Modal from 'react-bootstrap/Modal'
 import axios from 'axios'
-import {useToasts} from 'react-toast-notifications'
-import {useFormik} from 'formik'
+import { useToasts } from 'react-toast-notifications'
+import { useFormik } from 'formik'
 
 import './car.css'
 
 type Props = {
   className: string
   carsList: any[]
-  getSelectedCar : (id: any) => any
+  getSelectedCar: (id: any) => any
   css: string
-  getCarsList: ()=> any
+  getCarsList: () => any
   handleDelete: any
 }
 
@@ -41,7 +41,7 @@ const ReportTable: React.FC<Props> = ({
 
     window.addEventListener('scroll', (e) => handleNavigation(e))
   }, [])
-  
+
   return (
     <div className={`card ${className}`}>
       <div className='card-body py-3'>
@@ -50,7 +50,7 @@ const ReportTable: React.FC<Props> = ({
           {/* begin::Table */}
           <table className={`table table-row-bordered table-row-gray-100 align-middle gs-0 gy-3`}>
             {/* begin::Table head */}
-            <thead style={{background: stickyCss, top: `${stickyCss && '65px'}`}}>
+            <thead style={{ background: stickyCss, top: `${stickyCss && '65px'}` }}>
               <tr className='fw-bolder text-muted'>
                 <TableHeadView className='' text={'שם קרון'} />
                 <TableHeadView className='' text={'שם רכבת'} />
@@ -74,7 +74,7 @@ const ReportTable: React.FC<Props> = ({
                       getSelectedCar={getSelectedCar}
                       isEdit={false}
                       isEnabledButton={false}
-                      
+
                     />
                     <TableDataView
                       className=''
@@ -86,7 +86,7 @@ const ReportTable: React.FC<Props> = ({
                       isEdit={false}
                       isEnabledButton={false}
                     />
-                     <TableDataView
+                    <TableDataView
                       className=''
                       index={index}
                       flexValue={1}
@@ -98,6 +98,8 @@ const ReportTable: React.FC<Props> = ({
                       isDelete={false}
                       isEnabledButton={true}
                     />
+                   {/* <td>{item.isEnabled === true ? `✅` : `❌`}</td> */}
+
                     <TableDataView
                       className=''
                       index={index}
@@ -105,15 +107,15 @@ const ReportTable: React.FC<Props> = ({
                       getCarsList={getCarsList}
                       text={item.lastUpdated}
                       getSelectedCar={getSelectedCar}
-                      isEdit={false}     
-                      isEnabledButton={false}              
+                      isEdit={false}
+                      isEnabledButton={false}
                     />
-                  
+
                     <TableDataView
                       className=''
                       index={index}
                       flexValue={1}
-                      text={`edit`}
+                      // text={`edit`}
                       getSelectedCar={getSelectedCar}
                       carId={item.id}
                       isEdit={true}
@@ -122,6 +124,8 @@ const ReportTable: React.FC<Props> = ({
                       id={item.id}
                       isEnabledButton={false}
                       handleDelete={handleDelete}
+                      text={item.isEnabled}
+
                     />
                   </tr>
                 )
@@ -138,15 +142,15 @@ const ReportTable: React.FC<Props> = ({
   )
 }
 
-export {ReportTable}
+export { ReportTable }
 const TableDataView = (props: any) => {
   const [openSecondModal, setOpenSecondModal] = useState(false)
   const [loading, setLoading] = useState(false)
   const [hasErrors, setHasErrors] = useState<boolean | undefined>(undefined)
   const logged_user_detail: any = localStorage.getItem('logged_user_detail')
   const getUser = JSON.parse(logged_user_detail)
-  const {addToast} = useToasts()
- 
+  const { addToast } = useToasts()
+
   const {
     isEdit,
     text,
@@ -154,6 +158,7 @@ const TableDataView = (props: any) => {
     getSelectedCar,
     carId,
     getUsers,
+    carsList,
     getCarsList,
     isEnabledButton,
     handleDelete,
@@ -166,7 +171,7 @@ const TableDataView = (props: any) => {
     lastUpdated: '',
     lastUpdater: '',
     isEnabled: '',
-    id:'',
+    id: '',
   })
   const baseUrl = process.env.REACT_APP_API_URL
   const logged_user_details: any = localStorage.getItem('logged_user_detail')
@@ -185,6 +190,12 @@ const TableDataView = (props: any) => {
   const handleUpdateCar = () => {
     saveCarDetails(activeCar)
   }
+
+  const showAlert = (customText: any) => {
+    window.alert(customText);
+    // window.confirm(customText)
+  };
+
   const saveCarDetails = async (details: any, type = 'Updated') => {
     const response = await axios.post(saveCarDetailsEndPoint, details, headerJson)
     if (response.data.result === false) {
@@ -194,14 +205,15 @@ const TableDataView = (props: any) => {
         setShowModal(true)
       })
     } else {
-      addToast(`Car ${type} successfully`, {appearance: 'success', autoDismiss: true})
+      // addToast(`Car ${type} successfully`, {appearance: 'success', autoDismiss: true})
+      addToast(`עדכון התבצע בהצלחה`, { appearance: 'success', autoDismiss: true })
     }
     getCarsList()
   }
- 
-  const setCarVisibility = async ({carId, isEnabled, type}: any) => {
-    alert('are you sure, you want to execute this?')
-    const response = await axios.post(setCarVisibilityEndpoint, {carId: carId, isEnabled: isEnabled}, headerJson)
+
+  const setCarVisibility = async ({ carId, isEnabled, type }: any) => {
+    // alert('are you sure, you want to execute this?')
+    const response = await axios.post(setCarVisibilityEndpoint, { carId: carId, isEnabled: isEnabled }, headerJson)
     if (response.data.result === false) {
       response.data.validationErrors.forEach((error: any) => {
         // addToast(error, {appearance: 'error', autoDismiss: true});
@@ -209,13 +221,14 @@ const TableDataView = (props: any) => {
         setShowModal(true)
       })
     } else {
-      addToast(`${type} updated successfully`, {appearance: 'success', autoDismiss: true})
+      // addToast(`${type} updated successfully`, {appearance: 'success', autoDismiss: true})
+      addToast(`עדכון סטטוס הקרון בוצע בהצלחה`, { appearance: 'success', autoDismiss: true })
     }
     getCarsList()
   }
   const handleChangeActions = (isDelete: boolean, id: any) => {
     let car = getSelectedCar(id)
-   
+
     if (!isDelete) {
       setActiveCar({
         name: car.name,
@@ -231,6 +244,9 @@ const TableDataView = (props: any) => {
     }
   }
 
+
+
+
   const renderFields = () => {
     console.log({
       isDelete,
@@ -239,7 +255,8 @@ const TableDataView = (props: any) => {
     })
     return (
       <td className={`${className} `}>
-        {!isEdit && !isDelete && isEnabledButton && <button
+
+        {/* {!isEdit && !isDelete && isEnabledButton && <button
         style={{float: 'right', cursor: 'pointer' , marginLeft: '20px'}}
         onClick={(e) => {
           let car = setCarVisibility({carId, isEnabled: !text, type: 'car visibility'})
@@ -250,15 +267,20 @@ const TableDataView = (props: any) => {
         className={`${!text ? `btn btn-success mx-2` : `btn btn-danger mx-2`}`}
         >
           {!text ? 'Enable' : 'Disable' }
-        </button>}
+        </button>} */}
+        {!isEdit && !isDelete && isEnabledButton &&
+          <td>{text === true ? `✅` : `❌`}</td>
+        }
+
+
         {!isEnabledButton && isEdit === false ? (
-          <span style={{float: 'right'}}>{text}</span>
+          <span style={{ float: 'right' }}>{text}</span>
         ) : (
-          !isEnabledButton && 
+          !isEnabledButton &&
           <>
             {/* Modal Start */}
             <i
-              style={{float: 'right', cursor: 'pointer' , marginLeft: '20px'}}
+              style={{ float: 'right', cursor: 'pointer', marginLeft: '20px' }}
               onClick={(e) => {
                 let car = getSelectedCar(carId)
                 setActiveCar({
@@ -272,14 +294,38 @@ const TableDataView = (props: any) => {
               }}
               className='fa fa-edit'
             ></i>
-             <i
-              style={{float: 'right', cursor: 'pointer'}}
-              onClick={(e) => handleChangeActions(true, carId)}
+            <i
+              style={{ float: 'right', cursor: 'pointer' }}
+              onClick={(e) => {
+                showAlert("האם בטוח למחוק את הקרון?");
+                handleChangeActions(true, carId)
+              }}
               className={`fa fa-trash`}
             ></i>
+
+            <button
+              style={{ float: "right", cursor: "pointer", marginLeft: "20px", paddingLeft: "10px", paddingRight: "10px", paddingTop: "5px", paddingBottom: "5px" }}
+              onClick={(e) => {
+                showAlert(!text ? "האם בטוח להפעיל את הקרון?" : "האם בטוח להשבית את הקרון?");
+                let car = setCarVisibility({ carId, isEnabled: !text, type: 'car visibility' })
+                console.log({
+                  car
+                })
+              }}
+              className={`${!text ? `btn btn-success mx-2` : `btn btn-danger mx-2`}`}
+
+            >
+              {!text ? 'הפעל' : 'השבת'}
+            </button>
+          {/* {showAlert && (
+        <CustomAlert
+          message="This is your custom alert text!"
+          onClose={handleCloseAlert}
+        />
+      )} */}
             <Modal
               show={showModal}
-              style={{direction: 'rtl'}}
+              style={{ direction: 'rtl' }}
               onHide={() => {
                 setShowModal(false)
                 setOpenSecondModal(false)
@@ -299,7 +345,7 @@ const TableDataView = (props: any) => {
                         errors.length > 0 &&
                         errors.map((item: any) => (
                           <>
-                            <span style={{color: 'red'}}>{item}</span>
+                            <span style={{ color: 'red' }}>{item}</span>
                             <br />
                           </>
                         ))}
@@ -335,7 +381,7 @@ const TableDataView = (props: any) => {
                           className='form-control'
                         />
                       </div>
-                       
+
                     </form>
                   )}
                 </>
@@ -377,7 +423,7 @@ const TableDataView = (props: any) => {
 }
 
 const TableHeadView = (props: any) => {
-  const {text, className} = props
+  const { text, className } = props
 
   return (
     <th className={`${className}`}>

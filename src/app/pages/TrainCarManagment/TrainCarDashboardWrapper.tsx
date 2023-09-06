@@ -23,7 +23,7 @@ const TrainCarDashboardPage: FC = () => {
 
   const [activeTrainCar, setActiveTrainCar] = useState({
     name: '',
-    trainName: '',
+    // trainName: '',
   })
   const handleUpdateTrainCar = () => {
     //
@@ -87,7 +87,7 @@ const TrainCarDashboardPage: FC = () => {
     e.preventDefault()
     setActiveTrainCar({
       name: '',
-      trainName: '',
+      // trainName: '',
     })
     setShowModal(true)
     setErrors([])
@@ -108,14 +108,25 @@ const TrainCarDashboardPage: FC = () => {
       if (type === 'Created') {
         setActiveTrainCar({
           name: '',
-          trainName: '',
+          // trainName: '',
         })
-        addToast(response.data.message || 'Car has been created successfully!', {
+        // addToast(response.data.message || 'Car has been created successfully!', {
+        //   appearance: 'success',
+        //   autoDismiss: true,
+        // })
+
+        // addToast(response.data.message || 'הקרון החדש נוצר בהצלחה', {
+        //   appearance: 'success',
+        //   autoDismiss: true,
+        // })
+        addToast('הקרון החדש נוצר בהצלחה', {
           appearance: 'success',
           autoDismiss: true,
         })
+
       } else {
-        addToast(`Car ${type} successfully`, {appearance: 'success', autoDismiss: true})
+        // addToast(`Car ${type} successfully`, {appearance: 'success', autoDismiss: true})
+        addToast(`עדכון התבצע בהצלחה`, {appearance: 'success', autoDismiss: true})
       }
       getCarsList()
     }
@@ -137,7 +148,8 @@ const TrainCarDashboardPage: FC = () => {
   }
 
   const handleDeleteF = async (id: any) => {
-    if (window.confirm('Are you sure you want to delete?')) {
+    // if (window.confirm('Are you sure you want to delete?')) 
+    {
       const response = await axios.post(DeleteCar, {id: id}, headerJson)
 
       if (response && response.data) {
@@ -198,7 +210,8 @@ const TrainCarDashboardPage: FC = () => {
                       className='btn btn-primary handleSubmit'
                       onClick={(e) => handleModal(e)}
                     >
-                      הוסף משתמש
+                      {/* הוסף משתמש */}
+                      הוסף קרון
                     </button>
                   </div>
                 </div>
@@ -251,7 +264,7 @@ const TrainCarDashboardPage: FC = () => {
                 className='form-control'
               />
             </div>
-            <div className='form-group'>
+            {/* <div className='form-group'>
               <label>שם רכבת</label>
               <input
                 type='text'
@@ -264,7 +277,7 @@ const TrainCarDashboardPage: FC = () => {
                 }}
                 className='form-control'
               />
-            </div>
+            </div> */}
           </form>
         </Modal.Body>
         <Modal.Footer>
