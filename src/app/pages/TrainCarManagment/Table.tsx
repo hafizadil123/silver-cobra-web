@@ -192,17 +192,17 @@ const TableDataView = (props: any) => {
   }
 
   const showAlert = (customText: any) => {
-    window.alert(customText);
-    // window.confirm(customText)
+    // window.alert(customText);
+    window.confirm(customText)
   };
 
   const saveCarDetails = async (details: any, type = 'Updated') => {
     const response = await axios.post(saveCarDetailsEndPoint, details, headerJson)
     if (response.data.result === false) {
       response.data.validationErrors.forEach((error: any) => {
-        // addToast(error, {appearance: 'error', autoDismiss: true});
-        setErrors(response.data.validationErrors)
-        setShowModal(true)
+        addToast(error, {appearance: 'error', autoDismiss: true});
+        // setErrors(response.data.validationErrors)
+        // setShowModal(true)
       })
     } else {
       // addToast(`Car ${type} successfully`, {appearance: 'success', autoDismiss: true})
@@ -216,9 +216,9 @@ const TableDataView = (props: any) => {
     const response = await axios.post(setCarVisibilityEndpoint, { carId: carId, isEnabled: isEnabled }, headerJson)
     if (response.data.result === false) {
       response.data.validationErrors.forEach((error: any) => {
-        // addToast(error, {appearance: 'error', autoDismiss: true});
-        setErrors(response.data.validationErrors)
-        setShowModal(true)
+        addToast(error, {appearance: 'error', autoDismiss: true});
+        // setErrors(response.data.validationErrors)
+        // setShowModal(true)
       })
     } else {
       // addToast(`${type} updated successfully`, {appearance: 'success', autoDismiss: true})
@@ -297,8 +297,10 @@ const TableDataView = (props: any) => {
             <i
               style={{ float: 'right', cursor: 'pointer' }}
               onClick={(e) => {
-                showAlert("האם בטוח למחוק את הקרון?");
+              if (window.confirm("האם בטוח למחוק את הקרון?")) {
+                // showAlert("האם בטוח למחוק את הקרון?");
                 handleChangeActions(true, carId)
+                 }else{}
               }}
               className={`fa fa-trash`}
             ></i>
@@ -306,11 +308,13 @@ const TableDataView = (props: any) => {
             <button
               style={{ float: "right", cursor: "pointer", marginLeft: "20px", paddingLeft: "10px", paddingRight: "10px", paddingTop: "5px", paddingBottom: "5px" }}
               onClick={(e) => {
-                showAlert(!text ? "האם בטוח להפעיל את הקרון?" : "האם בטוח להשבית את הקרון?");
+                 if (window.confirm(!text ? "האם בטוח להפעיל את הקרון?" : "האם בטוח להשבית את הקרון?")) {
+                // showAlert(!text ? "האם בטוח להפעיל את הקרון?" : "האם בטוח להשבית את הקרון?");
                 let car = setCarVisibility({ carId, isEnabled: !text, type: 'car visibility' })
                 console.log({
                   car
                 })
+              }else{}
               }}
               className={`${!text ? `btn btn-success mx-2` : `btn btn-danger mx-2`}`}
 

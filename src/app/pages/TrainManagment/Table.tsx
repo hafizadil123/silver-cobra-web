@@ -187,8 +187,8 @@ const TableDataView = (props: any) => {
   }
   const showAlert = (customText: any) => {
     // const customText = "This is your custom alert text!";
-    window.alert(customText);
-    // window.confirm(customText)
+    // window.alert(customText);
+    window.confirm(customText)
   };
 
   const saveTrainDetails = async (details: any, type = 'Updated') => {
@@ -202,9 +202,10 @@ const TableDataView = (props: any) => {
     const response = await axios.post(saveTrainDetailsEndPoint, reqObj, headerJson)
     if (response.data.result === false) {
       response.data.validationErrors.forEach((error: any) => {
-        // addToast(error, {appearance: 'error', autoDismiss: true});
-        setErrors(response.data.validationErrors)
-        setShowModal(true)
+        addToast(error, {appearance: 'error', autoDismiss: true});
+        // setErrors(response.data.validationErrors)
+        // setShowModal(true)
+        // addToast(response.data.validationErrors, {appearance: 'success', autoDismiss: true})
       })
     } else {
       // addToast(`${type} successfully`, {appearance: 'success', autoDismiss: true})
@@ -222,9 +223,11 @@ const TableDataView = (props: any) => {
     )
     if (response.data.result === false) {
       response.data.validationErrors.forEach((error: any) => {
-        // addToast(error, {appearance: 'error', autoDismiss: true});
-        setErrors(response.data.validationErrors)
-        setShowModal(true)
+        addToast(error, {appearance: 'error', autoDismiss: true});
+        // setErrors(response.data.validationErrors)
+        // setShowModal(true)
+        // addToast(response.data.validationErrors, {appearance: 'success', autoDismiss: true})
+
       })
     } else {
       // addToast(`${type} updated successfully`, {appearance: 'success', autoDismiss: true})
@@ -313,8 +316,10 @@ const TableDataView = (props: any) => {
                 style={{float: 'right', cursor: 'pointer'}}
                 onClick={(e) => 
                   {
-                  showAlert("האם בטוח למחוק את הרכבת?");
+                    if (window.confirm("האם בטוח למחוק את הרכבת?")) {
+                  // showAlert("האם בטוח למחוק את הרכבת?");
                   handleChangeActions(true, trainId)
+                    }else{}
                 }
                 }
                 className={`fa fa-trash`}
@@ -324,12 +329,13 @@ const TableDataView = (props: any) => {
                 <button
                   style={{ float: "right", cursor: "pointer", marginLeft: "20px", paddingLeft: "10px", paddingRight: "10px", paddingTop: "5px", paddingBottom: "5px" }}
                   onClick={(e) => {
-
-                    showAlert(!text ? "האם בטוח להפעיל את הרכבת?" : "האם בטוח להשבית את הרכבת?");
+                    if (window.confirm(!text ? "האם בטוח להפעיל את הרכבת?" : "האם בטוח להשבית את הרכבת?")) {
+                    // showAlert(!text ? "האם בטוח להפעיל את הרכבת?" : "האם בטוח להשבית את הרכבת?");
                     let car = setTrainVisibility({ trainId, IsEnabled: !text, type: 'Train visibility' })
                     console.log({
                       car
                     })
+                  }else {}
                   }}
                   className={`${!text ? `btn btn-success mx-2` : `btn btn-danger mx-2`}`}
 
