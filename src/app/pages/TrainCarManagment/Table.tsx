@@ -248,11 +248,11 @@ const TableDataView = (props: any) => {
 
 
   const renderFields = () => {
-    console.log({
-      isDelete,
-      isEnabledButton,
-      isEdit
-    })
+    // console.log({
+    //   isDelete,
+    //   isEnabledButton,
+    //   isEdit
+    // })
     return (
       <td className={`${className} `}>
 
@@ -311,9 +311,9 @@ const TableDataView = (props: any) => {
                  if (window.confirm(!text ? "האם בטוח להפעיל את הקרון?" : "האם בטוח להשבית את הקרון?")) {
                 // showAlert(!text ? "האם בטוח להפעיל את הקרון?" : "האם בטוח להשבית את הקרון?");
                 let car = setCarVisibility({ carId, isEnabled: !text, type: 'car visibility' })
-                console.log({
-                  car
-                })
+                // console.log({
+                //   car
+                // })
               }else{}
               }}
               className={`${!text ? `btn btn-success mx-2` : `btn btn-danger mx-2`}`}

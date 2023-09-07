@@ -192,7 +192,7 @@ const TableDataView = (props: any) => {
   };
 
   const saveTrainDetails = async (details: any, type = 'Updated') => {
-      console.log("saveTrainDetails", details);
+      // console.log("saveTrainDetails", details);
       const reqObj = {
         id: details?.id,
         name : details?.name,
@@ -332,9 +332,9 @@ const TableDataView = (props: any) => {
                     if (window.confirm(!text ? "האם בטוח להפעיל את הרכבת?" : "האם בטוח להשבית את הרכבת?")) {
                     // showAlert(!text ? "האם בטוח להפעיל את הרכבת?" : "האם בטוח להשבית את הרכבת?");
                     let car = setTrainVisibility({ trainId, IsEnabled: !text, type: 'Train visibility' })
-                    console.log({
-                      car
-                    })
+                    // console.log({
+                    //   car
+                    // })
                   }else {}
                   }}
                   className={`${!text ? `btn btn-success mx-2` : `btn btn-danger mx-2`}`}
