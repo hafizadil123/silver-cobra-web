@@ -25,18 +25,21 @@ const TrainDashboardPage: FC = () => {
   const [y, setY] = useState(0)
   const [stickyCss, setStickyCss] = useState('')
   const [search, setSearch] = useState('')
-  const [actualUsers, setActualUsers] = useState<any>([])
+  const [actualTrains, setActualTrains] = useState<any>([])
   const [loading, setLoading] = useState(true)
   const logged_user_detail: any = localStorage.getItem('logged_user_detail')
   const [errors, setErrors] = useState<any>([])
   const [activeTrain, setActiveTrain] = useState({
     name: '',
-    IsEnabled: '',
+    car1Id: '',
+    car2Id: '',
+    lastUpdater: '',
     lastUpdated: '',
+    id: '',
+    availableCars: [] as any[],
   })
   const handleUpdateTrain = () => {
-    //
-    // saveTrainDetails(activeTrain, 'Created')
+    saveTrainDetails(activeTrain, activeTrain.id ? 'Updated' : 'Created')
   }
   const loggedInUserDetails = JSON.parse(logged_user_detail)
 
@@ -48,7 +51,9 @@ const TrainDashboardPage: FC = () => {
 
   const GetTrainsList =`${baseUrl}/api/Common/GetTrainsList`
   const DeleteTrain =`${baseUrl}/api/Common/DeleteTrain`
-  // const saveTrainDetailsEndPoint = `${baseUrl}/api/account/SaveUserDetails`
+  const saveTrainDetailsEndPoint = `${baseUrl}/api/Common/SaveTrainDetails`
+  const getTrainDetailsEndPoint = `${baseUrl}/api/Common/GetTrainDetails`
+  const setTrainUsabilityEndPoint = `${baseUrl}/api/Common/SetTrainUsability`
 
   const getUsersEndPoint = `${baseUrl}/api/Common/GetUsers`
   const headerJson = {
@@ -83,7 +88,7 @@ const TrainDashboardPage: FC = () => {
       const {data} = response
       console.log(data,"data")
       setTrainsList(data.TrainsList)
-      // setActualUsers(data.users)
+      setActualTrains(data.TrainsList)
       console.log(trainsList, "trainsList")
 
       setLoading(false)
@@ -101,61 +106,114 @@ const TrainDashboardPage: FC = () => {
     setY(window.scrollY)
   }
 
-  const handleModal = (e: any) => {
+  const getTrainDetails = async (id: number) => {
+    try {
+      const response = await axios.post(getTrainDetailsEndPoint, {id: id}, headerJson)
+      if (response && response.data && response.data.result) {
+        const data = response.data
+        setActiveTrain({
+          name: data.name || '',
+          car1Id: data.car1Id != null && data.car1Id !== 0 ? String(data.car1Id) : '',
+          car2Id: data.car2Id != null && data.car2Id !== 0 ? String(data.car2Id) : '',
+          lastUpdater: data.lastUpdater || '',
+          lastUpdated: data.lastUpdated || '',
+          id: data.id ? String(data.id) : '',
+          availableCars: data.availableCars || [],
+        })
+        setShowModal(true)
+        setErrors([])
+      }
+    } catch (error) {
+      console.error('Error fetching train details:', error)
+      addToast('שגיאה בטעינת פרטי הרכבת', {appearance: 'error', autoDismiss: true})
+    }
+  }
+
+  const handleModal = async (e: any) => {
     e.preventDefault()
-    setActiveTrain({
-      name: '',
-      IsEnabled: '',
-      lastUpdated: '',
-    })
-    setShowModal(true)
-    setErrors([])
+    await getTrainDetails(0)
   }
 
  
 
-  // const saveTrainDetails = async (details: any, type = 'Updated') => {
-  //   setActiveType(type)
+  const saveTrainDetails = async (details: any, type = 'Updated') => {
+    setActiveType(type)
 
-  //   const response = await axios.post(saveTrainDetailsEndPoint, details, headerJson)
-  //   if (response.data.result === false) {
-  //     response.data.validationErrors.forEach((error: any) => {
-  //       // addToast(error, {appearance: 'error', autoDismiss: true});
-  //       setErrors(response.data.validationErrors)
-  //       setShowModal(true)
-  //     })
-  //   } else {
-  //     setLoading(true)
-  //     if (type == 'Created') {
-  //       setActiveTrain({
-  //         name: '',
-  //         IsEnabled: '',
-  //         lastUpdated: ''
-  //       })
-  //       addToast(response.data.message, {appearance: 'success', autoDismiss: true})
-  //     } else {
-  //       addToast(`User ${type} successfully`, {appearance: 'success', autoDismiss: true})
-  //     }
-  //     getTrainsList()
-  //   }
-  // }
+    // Prepare data for SaveTrainDetails API
+    const dataToSend = {
+      id: details.id ? parseInt(details.id) : 0,
+      name: details.name,
+      car1Id: details.car1Id ? parseInt(details.car1Id) : null,
+      car2Id: details.car2Id ? parseInt(details.car2Id) : null,
+    }
+
+    const response = await axios.post(saveTrainDetailsEndPoint, dataToSend, headerJson)
+    if (response.data.result === false) {
+      response.data.validationErrors.forEach((error: any) => {
+        // addToast(error, {appearance: 'error', autoDismiss: true});
+        setErrors(response.data.validationErrors)
+        setShowModal(true)
+      })
+    } else {
+      setLoading(true)
+      if (type == 'Created') {
+        setActiveTrain({
+          name: '',
+          car1Id: '',
+          car2Id: '',
+          lastUpdater: '',
+          lastUpdated: '',
+          id: '',
+          availableCars: [],
+        })
+        addToast('הרכבת החדשה נוצרה בהצלחה', {appearance: 'success', autoDismiss: true})
+      } else {
+        addToast('עדכון התבצע בהצלחה', {appearance: 'success', autoDismiss: true})
+      }
+      setShowModal(false)
+      getTrainsList()
+    }
+  }
+
+  const handleSetTrainUsability = async (trainId: number, isEnabled: boolean) => {
+    try {
+      const response = await axios.post(setTrainUsabilityEndPoint, {
+        trainId: trainId,
+        isEnabled: isEnabled
+      }, headerJson)
+      
+      if (response.data.result === true) {
+        addToast('עדכון סטטוס הרכבת בוצע בהצלחה', {appearance: 'success', autoDismiss: true})
+        getTrainsList()
+      } else {
+        addToast(response.data.message || 'שגיאה בעדכון סטטוס הרכבת', {appearance: 'error', autoDismiss: true})
+      }
+    } catch (error) {
+      console.error('Error setting train usability:', error)
+      addToast('שגיאה בעדכון סטטוס הרכבת', {appearance: 'error', autoDismiss: true})
+    }
+  }
   const handleSearch = (value: any) => {
+    setSearch(value)
+    if (!value || value === '') {
+      setTrainsList(actualTrains)
+      return
+    }
     value = value.toLowerCase()
-      let searchedTrains = trainsList.filter((item: any) => {
+    let searchedTrains = actualTrains.filter((item: any) => {
       if (
         item.name.toLowerCase().indexOf(value) > -1 
       ) {
         return item
       }
     })
-    setSearch(value)
     setTrainsList(searchedTrains)
   }
 
 
 
   const handleDeleteF = async (id: any) => {
-    if (window.confirm('Are you sure you want to delete?')) {
+    if (window.confirm('האם בטוח למחוק את הרכבת?')) {
       const response = await axios.post(DeleteTrain, {id: id}, headerJson)
 
       if (response && response.data) {
@@ -214,7 +272,7 @@ const TrainDashboardPage: FC = () => {
                       className='btn btn-primary handleSubmit'
                       onClick={(e) => handleModal(e)}
                     >
-                      הוסף משתמש
+                      הוסף רכבת
                     </button>
                   </div>
                 </div>
@@ -235,6 +293,8 @@ const TrainDashboardPage: FC = () => {
                   getTrainsList={getTrainsList}
                   getTrainsAfterUpdate={getTrainsAfterUpdate}
                   handleDelete={(id: any) => handleDeleteF(id)}
+                  handleSetTrainUsability={handleSetTrainUsability}
+                  getTrainDetails={getTrainDetails}
 
                 />
               </>
@@ -268,6 +328,7 @@ const TrainDashboardPage: FC = () => {
               <label>שם רכבת</label>
               <input
                 type='text'
+                maxLength={50}
                 value={activeTrain.name}
                 onChange={(e) => {
                   setActiveTrain({
@@ -279,31 +340,63 @@ const TrainDashboardPage: FC = () => {
               />
             </div>
             <div className='form-group'>
-              <label>תאריך עדכון אחרון</label>
-              <input
-                type='text'
+              <label>קרון 1</label>
+              <select
                 onChange={(e) => {
                   setActiveTrain({
                     ...activeTrain,
-                    IsEnabled: e.target.value,
+                    car1Id: e.target.value,
                   })
                 }}
-                value={activeTrain.IsEnabled}
+                value={activeTrain.car1Id}
                 className='form-control'
+              >
+                <option value=''>בחר קרון</option>
+                {activeTrain.availableCars.map((car: any) => (
+                  <option key={car.id} value={String(car.id)}>
+                    {car.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className='form-group'>
+              <label>קרון 2</label>
+              <select
+                onChange={(e) => {
+                  setActiveTrain({
+                    ...activeTrain,
+                    car2Id: e.target.value,
+                  })
+                }}
+                value={activeTrain.car2Id}
+                className='form-control'
+              >
+                <option value=''>בחר קרון</option>
+                {activeTrain.availableCars.map((car: any) => (
+                  <option key={car.id} value={String(car.id)}>
+                    {car.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className='form-group'>
+              <label>מעדכן אחרון</label>
+              <input
+                type='text'
+                value={activeTrain.lastUpdater}
+                className='form-control'
+                readOnly
+                disabled
               />
             </div>
             <div className='form-group'>
-              <label>האם פעילה</label>
+              <label>תאריך עדכון אחרון</label>
               <input
                 type='text'
-                onChange={(e) => {
-                  setActiveTrain({
-                    ...activeTrain,
-                    lastUpdated: e.target.value,
-                  })
-                }}
                 value={activeTrain.lastUpdated}
                 className='form-control'
+                readOnly
+                disabled
               />
             </div>
             
@@ -322,7 +415,6 @@ const TrainDashboardPage: FC = () => {
             <button
               type='button'
               onClick={() => {
-                setShowModal(false)
                 handleUpdateTrain()
               }}
               className='btn btn-primary'

@@ -1,15 +1,15 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, {FC, useState, useEffect} from 'react'
-import {useIntl} from 'react-intl'
+import React, { FC, useState, useEffect, useRef } from 'react'
+import { useIntl } from 'react-intl'
 import axios from 'axios'
 import moment from 'moment'
-import DataTable, {createTheme} from 'react-data-table-component'
-import {PageTitle} from '../../../_metronic/layout/core'
-import {ChecksComponent} from './Checks'
+import DataTable, { createTheme } from 'react-data-table-component'
+import { PageTitle } from '../../../_metronic/layout/core'
+import { ChecksComponent } from './Checks'
 import './dashboard-page.css'
-import {ShowDataTable} from './ShowDataTable'
-import {ReportTable} from './Table'
-import {useToasts} from 'react-toast-notifications'
+import { ShowDataTable } from './ShowDataTable'
+import { ReportTable } from './Table'
+import { useToasts } from 'react-toast-notifications'
 import Modal from 'react-bootstrap/Modal'
 
 const DashboardPage: FC = () => {
@@ -25,6 +25,8 @@ const DashboardPage: FC = () => {
   const [search, setSearch] = useState('')
   const [actualUsers, setActualUsers] = useState<any>([])
   const [loading, setLoading] = useState(true)
+  const [isActive, setIsActive] = useState(true)
+  const isFirstRender = useRef(true)
   const logged_user_detail: any = localStorage.getItem('logged_user_detail')
   const [errors, setErrors] = useState<any>([])
   const [activeUser, setActiveUesr] = useState({
@@ -40,7 +42,7 @@ const DashboardPage: FC = () => {
   }
   const loggedInUserDetails = JSON.parse(logged_user_detail)
 
-  const {addToast} = useToasts()
+  const { addToast } = useToasts()
 
   const baseUrl = process.env.REACT_APP_API_URL
   const getLoggedInUserEndPoint = `${baseUrl}/api/Common/GetLoggedInUser`
@@ -67,12 +69,20 @@ const DashboardPage: FC = () => {
     getUsers()
     getLoggedInUserdata()
     getData()
+    isFirstRender.current = false
   }, [])
+
+  useEffect(() => {
+    if (!isFirstRender.current) {
+      setLoading(true)
+      getUsers()
+    }
+  }, [isActive])
   const getData = async () => {
     const response = await axios.post(getDataEndPoint, {}, headerJson)
 
     if (response && response.data) {
-      const {data} = response
+      const { data } = response
       setUserRoles(data.userRoles)
       setActiveUesr({
         ...activeUser,
@@ -84,7 +94,7 @@ const DashboardPage: FC = () => {
     const response = await axios.post(getLoggedInUserEndPoint, {}, headerJson)
 
     if (response && response.data) {
-      const {data} = response
+      const { data } = response
     }
   }
   const getSelectedUser = (id: any) => {
@@ -92,10 +102,13 @@ const DashboardPage: FC = () => {
     return user
   }
   const getUsers = async () => {
-    const response = await axios.post(getUsersEndPoint, {}, headerJson)
+    const payload = {
+      IsActive: isActive,
+    }
+    const response = await axios.post(getUsersEndPoint, payload, headerJson)
 
     if (response && response.data) {
-      const {data} = response
+      const { data } = response
       setUsers(data.users)
       setActualUsers(data.users)
       setLoading(false)
@@ -125,15 +138,15 @@ const DashboardPage: FC = () => {
     setErrors([])
   }
   const resetUserPassword = async (userId: any) => {
-    console.log({userId})
+    console.log({ userId })
     const activeUser = users.find((user: any) => user.userId === userId)
-    console.log({activeUser})
+    console.log({ activeUser })
     if (activeUser) {
       const data = {
         userName: activeUser.userName,
       }
       const response = await axios.post(resetPasswordEndPoint, data, headerJson)
-      console.log({data: response.data})
+      console.log({ data: response.data })
       const result = response.data.result
       if (result) {
         setResetPasswordMessage(response.data.message)
@@ -142,15 +155,15 @@ const DashboardPage: FC = () => {
         }, 45000)
         // addToast(response.data.message, {appearance: 'success', autoDismiss: true})
       } else {
-        addToast(response.data.message, {appearance: 'error', autoDismiss: true})
+        addToast(response.data.message, { appearance: 'error', autoDismiss: true })
       }
     }
   }
 
   const _initiateOtherPass = async (userId: any, newPassword: string, confirmPassword: string) => {
-    console.log({userId})
+    console.log({ userId })
     const activeUser = users.find((user: any) => user.userId === userId)
-    console.log({activeUser})
+    console.log({ activeUser })
     if (activeUser) {
       const data = {
         userName: activeUser.userName,
@@ -158,16 +171,16 @@ const DashboardPage: FC = () => {
         confirmPassword,
       }
       const response = await axios.post(_initateUpdateOtherPassEndPoint, data, headerJson)
-      console.log({data: response.data})
+      console.log({ data: response.data })
       const result = response.data
       if (result) {
         // setInitiateOtherPassMessage(response.data.message)
         // setTimeout(() => {
         //   setInitiateOtherPassMessage('')
         // }, 45000)
-        addToast(response.data.message, {appearance: 'success', autoDismiss: true})
+        addToast(response.data.message, { appearance: 'success', autoDismiss: true })
       } else {
-        addToast(response.data.message, {appearance: 'error', autoDismiss: true})
+        addToast(response.data.message, { appearance: 'error', autoDismiss: true })
       }
     }
   }
@@ -192,9 +205,9 @@ const DashboardPage: FC = () => {
           mobile: '',
           userName: '',
         })
-        addToast(response.data.message, {appearance: 'success', autoDismiss: true})
+        addToast(response.data.message, { appearance: 'success', autoDismiss: true })
       } else {
-        addToast(`User ${type} successfully`, {appearance: 'success', autoDismiss: true})
+        addToast(`User ${type} successfully`, { appearance: 'success', autoDismiss: true })
       }
       getUsers()
     }
@@ -217,12 +230,12 @@ const DashboardPage: FC = () => {
   }
   return (
     <>
-      <div style={{height: 'auto'}} className='main-container-dashboard'>
+      <div style={{ height: 'auto' }} className='main-container-dashboard'>
         <h1>ניהול משתמשים </h1>
         <div className='row'>
           <div className='col-lg-12'>
             <div className='row'>
-              <div className='col-md-8 col-lg-8'>
+              <div className='col-md-6 col-lg-6'>
                 <input
                   type='text'
                   className='form-control'
@@ -233,7 +246,23 @@ const DashboardPage: FC = () => {
                   placeholder='חיפוש'
                 />
               </div>
-              <div className='col-md-4 col-lg-4'>
+              <div className='col-md-3 col-lg-3'>
+                <div className='form-check mt-2'>
+                  <input
+                    className='form-check-input'
+                    type='checkbox'
+                    checked={isActive}
+                    onChange={(e) => {
+                      setIsActive(e.target.checked)
+                    }}
+                    id='isActiveCheckbox'
+                  />
+                  <label className='form-check-label' htmlFor='isActiveCheckbox'>
+                    האם להציג פעילים בלבד?
+                  </label>
+                </div>
+              </div>
+              <div className='col-md-3 col-lg-3'>
                 <button
                   type='button'
                   className='btn btn-danger mx-3'
@@ -281,7 +310,7 @@ const DashboardPage: FC = () => {
       </div>
       <Modal
         show={showModal}
-        style={{direction: 'rtl'}}
+        style={{ direction: 'rtl' }}
         onHide={() => {
           setShowModal(false)
         }}
@@ -297,7 +326,7 @@ const DashboardPage: FC = () => {
               errors.length > 0 &&
               errors.map((item: any) => (
                 <>
-                  <span style={{color: 'red'}}>{item}</span>
+                  <span style={{ color: 'red' }}>{item}</span>
                   <br />
                 </>
               ))}
@@ -419,10 +448,10 @@ const DashboardWrapper: FC = () => {
   const intl = useIntl()
   return (
     <>
-      <PageTitle breadcrumbs={[]}>{intl.formatMessage({id: 'MENU.DASHBOARD'})}</PageTitle>
+      <PageTitle breadcrumbs={[]}>{intl.formatMessage({ id: 'MENU.DASHBOARD' })}</PageTitle>
       <DashboardPage />
     </>
   )
 }
 
-export {DashboardWrapper}
+export { DashboardWrapper }

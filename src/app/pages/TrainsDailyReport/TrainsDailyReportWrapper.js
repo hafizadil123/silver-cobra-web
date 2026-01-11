@@ -522,7 +522,7 @@ const DashboardPage = () => {
     let _startDate = new Date(startDate)
     const fromDate = moment(_startDate).format('yyyy-MM-DD')
     let _endDate = new Date(endDate)
-    const tillDate = moment(_startDate).format('yyyy-MM-DD')
+    const tillDate = moment(_endDate).format('yyyy-MM-DD')
     const dataToSend = {
       fromDate,
       tillDate,

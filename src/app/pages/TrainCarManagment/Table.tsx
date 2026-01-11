@@ -68,6 +68,7 @@ const ReportTable: React.FC<Props> = ({
               <tr className='fw-bolder text-muted'>
                 <TableHeadView className='' text={'שם קרון'} />
                 <TableHeadView className='' text={'שם רכבת'} />
+                <TableHeadView className='' text={'האם פעיל'} />
                 <TableHeadView className='' text={'תאריך עדכון אחרון'} />
                 <TableHeadView className='' text={'פעולות'} />
               </tr>
@@ -94,6 +95,15 @@ const ReportTable: React.FC<Props> = ({
                       getSelectedCar={getSelectedCar}
                       isEdit={false}
                     />
+                    <td>
+                      <input
+                        type='checkbox'
+                        checked={isItemEnabled(item.isEnabled)}
+                        readOnly
+                        disabled
+                        style={{float: 'right'}}
+                      />
+                    </td>
                     <TableDataView
                       className=''
                       index={index}
@@ -116,6 +126,7 @@ const ReportTable: React.FC<Props> = ({
                       id={item.id}
                       handleDelete={handleDelete}
                       getUsersAfterUpdate={getUsersAfterUpdate}
+                      isEnabled={item.isEnabled}
                     />
                   </tr>
                 )
@@ -133,6 +144,11 @@ const ReportTable: React.FC<Props> = ({
 }
 
 export {ReportTable}
+
+const isItemEnabled = (value: any): boolean => {
+  return value === true || value === 'true' || value === 1 || value === '1'
+}
+
 const TableDataView = (props: any) => {
   const [openSecondModal, setOpenSecondModal] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -163,11 +179,13 @@ const TableDataView = (props: any) => {
     getUsers,
     getCarsList,
     handleDelete,
+    isEnabled,
   } = props
   const [errors, setErrors] = useState<any>([])
 
   const [activeCar, setActiveCar] = useState({
     name: '',
+    lastUpdater: '',
     lastUpdated: '',
     id:'',
   })
@@ -182,13 +200,22 @@ const TableDataView = (props: any) => {
     },
   }
   const saveUserDetailsEndPoint = `${baseUrl}/api/Common/SaveCarDetails`
+  const getCarDetailsEndPoint = `${baseUrl}/api/Common/GetCarDetails`
+  const setCarUsabilityEndPoint = `${baseUrl}/api/Common/SetCarUsability`
   const [showModal, setShowModal] = useState(false)
   const [status, setStatus] = useState<any>({})
   const handleUpdateUser = () => {
-    saveUserDetails(activeCar)
+    const type = activeCar.id ? 'Updated' : 'Created'
+    saveUserDetails(activeCar, type)
   }
   const saveUserDetails = async (details: any, type = 'Updated') => {
-    const response = await axios.post(saveUserDetailsEndPoint, details, headerJson)
+    // Prepare data for SaveCarDetails API - only send id and name
+    const dataToSend = {
+      id: details.id ? parseInt(details.id) : 0,
+      name: details.name,
+    }
+
+    const response = await axios.post(saveUserDetailsEndPoint, dataToSend, headerJson)
     if (response.data.result === false) {
       response.data.validationErrors.forEach((error: any) => {
         // addToast(error, {appearance: 'error', autoDismiss: true});
@@ -196,24 +223,62 @@ const TableDataView = (props: any) => {
         setShowModal(true)
       })
     } else {
-      addToast(`Car ${type} successfully`, {appearance: 'success', autoDismiss: true})
+      setShowModal(false)
+      if (type === 'Created') {
+        addToast('הקרון החדש נוצר בהצלחה', {appearance: 'success', autoDismiss: true})
+      } else {
+        addToast('עדכון התבצע בהצלחה', {appearance: 'success', autoDismiss: true})
+      }
+      getCarsList()
     }
-    getCarsList()
+  }
+
+  const handleSetCarUsability = async (carId: number, isEnabled: boolean) => {
+    try {
+      const response = await axios.post(setCarUsabilityEndPoint, {
+        carId: carId,
+        isEnabled: isEnabled
+      }, headerJson)
+      
+      if (response.data.result === true) {
+        addToast('עדכון סטטוס הקרון בוצע בהצלחה', {appearance: 'success', autoDismiss: true})
+        getCarsList()
+      } else {
+        addToast(response.data.message || 'שגיאה בעדכון סטטוס הקרון', {appearance: 'error', autoDismiss: true})
+      }
+    } catch (error) {
+      console.error('Error setting car usability:', error)
+      addToast('שגיאה בעדכון סטטוס הקרון', {appearance: 'error', autoDismiss: true})
+    }
   }
  
 
   const handleChangeActions = (isDelete: boolean, id: any) => {
-    let car = getSelectedCar(id)
     if (!isDelete) {
-      setActiveCar({
-        name: car.name,
-        lastUpdated: car.lastUpdated,
-        id: car.id,
-      })
-      setShowModal(true)
-      setErrors([])
+      // Call GetCarDetails API
+      getCarDetails(id)
     } else {
       handleDelete(id)
+    }
+  }
+
+  const getCarDetails = async (id: number) => {
+    try {
+      const response = await axios.post(getCarDetailsEndPoint, {id: id}, headerJson)
+      if (response && response.data && response.data.result) {
+        const data = response.data
+        setActiveCar({
+          name: data.name || '',
+          lastUpdater: data.lastUpdater || '',
+          lastUpdated: data.lastUpdated || '',
+          id: data.id || '',
+        })
+        setShowModal(true)
+        setErrors([])
+      }
+    } catch (error) {
+      console.error('Error fetching car details:', error)
+      addToast('שגיאה בטעינת פרטי הקרון', {appearance: 'error', autoDismiss: true})
     }
   }
 
@@ -229,20 +294,42 @@ const TableDataView = (props: any) => {
             <i
               style={{float: 'right', cursor: 'pointer' , marginLeft: '20px'}}
               onClick={(e) => {
-                let car = getSelectedCar(carId)
-
-                setActiveCar({
-                  name: car.name,
-                  lastUpdated: car.lastupdated,
-                  id: car.id
-                })
-                setShowModal(true)
+                getCarDetails(carId)
               }}
               className='fa fa-edit'
             ></i>
+            {isItemEnabled(isEnabled) ? (
+              <button
+                className='btn btn-danger mx-2'
+                style={{float: 'right', cursor: 'pointer', marginLeft: '20px', paddingLeft: '10px', paddingRight: '10px', paddingTop: '5px', paddingBottom: '5px'}}
+                onClick={(e) => {
+                  if (window.confirm('האם בטוח להשבית את הקרון?')) {
+                    handleSetCarUsability(carId, false)
+                  }
+                }}
+              >
+                השבת
+              </button>
+            ) : (
+              <button
+                className='btn btn-success mx-2'
+                style={{float: 'right', cursor: 'pointer', marginLeft: '20px', paddingLeft: '10px', paddingRight: '10px', paddingTop: '5px', paddingBottom: '5px'}}
+                onClick={(e) => {
+                  if (window.confirm('האם בטוח להפעיל את הקרון?')) {
+                    handleSetCarUsability(carId, true)
+                  }
+                }}
+              >
+                הפעל
+              </button>
+            )}
              <i
               style={{float: 'right', cursor: 'pointer'}}
-              onClick={(e) => handleChangeActions(true, carId)}
+              onClick={(e) => {
+                if (window.confirm('האם בטוח למחוק את הקרון?')) {
+                  handleChangeActions(true, carId)
+                }
+              }}
               className={`fa fa-trash`}
             ></i>
             <Modal
@@ -275,6 +362,7 @@ const TableDataView = (props: any) => {
                         <label>שם קרון</label>
                         <input
                           type='text'
+                          maxLength={50}
                           value={activeCar.name}
                           onChange={(e) => {
                             setActiveCar({
@@ -285,7 +373,30 @@ const TableDataView = (props: any) => {
                           className='form-control'
                         />
                       </div>
-                      
+                      {activeCar.id && (
+                        <>
+                          <div className='form-group'>
+                            <label>מעדכן אחרון</label>
+                            <input
+                              type='text'
+                              value={activeCar.lastUpdater}
+                              className='form-control'
+                              readOnly
+                              disabled
+                            />
+                          </div>
+                          <div className='form-group'>
+                            <label>תאריך עדכון אחרון</label>
+                            <input
+                              type='text'
+                              value={activeCar.lastUpdated}
+                              className='form-control'
+                              readOnly
+                              disabled
+                            />
+                          </div>
+                        </>
+                      )}
                        
                     </form>
                   )}

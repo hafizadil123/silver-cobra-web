@@ -82,8 +82,8 @@
     "yup": "^0.32.9"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "NODE_OPTIONS=--openssl-legacy-provider react-scripts start",
+    "build": "NODE_OPTIONS=--openssl-legacy-provider react-scripts build",
     "pretty": "prettier --write \"./**/*.{js,jsx,ts,tsx,json}\"",
     "test": "react-scripts test",
     "eject": "react-scripts eject",

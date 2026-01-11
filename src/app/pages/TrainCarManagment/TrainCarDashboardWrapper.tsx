@@ -31,11 +31,13 @@ const TrainCarDashboardPage: FC = () => {
 
   const [activeTrainCar, setActiveTrainCar] = useState({
     name: '',
-    trainName: ''
+    lastUpdater: '',
+    lastUpdated: '',
+    id: '',
   })
   const handleUpdateTrainCar = () => {
-    //
-    saveTrainCarDetails(activeTrainCar, 'Created')
+    const type = activeTrainCar.id ? 'Updated' : 'Created'
+    saveTrainCarDetails(activeTrainCar, type)
   }
   const loggedInUserDetails = JSON.parse(logged_user_detail)
 
@@ -47,8 +49,7 @@ const TrainCarDashboardPage: FC = () => {
 
   const GetCarsList =`${baseUrl}/api/Common/GetCarsList`
   const DeleteCar =`${baseUrl}/api/Common/DeleteCar`
-
-  // const getUsersEndPoint = `${baseUrl}/api/Common/GetUsers`
+  const getCarDetailsEndPoint = `${baseUrl}/api/Common/GetCarDetails`
   const saveCarDetailsEndPoint = `${baseUrl}/api/Common/SaveCarDetails`
   // const resetPasswordEndPoint = `${baseUrl}/api/account/AdminResetPassword`
   // const _initateUpdateOtherPassEndPoint = `${baseUrl}/api/account/AdminChangePassword`
@@ -104,21 +105,42 @@ const TrainCarDashboardPage: FC = () => {
     setY(window.scrollY)
   }
 
-  const handleModal = (e: any) => {
+  const getCarDetails = async (id: number) => {
+    try {
+      const response = await axios.post(getCarDetailsEndPoint, {id: id}, headerJson)
+      if (response && response.data && response.data.result) {
+        const data = response.data
+        setActiveTrainCar({
+          name: data.name || '',
+          lastUpdater: data.lastUpdater || '',
+          lastUpdated: data.lastUpdated || '',
+          id: data.id || '',
+        })
+        setShowModal(true)
+        setErrors([])
+      }
+    } catch (error) {
+      console.error('Error fetching car details:', error)
+      addToast('שגיאה בטעינת פרטי הקרון', {appearance: 'error', autoDismiss: true})
+    }
+  }
+
+  const handleModal = async (e: any) => {
     e.preventDefault()
-    setActiveTrainCar({
-      name: '',
-      trainName: ''
-    })
-    setShowModal(true)
-    setErrors([])
+    await getCarDetails(0)
   }
 
   
   const saveTrainCarDetails = async (details: any, type = 'Updated') => {
     setActiveType(type)
 
-    const response = await axios.post(saveCarDetailsEndPoint, details, headerJson)
+    // Prepare data for SaveCarDetails API - only send id and name
+    const dataToSend = {
+      id: details.id ? parseInt(details.id) : 0,
+      name: details.name,
+    }
+
+    const response = await axios.post(saveCarDetailsEndPoint, dataToSend, headerJson)
     if (response.data.result === false) {
       response.data.validationErrors.forEach((error: any) => {
         // addToast(error, {appearance: 'error', autoDismiss: true});
@@ -130,12 +152,15 @@ const TrainCarDashboardPage: FC = () => {
       if (type == 'Created') {
         setActiveTrainCar({
           name: '',
-          trainName: ''
+          lastUpdater: '',
+          lastUpdated: '',
+          id: '',
         })
-        addToast(response.data.message || 'Car has been created successfully!', {appearance: 'success', autoDismiss: true})
+        addToast('הקרון החדש נוצר בהצלחה', {appearance: 'success', autoDismiss: true})
       } else {
         addToast(`Car ${type} successfully`, {appearance: 'success', autoDismiss: true})
       }
+      setShowModal(false)
       getCarsList()
     }
   }
@@ -158,7 +183,7 @@ const TrainCarDashboardPage: FC = () => {
 
 
   const handleDeleteF = async (id: any) => {
-    if (window.confirm('Are you sure you want to delete?')) {
+    if (window.confirm('האם בטוח למחוק את הקרון?')) {
       const response = await axios.post(DeleteCar, {id: id}, headerJson)
 
       if (response && response.data) {
@@ -221,7 +246,7 @@ const TrainCarDashboardPage: FC = () => {
                       className='btn btn-primary handleSubmit'
                       onClick={(e) => handleModal(e)}
                     >
-                      הוסף משתמש
+                      הוסף קרון
                     </button>
                   </div>
                 </div>
@@ -275,6 +300,7 @@ const TrainCarDashboardPage: FC = () => {
               <label>שם קרון</label>
               <input
                 type='text'
+                maxLength={50}
                 value={activeTrainCar.name}
                 onChange={(e) => {
                   setActiveTrainCar({
@@ -285,20 +311,30 @@ const TrainCarDashboardPage: FC = () => {
                 className='form-control'
               />
             </div>
-            <div className='form-group'>
-              <label>שם רכבת</label>
-              <input
-                type='text'
-                value={activeTrainCar.trainName}
-                onChange={(e) => {
-                  setActiveTrainCar({
-                    ...activeTrainCar,
-                    trainName: e.target.value,
-                  })
-                }}
-                className='form-control'
-              />
-            </div>
+            {activeTrainCar.id && (
+              <>
+                <div className='form-group'>
+                  <label>מעדכן אחרון</label>
+                  <input
+                    type='text'
+                    value={activeTrainCar.lastUpdater}
+                    className='form-control'
+                    readOnly
+                    disabled
+                  />
+                </div>
+                <div className='form-group'>
+                  <label>תאריך עדכון אחרון</label>
+                  <input
+                    type='text'
+                    value={activeTrainCar.lastUpdated}
+                    className='form-control'
+                    readOnly
+                    disabled
+                  />
+                </div>
+              </>
+            )}
             
           </form>
         </Modal.Body>

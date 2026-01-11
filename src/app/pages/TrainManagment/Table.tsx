@@ -21,6 +21,8 @@ type Props = {
   getTrainsList: ()=> any
   getTrainsAfterUpdate: () => any
   handleDelete: any
+  handleSetTrainUsability: (trainId: number, isEnabled: boolean) => void
+  getTrainDetails: (id: number) => void
 }
 
 const ReportTable: React.FC<Props> = ({
@@ -31,6 +33,8 @@ const ReportTable: React.FC<Props> = ({
   getTrainsList,
   handleDelete,
   getTrainsAfterUpdate,
+  handleSetTrainUsability,
+  getTrainDetails,
 }) => {
   const [y, setY] = useState(0)
   const [stickyCss, setStickyCss] = useState('')
@@ -97,15 +101,15 @@ const ReportTable: React.FC<Props> = ({
                       isEdit={false}
                       
                     />
-                    <TableDataView
-                      className=''
-                      index={index}
-                      flexValue={1}
-                      text={item.IsEnabled}
-                      getSelectedTrain={getSelectedTrain}
-                      isEdit={false}
-                     
-                    />
+                    <td>
+                      <input
+                        type='checkbox'
+                        checked={isItemEnabled(item.IsEnabled)}
+                        readOnly
+                        disabled
+                        style={{float: 'right'}}
+                      />
+                    </td>
                     {/* <TableDataView
                       className=''
                       index={index}
@@ -135,6 +139,9 @@ const ReportTable: React.FC<Props> = ({
                       id={item.id}
                       handleDelete={handleDelete}
                       getTrainsAfterUpdate={getTrainsAfterUpdate}
+                      handleSetTrainUsability={handleSetTrainUsability}
+                      getTrainDetails={getTrainDetails}
+                      isEnabled={item.IsEnabled}
                     />
                   </tr>
                 )
@@ -152,6 +159,11 @@ const ReportTable: React.FC<Props> = ({
 }
 
 export {ReportTable}
+
+const isItemEnabled = (value: any): boolean => {
+  return value === true || value === 'true' || value === 1 || value === '1'
+}
+
 const TableDataView = (props: any) => {
   const [openSecondModal, setOpenSecondModal] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -186,14 +198,20 @@ const TableDataView = (props: any) => {
     resetUserPassword,
     getUsers,
     handleDelete,
+    handleSetTrainUsability,
+    getTrainDetails,
+    isEnabled,
   } = props
   const [errors, setErrors] = useState<any>([])
 
   const [activeTrain, setActiveTrain] = useState({
     name: '',
-    isEnabled: '',
+    car1Id: '',
+    car2Id: '',
+    lastUpdater: '',
     lastUpdated: '',
     id:'',
+    availableCars: [] as any[],
   })
   const baseUrl = process.env.REACT_APP_API_URL
   const logged_user_details: any = localStorage.getItem('logged_user_detail')
@@ -205,14 +223,23 @@ const TableDataView = (props: any) => {
       Authorization: `bearer ${loggedInUserDetails.access_token}`,
     },
   }
-  const saveTrainDetailsEndPoint = `${baseUrl}/api/Common/GetTrainDetails`
+  const saveTrainDetailsEndPoint = `${baseUrl}/api/Common/SaveTrainDetails`
   const [showModal, setShowModal] = useState(false)
   const [status, setStatus] = useState<any>({})
   const handleUpdateTrain = () => {
-    saveTrainDetails(activeTrain)
+    const type = activeTrain.id ? 'Updated' : 'Created'
+    saveTrainDetails(activeTrain, type)
   }
   const saveTrainDetails = async (details: any, type = 'Updated') => {
-    const response = await axios.post(saveTrainDetailsEndPoint, details, headerJson)
+    // Prepare data for SaveTrainDetails API
+    const dataToSend = {
+      id: details.id ? parseInt(details.id) : 0,
+      name: details.name,
+      car1Id: details.car1Id ? parseInt(details.car1Id) : null,
+      car2Id: details.car2Id ? parseInt(details.car2Id) : null,
+    }
+
+    const response = await axios.post(saveTrainDetailsEndPoint, dataToSend, headerJson)
     if (response.data.result === false) {
       response.data.validationErrors.forEach((error: any) => {
         // addToast(error, {appearance: 'error', autoDismiss: true});
@@ -220,24 +247,22 @@ const TableDataView = (props: any) => {
         setShowModal(true)
       })
     } else {
-      addToast(`User ${type} successfully`, {appearance: 'success', autoDismiss: true})
+      setShowModal(false)
+      if (type === 'Created') {
+        addToast('הרכבת החדשה נוצרה בהצלחה', {appearance: 'success', autoDismiss: true})
+      } else {
+        addToast('עדכון התבצע בהצלחה', {appearance: 'success', autoDismiss: true})
+      }
+      getTrainsList()
     }
-    getTrainsList()
   }
 
 
 
   const handleChangeActions = (isDelete: boolean, id: any) => {
-    let train = getSelectedTrain(id)
     if (!isDelete) {
-      setActiveTrain({
-        name: train.name,
-        isEnabled: train.isEnabled,
-        lastUpdated: train.lastUpdated,
-        id: train.id,
-      })
-      setShowModal(true)
-      setErrors([])
+      // Call GetTrainDetails API
+      getTrainDetails(id)
     } else {
       handleDelete(id)
     }
@@ -253,23 +278,65 @@ const TableDataView = (props: any) => {
             {/* Modal Start */}
             <i
               style={{float: 'right', cursor: 'pointer' , marginLeft: '20px'}}
-              onClick={(e) => {
-                // let user = getSelectedUser(userId)
-                let train = getSelectedTrain(userId)
-
-                setActiveTrain({
-                  name: train.name,
-                  isEnabled: train.isEnabled,
-                  lastUpdated: train.lastupdated,
-                  id: train.id
-                })
-                setShowModal(true)
+              onClick={async (e) => {
+                // Call GetTrainDetails API
+                const baseUrl = process.env.REACT_APP_API_URL
+                const getTrainDetailsEndPoint = `${baseUrl}/api/Common/GetTrainDetails`
+                try {
+                  const response = await axios.post(getTrainDetailsEndPoint, {id: userId}, headerJson)
+                  if (response && response.data && response.data.result) {
+                    const data = response.data
+                    setActiveTrain({
+                      name: data.name || '',
+                      car1Id: data.car1Id != null && data.car1Id !== 0 ? String(data.car1Id) : '',
+                      car2Id: data.car2Id != null && data.car2Id !== 0 ? String(data.car2Id) : '',
+                      lastUpdater: data.lastUpdater || '',
+                      lastUpdated: data.lastUpdated || '',
+                      id: data.id ? String(data.id) : '',
+                      availableCars: data.availableCars || [],
+                    })
+                    setShowModal(true)
+                    setErrors([])
+                  }
+                } catch (error) {
+                  console.error('Error fetching train details:', error)
+                  addToast('שגיאה בטעינת פרטי הרכבת', {appearance: 'error', autoDismiss: true})
+                }
               }}
               className='fa fa-edit'
             ></i>
+            {isItemEnabled(isEnabled) ? (
+              <button
+                className='btn btn-danger mx-2'
+                style={{float: 'right', cursor: 'pointer', marginLeft: '20px', paddingLeft: '10px', paddingRight: '10px', paddingTop: '5px', paddingBottom: '5px'}}
+                onClick={(e) => {
+                  if (window.confirm('האם בטוח להשבית את הרכבת?')) {
+                    handleSetTrainUsability(userId, false)
+                  }
+                }}
+              >
+                השבת
+              </button>
+            ) : (
+              <button
+                className='btn btn-success mx-2'
+                style={{float: 'right', cursor: 'pointer', marginLeft: '20px', paddingLeft: '10px', paddingRight: '10px', paddingTop: '5px', paddingBottom: '5px'}}
+                onClick={(e) => {
+                  if (window.confirm('האם בטוח להפעיל את הרכבת?')) {
+                    handleSetTrainUsability(userId, true)
+                  }
+                }}
+              >
+                הפעל
+              </button>
+            )}
              <i
               style={{float: 'right', cursor: 'pointer'}}
-              onClick={(e) => handleChangeActions(true, userId)}
+              onClick={(e) => {
+                if (window.confirm('האם בטוח למחוק את הרכבת?')) {
+                  handleChangeActions(true, userId)
+                }
+              }}
               className={`fa fa-trash`}
             ></i>
             <Modal
@@ -302,6 +369,7 @@ const TableDataView = (props: any) => {
                         <label>שם רכבת</label>
                         <input
                           type='text'
+                          maxLength={50}
                           value={activeTrain.name}
                           onChange={(e) => {
                             setActiveTrain({
@@ -313,31 +381,63 @@ const TableDataView = (props: any) => {
                         />
                       </div>
                       <div className='form-group'>
-                        <label>תאריך עדכון אחרון</label>
-                        <input
-                          type='text'
+                        <label>קרון 1</label>
+                        <select
                           onChange={(e) => {
                             setActiveTrain({
                               ...activeTrain,
-                              lastUpdated: e.target.value,
+                              car1Id: e.target.value,
                             })
                           }}
-                          value={activeTrain.lastUpdated}
+                          value={activeTrain.car1Id}
                           className='form-control'
+                        >
+                          <option value=''>בחר קרון</option>
+                          {activeTrain.availableCars.map((car: any) => (
+                            <option key={car.id} value={String(car.id)}>
+                              {car.name}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                      <div className='form-group'>
+                        <label>קרון 2</label>
+                        <select
+                          onChange={(e) => {
+                            setActiveTrain({
+                              ...activeTrain,
+                              car2Id: e.target.value,
+                            })
+                          }}
+                          value={activeTrain.car2Id}
+                          className='form-control'
+                        >
+                          <option value=''>בחר קרון</option>
+                          {activeTrain.availableCars.map((car: any) => (
+                            <option key={car.id} value={String(car.id)}>
+                              {car.name}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                      <div className='form-group'>
+                        <label>מעדכן אחרון</label>
+                        <input
+                          type='text'
+                          value={activeTrain.lastUpdater}
+                          className='form-control'
+                          readOnly
+                          disabled
                         />
                       </div>
                       <div className='form-group'>
-                        <label>האם פעילה</label>
+                        <label>תאריך עדכון אחרון</label>
                         <input
                           type='text'
-                          onChange={(e) => {
-                            setActiveTrain({
-                              ...activeTrain,
-                              isEnabled: e.target.value,
-                            })
-                          }}
-                          value={activeTrain.isEnabled}
+                          value={activeTrain.lastUpdated}
                           className='form-control'
+                          readOnly
+                          disabled
                         />
                       </div>
                      
@@ -347,7 +447,7 @@ const TableDataView = (props: any) => {
                 
                 </>
               </Modal.Body>
-              {/* {!openSecondModal && (
+              {!openSecondModal && (
                 <Modal.Footer>
                   <div
                     className=''
@@ -361,7 +461,6 @@ const TableDataView = (props: any) => {
                     <button
                       type='button'
                       onClick={() => {
-                        setShowModal(false)
                         handleUpdateTrain()
                       }}
                       className='btn btn-primary'
@@ -370,7 +469,7 @@ const TableDataView = (props: any) => {
                     </button>
                   </div>
                 </Modal.Footer>
-              )} */}
+              )}
             </Modal>
 
             {/* Modal End */}
